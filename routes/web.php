@@ -8,6 +8,6 @@ use WinLocalInc\Chjs\Http\Middleware\VerifyWebhookSignature;
 Route::post('api/webhook/v2', WebhookController::class)
     ->middleware(VerifyWebhookSignature::class)->name('webhook.v2');
 
-Route::get('api/chjs/token', TokenController::class)
+Route::get('api/chargify/token', TokenController::class)
     ->middleware(['trust.hosts', 'api'])
     ->name('chargify.token');
