@@ -4,12 +4,11 @@ namespace WinLocalInc\Chjs\Http\Controllers;
 
 use WinLocalInc\Chjs\Chargify\ObjectTypes;
 use WinLocalInc\Chjs\Chargify\Webhook\Webhook;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class WebhookController extends Controller
+class WebhookController
 {
     const HANDLER_NAMESPACE = 'WinLocalInc\\Chjs\\Webhook\\';
 
