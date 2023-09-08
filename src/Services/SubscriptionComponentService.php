@@ -38,23 +38,14 @@ class SubscriptionComponentService extends AbstractService
         return $this->post('subscriptions/'.$subscriptionId.'/price_points/reset');
     }
 
-    public function updateQuantity(string $subscriptionId, string $componentId, int $qty, array $options = []): ChargifyObject
+    public function updateQuantity(string $subscriptionId, string $componentId, array $options = []): ChargifyObject
     {
-        $this->validatePayload($options, [
-            'memo' => 'sometimes|string',
-            'upgrade_charge' => 'sometimes|string|in:full,prorated,none',
-            'downgrade_credit' => 'sometimes|string|in:full,prorated,none',
-            'accrue_charge' => 'sometimes|boolean',
-        ]);
-
         $allocation = array_merge([
             'upgrade_charge' => 'prorated',
             'downgrade_credit' => 'prorated'
         ], $options);
 
-        $allocation = ['allocation' => ['quantity' => $qty] + $allocation];
-
-        return $this->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/allocations', $allocation);
+        return $this->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/allocations', ['allocation' => $allocation]);
     }
 
     public function updateQuantityBulk(string $subscriptionId, array $parameters): Collection

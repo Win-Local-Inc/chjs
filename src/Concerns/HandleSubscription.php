@@ -20,17 +20,15 @@ trait HandleSubscription
     //adding status check
     //add exceptions
 
-    public function swapSubscriptionProduct( ProductPrice $productPrice, ?int $customPrice = null) :static
+    public function swapSubscriptionProduct(ProductPrice $productPrice, ?int $customPrice = null): static
     {
         //Subscriptions should be in the active or trialing
 
         $data = ['product_id' => $productPrice->product_id];
 
-        if(!$customPrice) {
+        if (!$customPrice) {
             $data['product_price_point_id'] = $productPrice->product_price_id;
-        }
-        else
-        {
+        } else {
             $data['custom_price']['price_in_cents'] = $customPrice;
             $data['custom_price']['interval'] = $productPrice->product_price_interval->getInterval();
             $data['custom_price']['interval_unit'] = 'month';
@@ -55,36 +53,32 @@ trait HandleSubscription
         return $this;
     }
 
-    public function addSubscriptionComponent(Component $component, int $qty, ?int $customPrice = null)  :static
+    public function addSubscriptionComponent(Component $component, int $qty, ?int $customPrice = null, array $options = []): static
     {
+        $data = ['component_id' => $component->component_id, 'quantity' => $qty];
+        if ($customPrice) {
+            $data['custom_price'] = [
+                'pricing_scheme' => 'per_unit',
+                'prices' => [
+                    [
+                        'starting_quantity' => 1,
+                        'unit_price' => $customPrice
+                    ]
+                ]
+            ];
+        }
+
+        $data = array_merge($options, $data);
+
         maxio()->subscriptionComponent->updateQuantity(
             subscriptionId: $this->subscription->subscription_id,
             componentId: $component->component_id,
-            qty: $qty
+            options: $data
         );
 
-//        $data = [ 'components' => [
-//           'component_id' =>  $component->component_id,
-//            'custom_price' => [
-//                'price_scheme' => 'per_unit',
-//                'prices' => [
-//                    [
-//                        'starting_quantity' => 1,
-//                        'unit_price' => $customPrice
-//                    ]
-//                ]
-//            ]
-//        ]];
-//
-//
-//        maxio()->subscription->update(
-//            subscriptionId: $this->subscription->subscription_id,
-//            parameters: $data
-//        );
-
         $maxioComponent = maxio()->subscriptionComponent
-                            ->list(subscriptionId: $this->subscription->subscription_id)
-                            ->where('component_id', $component->component_id)->first();
+            ->list(subscriptionId: $this->subscription->subscription_id)
+            ->where('component_id', $component->component_id)->first();
 
 
         $componentPrice = maxio()->componentPrice->list(['filter' => ['ids' => $maxioComponent->price_point_id]]);
@@ -98,48 +92,41 @@ trait HandleSubscription
                 'component_handle' => $maxioComponent->component_handle,
                 'component_price_handle' => $maxioComponent->price_point_handle,
                 'component_price_id' => $maxioComponent->price_point_id,
-                'subscription_component_price' =>  $componentPrice->first()->prices->first()->unit_price,
+                'subscription_component_price' => $componentPrice->first()->prices->first()->unit_price,
                 'subscription_component_quantity' => $maxioComponent->allocated_quantity,
                 'created_at' => $component->created_at,
                 'updated_at' => $component->updated_at,
             ]
         );
 
-
-        return $this;
-
-    }
-
-    public function addSubscriptionCustomComponent(ComponentPrice $componentPrice, int $qty, int $customPrice)  :static
-    {
-
         return $this;
     }
 
-    public function updateSubscriptionComponentQuantity(SubscriptionComponent $component, int $qty, array $options = [])  :static
+    public function updateSubscriptionComponentQuantity(SubscriptionComponent $component, int $qty, array $options = []): static
     {
+        $data = array_merge($options, ['quantity' => $qty]);
+
         $maxioSubscriptionComponent = maxio()->subscriptionComponent->updateQuantity(
             subscriptionId: $this->subscription->subscription_id,
             componentId: $component->component_id,
-            qty: $qty,
-            options: $options
+            options: $data
         );
 
         $component->update([
             'subscription_component_quantity' => $maxioSubscriptionComponent->quantity,
             'updated_at' => $maxioSubscriptionComponent->created_at
-            ]);
+        ]);
 
         return $this;
     }
 
-    public function removeSubscriptionComponent(SubscriptionComponent $component, array $options = [])  :static
+    public function removeSubscriptionComponent(SubscriptionComponent $component, array $options = []): static
     {
+        $data = array_merge($options, ['quantity' => 0]);
         $maxioSubscriptionComponent = maxio()->subscriptionComponent->updateQuantity(
             subscriptionId: $this->subscription->subscription_id,
             componentId: $component->component_id,
-            qty: 0,
-            options: $options
+            options: $data
         );
 
         $component->update([
@@ -149,13 +136,13 @@ trait HandleSubscription
         return $this;
     }
 
-    public function holdSubscription() :static
+    public function holdSubscription(): static
     {
-         $maxioSubscription = maxio()->subscriptionStatus->hold(subscriptionId: $this->subscription->subscription_id);
+        $maxioSubscription = maxio()->subscriptionStatus->hold(subscriptionId: $this->subscription->subscription_id);
 
-         $this->updateSubscription($maxioSubscription);
+        $this->updateSubscription($maxioSubscription);
 
-         return $this;
+        return $this;
     }
 
     public function holdSubscriptionUntil(string $date): static
