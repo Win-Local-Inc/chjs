@@ -42,8 +42,10 @@ class SubscriptionComponentService extends AbstractService
     {
         $allocation = array_merge([
             'upgrade_charge' => 'prorated',
-            'downgrade_credit' => 'prorated'
+            'downgrade_credit' => 'prorated',
+            'accrue_charge' => true,
         ], $options);
+
 
         return $this->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/allocations', ['allocation' => $allocation]);
     }

@@ -2,7 +2,6 @@
 
 namespace WinLocalInc\Chjs\Concerns;
 
-use App\Models\Workspace\Workspace;
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
 use WinLocalInc\Chjs\Chargify\Subscription;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
@@ -15,7 +14,6 @@ trait HandleSubscription
 {
     public function newSubscription(): SubscriptionBuilder
     {
-        /** @var Workspace $this **/
         return new SubscriptionBuilder($this);
     }
 
