@@ -12,6 +12,7 @@ use WinLocalInc\Chjs\Enums\IsActive;
 /**
  * @property mixed $component_id
  * @property mixed $product_price_id
+ * @property mixed $component_price_id
  */
 class ComponentPrice extends Model
 {

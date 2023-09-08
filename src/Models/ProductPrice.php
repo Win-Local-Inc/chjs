@@ -15,6 +15,7 @@ use WinLocalInc\Chjs\Enums\SubscriptionInterval;
  * @property mixed $product_id
  * @property Product product
  * @property mixed $product_price_handle
+ * @property mixed $product_price_id
  */
 class ProductPrice extends Model
 {

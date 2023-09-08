@@ -5,11 +5,15 @@ namespace WinLocalInc\Chjs\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use WinLocalInc\Chjs\Chjs;
 use WinLocalInc\Chjs\Enums\IsActive;
 
 /**
  * @property mixed $component_id
+ * @property mixed $created_at
+ * @property mixed $updated_at
+ * @property ComponentPrice price
  */
 class Component extends Model
 {
@@ -22,8 +26,8 @@ class Component extends Model
         'component_is_active' => IsActive::class,
     ];
 
-    public function componentPricePoints(): HasMany
+    public function price(): HasOne
     {
-        return $this->hasMany(ComponentPrice::class, 'component_id');
+        return $this->hasOne(ComponentPrice::class, 'component_id');
     }
 }
