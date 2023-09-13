@@ -2,41 +2,37 @@
 
 namespace WinLocalInc\Chjs\Webhook;
 
-use App\Services\Chargify\Attributes\HandleEvents;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 use ReflectionClass;
 use Symfony\Component\Finder\SplFileInfo;
+use WinLocalInc\Chjs\Attributes\HandleEvents;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
 
 class WebhookResolver
 {
     protected ?WebhookEvents $event = null;
 
-    public function getHandlersByEvent(WebhookEvents $event, array $paths): array
+    public function getHandlersByEvent(WebhookEvents $event): array
     {
         $this->event = $event;
 
-        return Collection::make($paths)
-            ->map(fn (string $path) => Collection::make($this->getAllFiles($path))
-                ->filter(fn (SplFileInfo $file) => $file->getExtension() === 'php')
-                ->map($this->createClassName(...))
-                ->filter($this->classHandleEvent(...)))
-            ->flatten()
+        return Collection::make($this->getAllFiles())
+            ->filter(fn (SplFileInfo $file) => $file->getExtension() === 'php')
+            ->map($this->createClassName(...))
+            ->filter($this->classHandleEvent(...))
             ->toArray();
     }
 
-    protected function getAllFiles(string $path): array
+    protected function getAllFiles(): array
     {
-        return File::allFiles(App::path($path));
+        return File::allFiles(App::basePath().'/vendor/win-local-inc/chjs/src/Webhook/Handlers');
     }
 
     protected function createClassName(SplFileInfo $file): string
     {
-        return ucfirst(
-            str_replace([App::basePath().DIRECTORY_SEPARATOR, '/'], ['', '\\'], $file->getPath())
-        ).'\\'.$file->getFilenameWithoutExtension();
+        return 'WinLocalInc\\Chjs\\Webhook\\Handlers\\'.$file->getFilenameWithoutExtension();
     }
 
     protected function classHandleEvent(string $absoluteClassName): bool
