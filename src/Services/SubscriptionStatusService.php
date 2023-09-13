@@ -59,17 +59,15 @@ class SubscriptionStatusService extends AbstractService
         return $this->post('subscriptions/'.$subscriptionId.'/cancel_dunning');
     }
 
-//    public function previewRenewal(string $subscriptionId, array $parameters): ChargifyObject
-//    {
-//        $this->validatePayload($parameters, [
-//            'components' => 'require|array',
-//            'components.*.component_id' => 'require|integer',
-//            'components.*.quantity' => 'require|integer',
-//            'components.*.price_point_id' => 'sometimes|integer',
-//        ]);
-//
-//        return $this->getClient()
-//            ->request('subscriptions/'.$subscriptionId.'/renewals/preview', 'post', $parameters)
-//            ->json();
-//    }
+    public function previewRenewal(string $subscriptionId, array $parameters): ChargifyObject
+    {
+        $this->validatePayload($parameters, [
+            'components' => 'require|array',
+            'components.*.component_id' => 'require|integer',
+            'components.*.quantity' => 'require|integer',
+            'components.*.price_point_id' => 'sometimes|integer',
+        ]);
+
+        return $this->post('subscriptions/'.$subscriptionId.'/renewals/preview', $parameters);
+    }
 }

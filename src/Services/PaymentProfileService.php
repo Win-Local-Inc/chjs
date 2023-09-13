@@ -8,7 +8,7 @@ use WinLocalInc\Chjs\Chargify\PaymentProfile;
 
 class PaymentProfileService extends AbstractService
 {
-    public function create(string $customerId, string $chargifyToken): PaymentProfile
+    public function create(string $customerId, string $chargifyToken): ChargifyObject
     {
         return $this->post('payment_profiles', ['payment_profile' => [
                 'customer_id' => $customerId,
@@ -16,7 +16,7 @@ class PaymentProfileService extends AbstractService
             ]]);
     }
 
-    public function update(string $paymentProfileId, array $parameters): PaymentProfile
+    public function update(string $paymentProfileId, array $parameters): ChargifyObject
     {
         return $this->put('payment_profiles/'.$paymentProfileId, ['payment_profile' => $parameters]);
     }
@@ -31,27 +31,19 @@ class PaymentProfileService extends AbstractService
         $this->delete('subscriptions/'.$subscriptionId.'/payment_profiles/'.$paymentProfileId);
     }
 
-    public function changeSubscriptionDefaultPaymentProfile(string $paymentProfileId, string $subscriptionId): PaymentProfile
+    public function setDefault(string $paymentProfileId, string $subscriptionId): ChargifyObject
     {
         return $this->post('subscriptions/'.$subscriptionId.'/payment_profiles/'.$paymentProfileId.'/change_payment_profile');
     }
 
-    public function changeSubscriptionGroupDefaultPaymentProfile(string $paymentProfileId, string $subscriptionGroupId): PaymentProfile
-    {
-        return $this->post('subscription_groups/'.$subscriptionGroupId.'/payment_profiles/'.$paymentProfileId.'/change_payment_profile');
-    }
 
-    public function deleteSubscriptionGroupPaymentProfile(string $paymentProfileId, string $subscriptionGroupId): void
-    {
-        $this->delete('subscription_groups/'.$subscriptionGroupId.'/payment_profiles/'.$paymentProfileId);
-    }
 
-    public function getPaymentProfileById(string $paymentProfileId): PaymentProfile
+    public function find(string $paymentProfileId): ChargifyObject
     {
         return $this->get('payment_profiles/'.$paymentProfileId);
     }
 
-    public function getByToken(string $chargifyToken): PaymentProfile
+    public function getByToken(string $chargifyToken): ChargifyObject
     {
         return $this->get('one_time_tokens/'.$chargifyToken);
     }

@@ -5,11 +5,12 @@ namespace WinLocalInc\Chjs\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use WinLocalInc\Chjs\Chargify\ChargifyObject;
 use WinLocalInc\Chjs\Chargify\Customer;
 
 class CustomerService extends AbstractService
 {
-    public function create(Model $model): Customer
+    public function create(Model $model): ChargifyObject
     {
         $parameters = [
             'reference' => $model->getKey(),
@@ -30,7 +31,7 @@ class CustomerService extends AbstractService
         return $this->post('customers',  ['customer' => $parameters]);
     }
 
-    public function update(string $customerId, array $parameters): Customer
+    public function update(string $customerId, array $parameters): ChargifyObject
     {
         return $this->put('customers/'.$customerId, ['customer' => $parameters]);
     }
@@ -62,12 +63,12 @@ class CustomerService extends AbstractService
         return $this->get('customers/'.$customerId.'/subscriptions');
     }
 
-    public function getById(string $customerId): Customer
+    public function getById(string $customerId): ChargifyObject
     {
         return $this->get('customers/'.$customerId);
     }
 
-    public function getByReference(string $reference): Customer
+    public function getByReference(string $reference): ChargifyObject
     {
         return $this->get('customers/lookup', ['reference' => $reference]);
     }

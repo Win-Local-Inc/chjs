@@ -79,34 +79,8 @@ class ComponentService extends AbstractService
         return $this->get('components/'.$componentId.'/price_points', $parameters);
     }
 
-    public function findPricePoint(int $componentId, int $pricePoint): ChargifyObject
-    {
-//        return (object) $this
-//            ->get('components/'.$componentId.'/price_points')
-//            ->collect('price_points')
-//            ->map(fn ($item) => (object) $item)
-//            ->filter(fn ($item) => $item->id == $pricePoint)
-//            ->map(function ($item) {
-//                $item->prices =(object) $item->prices[0] ;
-//                $item->prices->unit_price = (int) number_format($item->prices->unit_price * 100, 0, '.', '');
-//                return $item;
-//            })
-//            ->first();
 
-//        return (object) $this
-//            ->get('components/'.$componentId.'/price_points')
-//            ->collect('price_points')
-//            ->map(fn ($item) => (object) $item)
-//            ->filter(fn ($item) => $item->id == $pricePoint)
-//            ->map(function ($item) {
-//                $item->prices =(object) $item->prices[0] ;
-//                $item->prices->unit_price = (int) number_format($item->prices->unit_price * 100, 0, '.', '');
-//                return $item;
-//            })
-//            ->first();
-    }
-
-    public function setDefaultPricePoint(string $componentId, string $pricePointId): void
+    public function setDefault(string $componentId, string $pricePointId): void
     {
         $this->put('components/'.$componentId.'/price_points/'.$pricePointId.'/default.json');
     }

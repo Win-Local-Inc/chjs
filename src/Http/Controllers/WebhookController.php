@@ -20,6 +20,7 @@ class WebhookController
 
 //        $payload = (new ChargifyPayload($content['payload']))->payload;
         ray($handlerClass)->green();
+
         $payload = ObjectTypes::resolve($content['payload'], Webhook::class);
 
         ray($payload, $handlerClass)->red();
