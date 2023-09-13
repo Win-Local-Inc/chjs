@@ -26,11 +26,10 @@ use WinLocalInc\Chjs\Services\SubscriptionStatusService;
  * @property ComponentPriceService $componentPrice
  * @property SubscriptionStatusService $subscriptionStatus
  **/
-
 class Chjs extends ChjsBase
 {
     private ?CoreServiceFactory $coreServiceFactory = null;
-    
+
     public function __get($name)
     {
         return $this->getService($name);
@@ -38,7 +37,7 @@ class Chjs extends ChjsBase
 
     public function getService($name)
     {
-        if (null === $this->coreServiceFactory) {
+        if ($this->coreServiceFactory === null) {
             $this->coreServiceFactory = new CoreServiceFactory($this);
         }
 

@@ -23,7 +23,7 @@ return new class extends Migration
 
             $table->uuid('chargify_subscription_group_id')
                 ->nullable()
-                ->index(); 
+                ->index();
             $table->foreign('chargify_subscription_group_id')
                 ->references('id')
                 ->on('chargify_subscription_groups')
@@ -32,7 +32,7 @@ return new class extends Migration
 
             $table->uuid('user_id')
                 ->nullable()
-                ->index(); 
+                ->index();
             $table->foreign('user_id')
                 ->references('user_id')
                 ->on('users')
@@ -41,7 +41,7 @@ return new class extends Migration
 
             $table->uuid('workspace_id')
                 ->nullable()
-                ->index(); 
+                ->index();
             $table->foreign('workspace_id')
                 ->references('workspace_id')
                 ->on('workspaces')

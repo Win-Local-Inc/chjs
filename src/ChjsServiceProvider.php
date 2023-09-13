@@ -19,13 +19,12 @@ class ChjsServiceProvider extends ServiceProvider
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'chjs');
 
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');  
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/chjs.php' => config_path('chjs.php'),
             ], 'config');
-
 
             $this->publishes([
                 __DIR__.'/../database/migrations' => $this->app->databasePath('migrations'),
@@ -64,28 +63,24 @@ class ChjsServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/chjs.php', 'chjs');
 
         // Register the main class to use with the facade
-//        $this->app->singleton(Chjs::class, function () {
-//            return new ChjsBase();
-//        });
+        //        $this->app->singleton(Chjs::class, function () {
+        //            return new ChjsBase();
+        //        });
 
-
-        $this->app->singleton( ChjsBase::class, function ()
-        {
+        $this->app->singleton(ChjsBase::class, function () {
             return new ChjsBase(
                 hostname: config('chjs.hostname'),
                 apiKey: config('chjs.api_key'),
                 timeout: config('chjs.time_out')
             );
-        } );
+        });
 
-
-        $this->app->bind( 'chjs', function ()
-        {
+        $this->app->bind('chjs', function () {
             return new Chjs(
                 hostname: config('chjs.hostname'),
                 apiKey: config('chjs.api_key'),
                 timeout: config('chjs.time_out')
             );
-        } );
+        });
     }
 }

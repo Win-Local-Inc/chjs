@@ -4,7 +4,7 @@ namespace WinLocalInc\Chjs\Services;
 
 use Illuminate\Support\Collection;
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
-use WinLocalInc\Chjs\Chargify\Component;
+
 
 class ComponentService extends AbstractService
 {

@@ -3,13 +3,13 @@
 namespace Obsolete\WebhookHandlers;
 
 use App\Models\Chargify\ChargifyEvent;
-use Obsolete\Chargify;
-use Obsolete\ChargifySystem;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Obsolete\Chargify;
+use Obsolete\ChargifySystem;
 
 abstract class AbstractHandler implements ShouldQueue
 {

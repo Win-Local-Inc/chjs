@@ -4,11 +4,11 @@ namespace Obsolete\WebhookHandlers;
 
 use App\Models\Chargify\ChargifyCustomer;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Obsolete\Attributes\HandleEvents;
 use Obsolete\ChargifyUtility;
 use Obsolete\Enums\WebhookEvents;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 
 #[HandleEvents(
     WebhookEvents::CustomerCreate,

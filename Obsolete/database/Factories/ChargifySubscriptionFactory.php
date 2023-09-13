@@ -13,7 +13,7 @@ class ChargifySubscriptionFactory extends Factory
     {
         return [
             'id' => random_int(1000000, 9999999),
-            'state' => 'active'
+            'state' => 'active',
         ];
     }
 }

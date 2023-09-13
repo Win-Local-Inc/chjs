@@ -25,12 +25,11 @@ class SubscriptionComponentService extends AbstractService
         ]);
 
         $parameters = array_merge([
-            'price_point_ids' => 'not_null'
+            'price_point_ids' => 'not_null',
         ], $options);
 
-        return $this->get('subscriptions/'.$subscriptionId.'/components',  $parameters);
+        return $this->get('subscriptions/'.$subscriptionId.'/components', $parameters);
     }
-
 
     //dont use
     public function reset(string $subscriptionId): ChargifyObject
@@ -45,7 +44,6 @@ class SubscriptionComponentService extends AbstractService
             'downgrade_credit' => 'prorated',
             'accrue_charge' => true,
         ], $options);
-
 
         return $this->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/allocations', ['allocation' => $allocation]);
     }
@@ -145,11 +143,11 @@ class SubscriptionComponentService extends AbstractService
 
     public function eventIngestion(string $apiHandle, array $parameters): void
     {
-        $this->post(config('chjs.subdomain') . $this->getConfig()->getSubdomain().'/events/'.$apiHandle, $parameters);
+        $this->post(config('chjs.subdomain').$this->getConfig()->getSubdomain().'/events/'.$apiHandle, $parameters);
     }
 
     public function eventIngestionBulk(string $apiHandle, array $parameters): void
     {
-        $this->post(config('chjs.event_host') . config('chjs.subdomain') .'/events/'.$apiHandle.'/bulk', $parameters);
+        $this->post(config('chjs.event_host').config('chjs.subdomain').'/events/'.$apiHandle.'/bulk', $parameters);
     }
 }

@@ -8,10 +8,10 @@ class Subscription extends AbstractService
 {
     public function create(array $parameters): array
     {
-//        $this->validatePayload($parameters, [
-//            'product_id' => 'required|integer',
-//            'customer_id' => 'required|integer',
-//        ]);
+        //        $this->validatePayload($parameters, [
+        //            'product_id' => 'required|integer',
+        //            'customer_id' => 'required|integer',
+        //        ]);
 
         return $this->getClient()
             ->request('subscriptions', 'post', ['subscription' => $parameters])

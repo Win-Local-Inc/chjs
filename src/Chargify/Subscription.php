@@ -2,7 +2,6 @@
 
 namespace WinLocalInc\Chjs\Chargify;
 
-
 /**
  * @property $id
  * @property $state
@@ -15,6 +14,4 @@ namespace WinLocalInc\Chjs\Chargify;
 class Subscription extends ObjectTypes implements ChargifyObject
 {
     const OBJECT_NAME = 'subscription';
-
-
 }

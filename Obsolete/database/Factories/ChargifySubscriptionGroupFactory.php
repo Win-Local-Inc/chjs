@@ -2,9 +2,9 @@
 
 namespace Database\Factories\Chargify;
 
-use Illuminate\Support\Str;
 use App\Models\Chargify\ChargifySubscriptionGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class ChargifySubscriptionGroupFactory extends Factory
 {
@@ -14,7 +14,7 @@ class ChargifySubscriptionGroupFactory extends Factory
     {
         return [
             'id' => 'grp_'.Str::random(),
-            'state' => 'active'
+            'state' => 'active',
         ];
     }
 }

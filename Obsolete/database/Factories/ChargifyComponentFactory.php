@@ -2,9 +2,9 @@
 
 namespace Database\Factories\Chargify;
 
-use Illuminate\Support\Str;
 use App\Models\Chargify\ChargifyComponent;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class ChargifyComponentFactory extends Factory
 {
@@ -21,7 +21,7 @@ class ChargifyComponentFactory extends Factory
                 'quantity_based_component',
                 'on_off_component',
                 'prepaid_usage_component',
-                'event_based_component']))
+                'event_based_component'])),
         ];
     }
 }

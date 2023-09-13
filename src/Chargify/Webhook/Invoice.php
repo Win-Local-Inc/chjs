@@ -8,6 +8,4 @@ use WinLocalInc\Chjs\Chargify\ObjectTypes;
 class Invoice extends ObjectTypes implements ChargifyObject
 {
     const OBJECT_NAME = 'invoice';
-
-
 }

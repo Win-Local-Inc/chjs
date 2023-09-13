@@ -3,7 +3,6 @@
 namespace WinLocalInc\Chjs\Http\Middleware;
 
 use Closure;
-
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use WinLocalInc\Chjs\Exceptions\SignatureVerificationException;
@@ -16,7 +15,7 @@ class VerifyWebhookSignature
      *
      * @throws AccessDeniedHttpException
      */
-    public function handle( $request, Closure $next)
+    public function handle($request, Closure $next)
     {
         try {
             WebhookSignature::verifyHeader(
@@ -28,7 +27,7 @@ class VerifyWebhookSignature
         } catch (SignatureVerificationException $exception) {
             throw new AccessDeniedHttpException($exception->getMessage(), $exception);
         }
-        
+
         $request->headers->set('Accept', 'application/json');
 
         return $next($request);

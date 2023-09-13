@@ -3,10 +3,10 @@
 namespace Obsolete;
 
 use App\Models\Chargify\ChargifyEvent;
-use Obsolete\Enums\WebhookEvents;
-use Obsolete\Interfaces\WebhookResolverInterface;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
+use Obsolete\Enums\WebhookEvents;
+use Obsolete\Interfaces\WebhookResolverInterface;
 
 class ChargifyWebhook
 {

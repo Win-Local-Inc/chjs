@@ -32,12 +32,12 @@ class ComponentPriceService extends AbstractService
         ]);
 
         $parameters = array_merge_recursive([
-                'page' => 1,
-                'per_page' => 100,
-                'filter' => [
-                    'type' => 'catalog,default,custom',
-                ],
+            'page' => 1,
+            'per_page' => 100,
+            'filter' => [
+                'type' => 'catalog,default,custom',
             ],
+        ],
             $options
         );
 
@@ -51,49 +51,37 @@ class ComponentPriceService extends AbstractService
             'per_page' => 100,
             'filter' => [
                 'type' => 'catalog,default,custom',
-                'ids' => $pricePoint
+                'ids' => $pricePoint,
             ],
         ];
 
         return $this->get('components_price_points', $parameters);
     }
 
-
-
-
-    public function createCurrencyPricesForPricePoint(string $pricePointId, array $parameters): object
+    public function createCurrencyPricesForPricePoint(string $pricePointId, array $parameters): ChargifyObject
     {
         return $this
-            ->post('price_points/'.$pricePointId.'/currency_prices', ['currency_prices' => $parameters])
-            ->object();
+            ->post('price_points/'.$pricePointId.'/currency_prices', ['currency_prices' => $parameters]);
     }
 
-    public function updateCurrencyPricesForPricePoint(string $pricePointId, array $parameters): object
+    public function updateCurrencyPricesForPricePoint(string $pricePointId, array $parameters): ChargifyObject
     {
         return $this
-            ->put('price_points/'.$pricePointId.'/currency_prices', ['currency_prices' => $parameters])
-            ->object();
+            ->put('price_points/'.$pricePointId.'/currency_prices', ['currency_prices' => $parameters]);
     }
 
-
-
-    public function archive(string $componentId, string $pricePointId): object
+    public function archive(string $componentId, string $pricePointId): ChargifyObject
     {
-        return $this
-            ->delete('components/'.$componentId.'/price_points/'.$pricePointId)
-            ->object()->price_point;
+        return $this->delete('components/'.$componentId.'/price_points/'.$pricePointId);
     }
 
     public function unarchive(string $componentId, string $pricePointId): object
     {
-        return $this
-            ->put('components/'.$componentId.'/price_points/'.$pricePointId.'/unarchive')
-            ->object()->price_point;
+        return $this->put('components/'.$componentId.'/price_points/'.$pricePointId.'/unarchive');
     }
 
     public function setDefault(string $componentId, string $pricePointId): void
     {
         $this->put('components/'.$componentId.'/price_points/'.$pricePointId.'/default.json');
     }
-
 }

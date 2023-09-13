@@ -2,11 +2,11 @@
 
 namespace Obsolete\WebhookHandlers;
 
+use Illuminate\Support\Facades\Validator;
 use Obsolete\Attributes\HandleEvents;
 use Obsolete\ChargifyFacade;
 use Obsolete\Enums\SubscriptionPaymentCollectionMethod;
 use Obsolete\Enums\WebhookEvents;
-use Illuminate\Support\Facades\Validator;
 
 #[HandleEvents(
     WebhookEvents::PaymentSuccess

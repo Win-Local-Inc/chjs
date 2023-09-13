@@ -12,7 +12,4 @@ use WinLocalInc\Chjs\Chargify\Product;
 class Webhook extends ObjectTypes implements ChargifyObject
 {
     const OBJECT_NAME = 'webhook';
-
-
-
 }

@@ -2,8 +2,8 @@
 
 namespace Obsolete\Attributes;
 
-use Obsolete\Enums\WebhookEvents;
 use Attribute;
+use Obsolete\Enums\WebhookEvents;
 
 #[Attribute(Attribute::TARGET_CLASS)]
 class HandleEvents

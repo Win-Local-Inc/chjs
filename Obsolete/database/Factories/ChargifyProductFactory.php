@@ -2,9 +2,9 @@
 
 namespace Database\Factories\Chargify;
 
-use Illuminate\Support\Str;
 use App\Models\Chargify\ChargifyProduct;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class ChargifyProductFactory extends Factory
 {
