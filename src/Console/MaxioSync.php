@@ -9,6 +9,7 @@ use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
 use WinLocalInc\Chjs\Models\Product;
 use WinLocalInc\Chjs\Models\ProductPrice;
+
 use function Laravel\Prompts\multiselect;
 
 class MaxioSync extends Command
@@ -67,11 +68,9 @@ class MaxioSync extends Command
         $this->updateComponentPrice();
     }
 
-
     protected function updateProducts()
     {
         $products = maxio()->product->list();
-
 
         foreach ($products as $product) {
             $this->info('product: '.$product->name);
@@ -110,7 +109,7 @@ class MaxioSync extends Command
                     'product_price_name' => $productPricePoint->name,
                     'product_price_interval' => SubscriptionInterval::getIntervalUnit($productPricePoint->interval),
                     'product_price_in_cents' => $productPricePoint->price_in_cents,
-                    'product_price_is_active' =>  is_null($productPricePoint->archived_at) ? IsActive::Active : IsActive::Inactive,
+                    'product_price_is_active' => is_null($productPricePoint->archived_at) ? IsActive::Active : IsActive::Inactive,
                     'created_at' => $productPricePoint->created_at,
                     'updated_at' => $productPricePoint->updated_at,
                 ]
@@ -172,10 +171,4 @@ class MaxioSync extends Command
 
         $this->info("component prices sync done!\n");
     }
-
-
-
-
-
-
 }

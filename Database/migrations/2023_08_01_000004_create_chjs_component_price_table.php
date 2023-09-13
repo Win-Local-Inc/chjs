@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('chjs_component_prices', function (Blueprint $table) {
             $table->id('component_price_id');
-            $table->foreignId('component_id')->constrained('chjs_components', 'component_id')->cascadeOnDelete();;
+            $table->foreignId('component_id')->constrained('chjs_components', 'component_id')->cascadeOnDelete();
             $table->string('component_handle', 52);
             $table->string('component_price_handle', 52)->unique();
             $table->string('component_price_name', 52);

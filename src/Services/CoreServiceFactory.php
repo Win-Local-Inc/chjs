@@ -30,7 +30,6 @@ class CoreServiceFactory extends AbstractServiceFactory
         'subscriptionStatus' => SubscriptionStatusService::class,
     ];
 
-
     protected function getServiceClass(string $name): ?string
     {
         return array_key_exists($name, self::$classMap) ? self::$classMap[$name] : null;

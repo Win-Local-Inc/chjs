@@ -2,39 +2,20 @@
 
 namespace WinLocalInc\Chjs\Http\Controllers;
 
-use WinLocalInc\Chjs\Chargify\ObjectTypes;
-use WinLocalInc\Chjs\Chargify\Webhook\Webhook;
-use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Response;
-
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use WinLocalInc\Chjs\Webhook\ChargifyWebhook;
 
 class WebhookController
 {
-    const HANDLER_NAMESPACE = 'WinLocalInc\\Chjs\\Webhook\\';
-
-    public function __invoke():  Response
+    public function __construct(protected ChargifyWebhook $chargifyWebhook)
     {
-
-        $content = request()->all();
-        $handlerClass = static::HANDLER_NAMESPACE . Str::studly($content['event']) . 'Handler';
-
-//        $payload = (new ChargifyPayload($content['payload']))->payload;
-        ray($handlerClass)->green();
-        $payload = ObjectTypes::resolve($content['payload'], Webhook::class);
-
-        ray($payload, $handlerClass)->red();
-//        WebhookReceived::dispatch($payload);
-        if (class_exists($handlerClass)) {
-            $handler = new $handlerClass();
-
-            if ($handler->handle($payload)) {
-//                WebhookHandled::dispatch($payload);
-                return new Response('Webhook Handled', 200);
-            }
-
-        }
-
-        return new Response;
     }
 
+    public function handleWebhook(Request $request)
+    {
+        $this->chargifyWebhook->handle($request->all());
+
+        return new JsonResponse(['message' => 'Webhook Handled'], 200);
+    }
 }

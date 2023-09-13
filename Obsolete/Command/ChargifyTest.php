@@ -2,13 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Firebase\JWT\JWT;
-use Illuminate\Support\Str;
-use Illuminate\Console\Command;
-use App\Services\Chargify\ChargifyConfig;
 use App\Services\Chargify\ChargifyFacade;
 use App\Services\Chargify\ChargifySystem;
-use Illuminate\Http\Client\RequestException;
+use Illuminate\Console\Command;
 
 class ChargifyTest extends Command
 {
@@ -57,24 +53,23 @@ class ChargifyTest extends Command
             'zip' => '02120',
             'country' => 'US',
             'phone' => '555-555-1212',
-            'locale' => 'es-MX'
+            'locale' => 'es-MX',
         ];
 
         $data = [
-//            'payment_profile_id' => 0,
-            'product_id' => 6542051 ,
+            //            'payment_profile_id' => 0,
+            'product_id' => 6542051,
             'product_price_point_id' => 2424017,
-//            'components' => [[
-//                "component_id"=> 2340449,
-//                "allocated_quantity"=> 10,
-//                "price_point_id" => 2978581
-//            ]]
+            //            'components' => [[
+            //                "component_id"=> 2340449,
+            //                "allocated_quantity"=> 10,
+            //                "price_point_id" => 2978581
+            //            ]]
             'metafields' => [
                 'user_id' => '6',
                 'workspace_id' => '66',
-            ]
+            ],
         ];
-
 
         $data['customer_id'] = (ChargifyFacade::customer()->create($userData))['id'];
 
@@ -82,17 +77,17 @@ class ChargifyTest extends Command
 
         ray($subscription);
 
-//        try {
-//            try {
-//                $product = ChargifyFacade::product()->listProducts();
-//                echo(json_encode($product));
-//            } catch (\Illuminate\Http\Client\RequestException $exception) {
-//                echo $exception->response->body();
-//            }
-//        } catch (\Throwable $th) {
-//            echo $th->getMessage();
-//        }
-//
-//        return 0;
+        //        try {
+        //            try {
+        //                $product = ChargifyFacade::product()->listProducts();
+        //                echo(json_encode($product));
+        //            } catch (\Illuminate\Http\Client\RequestException $exception) {
+        //                echo $exception->response->body();
+        //            }
+        //        } catch (\Throwable $th) {
+        //            echo $th->getMessage();
+        //        }
+        //
+        //        return 0;
     }
 }

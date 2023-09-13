@@ -4,9 +4,7 @@ namespace WinLocalInc\Chjs\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use WinLocalInc\Chjs\Chjs;
 use WinLocalInc\Chjs\Enums\IsActive;
 
 /**
@@ -18,10 +16,15 @@ use WinLocalInc\Chjs\Enums\IsActive;
 class Component extends Model
 {
     use HasFactory;
+
     public $incrementing = false;
-    protected $primaryKey   = 'component_id';
-    protected $table        = 'chjs_components';
-    protected $guarded      = [];
+
+    protected $primaryKey = 'component_id';
+
+    protected $table = 'chjs_components';
+
+    protected $guarded = [];
+
     protected $casts = [
         'component_is_active' => IsActive::class,
     ];

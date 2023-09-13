@@ -4,9 +4,9 @@ namespace Obsolete\Traits;
 
 use App\Models\Chargify\ChargifyCustomer;
 use App\Models\Chargify\ChargifySubscription;
-use Obsolete\ChargifySystem;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Obsolete\ChargifySystem;
 
 trait Chargifyable
 {

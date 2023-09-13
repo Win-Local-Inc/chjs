@@ -8,6 +8,4 @@ use WinLocalInc\Chjs\Chargify\ObjectTypes;
 class PreviousPaymentProfile extends ObjectTypes implements ChargifyObject
 {
     const OBJECT_NAME = 'previous_payment_profile';
-
-
 }

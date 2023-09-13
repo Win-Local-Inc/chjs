@@ -3,7 +3,6 @@
 namespace WinLocalInc\Chjs\Services;
 
 use Illuminate\Support\Collection;
-use WinLocalInc\Chjs\Chargify\ChargifyObject;
 use WinLocalInc\Chjs\Chargify\PaymentProfile;
 
 class PaymentProfileService extends AbstractService
@@ -11,9 +10,9 @@ class PaymentProfileService extends AbstractService
     public function create(string $customerId, string $chargifyToken): PaymentProfile
     {
         return $this->post('payment_profiles', ['payment_profile' => [
-                'customer_id' => $customerId,
-                'chargify_token' => $chargifyToken,
-            ]]);
+            'customer_id' => $customerId,
+            'chargify_token' => $chargifyToken,
+        ]]);
     }
 
     public function update(string $paymentProfileId, array $parameters): PaymentProfile

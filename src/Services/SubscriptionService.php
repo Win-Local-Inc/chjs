@@ -14,19 +14,18 @@ class SubscriptionService extends AbstractService
 
     public function update(string $subscriptionId, array $parameters): ChargifyObject
     {
-        return $this->put('subscriptions/' . $subscriptionId, ['subscription' => $parameters]);
+        return $this->put('subscriptions/'.$subscriptionId, ['subscription' => $parameters]);
     }
 
     public function override(string $subscriptionId, array $parameters): void
     {
-        $this->put('subscriptions/' . $subscriptionId . '/override', ['subscription' => $parameters]);
+        $this->put('subscriptions/'.$subscriptionId.'/override', ['subscription' => $parameters]);
     }
 
     public function find(string $subscriptionId): ChargifyObject
     {
-        return $this->get('subscriptions/' . $subscriptionId); //['include[]' => 'self_service_page_token']
+        return $this->get('subscriptions/'.$subscriptionId); //['include[]' => 'self_service_page_token']
     }
-
 
     public function findByReference(string $reference): ChargifyObject
     {
@@ -35,25 +34,24 @@ class SubscriptionService extends AbstractService
 
     public function attachCoupons(string $subscriptionId, array $codes): ChargifyObject
     {
-        return $this->post('subscriptions/' . $subscriptionId . '/add_coupon', ['codes' => $codes]);
+        return $this->post('subscriptions/'.$subscriptionId.'/add_coupon', ['codes' => $codes]);
     }
 
     public function detachCoupon(string $subscriptionId, string $code): void
     {
-        $this->delete('subscriptions/' . $subscriptionId . '/remove_coupon', ['coupon_code' => $code]);
+        $this->delete('subscriptions/'.$subscriptionId.'/remove_coupon', ['coupon_code' => $code]);
     }
 
     //Only trialing or awaiting signup subscriptions can be activated immediately
     public function activate(string $subscriptionId): ChargifyObject
     {
-        return $this->put('subscriptions/' . $subscriptionId . '/activate');
+        return $this->put('subscriptions/'.$subscriptionId.'/activate');
     }
 
     public function preview(array $parameters): ChargifyObject
     {
         return $this->post('subscriptions/preview', ['subscription' => $parameters]);
     }
-
 
     public function list(array $options = []): Collection
     {
@@ -84,7 +82,7 @@ class SubscriptionService extends AbstractService
             'product_price_point_id' => 'required_without:product_id|integer',
         ]);
 
-        return $this->post('subscriptions/' . $subscriptionId . '/migrations', ['migration' => $parameters]);
+        return $this->post('subscriptions/'.$subscriptionId.'/migrations', ['migration' => $parameters]);
     }
 
     public function migrateProductPreview(string $subscriptionId, array $parameters): ChargifyObject
@@ -94,6 +92,6 @@ class SubscriptionService extends AbstractService
             'product_price_point_id' => 'required_without:product_id|integer',
         ]);
 
-        return $this->post('subscriptions/' . $subscriptionId . '/migrations/preview', ['migration' => $parameters]);
+        return $this->post('subscriptions/'.$subscriptionId.'/migrations/preview', ['migration' => $parameters]);
     }
 }

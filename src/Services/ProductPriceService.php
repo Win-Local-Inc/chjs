@@ -16,7 +16,7 @@ class ProductPriceService extends AbstractService
         ]);
 
         return $this
-            ->post('products/'.$productId.'/price_points',  ['price_point' => $parameters])
+            ->post('products/'.$productId.'/price_points', ['price_point' => $parameters])
             ->object()->price_point;
     }
 
@@ -30,7 +30,7 @@ class ProductPriceService extends AbstractService
         ]);
 
         return $this
-            ->post('products/'.$productId.'/price_points/bulk',  ['price_points' => $parameters])
+            ->post('products/'.$productId.'/price_points/bulk', ['price_points' => $parameters])
             ->collect('price_points');
     }
 
@@ -90,7 +90,7 @@ class ProductPriceService extends AbstractService
             'page' => 1,
             'per_page' => 100,
             'filter' => [
-                'type' => 'catalog,default'
+                'type' => 'catalog,default',
             ],
         ], $options);
 
@@ -116,7 +116,7 @@ class ProductPriceService extends AbstractService
         ]);
 
         return $this
-            ->post('product_price_points/'.$pricePointId.'/currency_prices',  ['currency_prices' => $parameters])
+            ->post('product_price_points/'.$pricePointId.'/currency_prices', ['currency_prices' => $parameters])
             ->collect();
     }
 }

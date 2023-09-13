@@ -2,12 +2,12 @@
 
 namespace Obsolete\Factories;
 
-use Obsolete\Attributes\HandleEvents;
-use Obsolete\Enums\WebhookEvents;
-use Obsolete\Interfaces\WebhookResolverInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
+use Obsolete\Attributes\HandleEvents;
+use Obsolete\Enums\WebhookEvents;
+use Obsolete\Interfaces\WebhookResolverInterface;
 use ReflectionClass;
 use Symfony\Component\Finder\SplFileInfo;
 

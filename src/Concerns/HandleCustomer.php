@@ -9,34 +9,30 @@ use WinLocalInc\Chjs\Exceptions\InvalidCustomer;
 
 trait HandleCustomer
 {
-
-    public function chargifyId() :?int
+    public function chargifyId(): ?int
     {
         return $this->chargify_id;
     }
-
 
     public function hasChargifyId(): bool
     {
         return ! is_null($this->chargify_id);
     }
 
-
     /**
      * @throws InvalidCustomer
      */
-    protected function assertCustomerExists() :void
+    protected function assertCustomerExists(): void
     {
         if (! $this->hasChargifyId()) {
             throw InvalidCustomer::notYetCreated($this);
         }
     }
 
-
     /**
      * @throws CustomerAlreadyCreated
      */
-    public function createAsChargifyCustomer(?string $token = null): object
+    public function createAsChargifyCustomer(string $token = null): object
     {
         if ($this->hasChargifyId()) {
             throw CustomerAlreadyCreated::exists($this);
@@ -44,8 +40,7 @@ trait HandleCustomer
         $paymentProfile = null;
         $customer = maxio()->customer->create($this);
 
-        if($token)
-        {
+        if ($token) {
             $paymentProfile = maxio()->paymentProfile->create(customerId: $customer->id, chargifyToken: $token);
         }
 
@@ -59,7 +54,6 @@ trait HandleCustomer
     /**
      * Update the underlying Chargify customer information for the model.
      *
-     * @param  array  $options
      * @return \Chargify\Customer
      */
     public function updateChargifyCustomer(array $options = [])
@@ -72,7 +66,6 @@ trait HandleCustomer
     /**
      * Get the Chargify customer instance for the current user or create one.
      *
-     * @param  array  $options
      * @return \Chargify\Customer
      */
     public function createOrGetChargifyCustomer(array $options = [])
@@ -87,7 +80,6 @@ trait HandleCustomer
     /**
      * Get the Chargify customer for the model.
      *
-     * @param  array  $expand
      * @return \Chargify\Customer
      */
     public function asChargifyCustomer(array $expand = [])
@@ -231,7 +223,6 @@ trait HandleCustomer
      * Retrieve a promotion code by its code.
      *
      * @param  string  $code
-     * @param  array  $options
      * @return \Laravel\Cashier\PromotionCode|null
      */
     public function findPromotionCode($code, array $options = [])
@@ -250,7 +241,6 @@ trait HandleCustomer
      * Retrieve a promotion code by its code.
      *
      * @param  string  $code
-     * @param  array  $options
      * @return \Laravel\Cashier\PromotionCode|null
      */
     public function findActivePromotionCode($code, array $options = [])
@@ -286,7 +276,6 @@ trait HandleCustomer
      * Return a customer's balance transactions.
      *
      * @param  int  $limit
-     * @param  array  $options
      * @return \Illuminate\Support\Collection
      */
     public function balanceTransactions($limit = 10, array $options = [])
@@ -309,7 +298,6 @@ trait HandleCustomer
      *
      * @param  int  $amount
      * @param  string|null  $description
-     * @param  array  $options
      * @return \Laravel\Cashier\CustomerBalanceTransaction
      */
     public function creditBalance($amount, $description = null, array $options = [])
@@ -322,7 +310,6 @@ trait HandleCustomer
      *
      * @param  int  $amount
      * @param  string|null  $description
-     * @param  array  $options
      * @return \Laravel\Cashier\CustomerBalanceTransaction
      */
     public function debitBalance($amount, $description = null, array $options = [])
@@ -335,7 +322,6 @@ trait HandleCustomer
      *
      * @param  int  $amount
      * @param  string|null  $description
-     * @param  array  $options
      * @return \Laravel\Cashier\CustomerBalanceTransaction
      */
     public function applyBalance($amount, $description = null, array $options = [])
@@ -378,7 +364,6 @@ trait HandleCustomer
      * Get the Chargify billing portal for this customer.
      *
      * @param  string|null  $returnUrl
-     * @param  array  $options
      * @return string
      */
     public function billingPortalUrl($returnUrl = null, array $options = [])
@@ -395,7 +380,6 @@ trait HandleCustomer
      * Generate a redirect response to the customer's Chargify billing portal.
      *
      * @param  string|null  $returnUrl
-     * @param  array  $options
      * @return \Illuminate\Http\RedirectResponse
      */
     public function redirectToBillingPortal($returnUrl = null, array $options = [])
@@ -500,6 +484,4 @@ trait HandleCustomer
     {
         return $this->asChargifyCustomer()->tax_exempt === ChargifyCustomer::TAX_EXEMPT_REVERSE;
     }
-
-
 }

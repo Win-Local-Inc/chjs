@@ -2,8 +2,6 @@
 
 namespace WinLocalInc\Chjs\Services;
 
-use Illuminate\Support\Collection;
-
 class ProductService extends AbstractService
 {
     public function create(string $productFamilyId, array $parameters): object

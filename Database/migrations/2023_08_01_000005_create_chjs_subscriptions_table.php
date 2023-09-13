@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignUuid('workspace_id')->constrained('workspaces', 'workspace_id');
             $table->foreignId('product_id')->constrained('chjs_products', 'product_id')->cascadeOnDelete();
             $table->string('product_handle', 52);
-            $table->string('product_price_handle',52);
+            $table->string('product_price_handle', 52);
             $table->string('status', 18)->default(SubscriptionStatus::Active->value);
             $table->string('payment_collection_method', 10)->default(PaymentCollectionMethod::Automatic->value);
             $table->char('subscription_interval', 5)->default(SubscriptionInterval::Month->value);

@@ -9,8 +9,7 @@ enum SubscriptionInterval: string
 
     public static function getIntervalUnit(int $interval): SubscriptionInterval
     {
-        if($interval === 1)
-        {
+        if ($interval === 1) {
             return SubscriptionInterval::Month;
         }
 
@@ -19,8 +18,7 @@ enum SubscriptionInterval: string
 
     public function getInterval(): int
     {
-        if($this == SubscriptionInterval::Month)
-        {
+        if ($this == SubscriptionInterval::Month) {
             return 1;
         }
 

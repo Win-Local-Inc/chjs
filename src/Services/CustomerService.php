@@ -2,7 +2,6 @@
 
 namespace WinLocalInc\Chjs\Services;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use WinLocalInc\Chjs\Chargify\Customer;
@@ -27,7 +26,7 @@ class CustomerService extends AbstractService
             'locale' => 'en-US',
         ];
 
-        return $this->post('customers',  ['customer' => $parameters]);
+        return $this->post('customers', ['customer' => $parameters]);
     }
 
     public function update(string $customerId, array $parameters): Customer

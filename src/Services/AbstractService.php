@@ -3,7 +3,6 @@
 namespace WinLocalInc\Chjs\Services;
 
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
@@ -13,6 +12,7 @@ use WinLocalInc\Chjs\Chjs;
 abstract class AbstractService
 {
     protected PendingRequest $httpClient;
+
     public function __construct(protected Chjs $chargify)
     {
         $this->httpClient = $this->chargify->getClient();
@@ -23,16 +23,14 @@ abstract class AbstractService
         return $this->chargify->getClient();
     }
 
-
     protected function validatePayload(array $parameters, array $check)
     {
         Validator::make($parameters, $check)->validate();
     }
 
-
-    public function request(string $path, string $method, array $parameters = []) :ChargifyObject|Collection
+    public function request(string $path, string $method, array $parameters = []): ChargifyObject|Collection
     {
-        $response = $this->httpClient->$method(ltrim($path, '/') . '.json', $parameters);
+        $response = $this->httpClient->$method(ltrim($path, '/').'.json', $parameters);
 
         if ($response->successful()) {
             $jsonResponse = $response->json();
@@ -50,7 +48,6 @@ abstract class AbstractService
 
         return $response->throw();
     }
-
 
     public function get(string $path, array $parameters = []): ChargifyObject|Collection
     {

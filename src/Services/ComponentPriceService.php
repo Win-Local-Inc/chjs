@@ -32,12 +32,12 @@ class ComponentPriceService extends AbstractService
         ]);
 
         $parameters = array_merge_recursive([
-                'page' => 1,
-                'per_page' => 100,
-                'filter' => [
-                    'type' => 'catalog,default,custom',
-                ],
+            'page' => 1,
+            'per_page' => 100,
+            'filter' => [
+                'type' => 'catalog,default,custom',
             ],
+        ],
             $options
         );
 
@@ -51,15 +51,12 @@ class ComponentPriceService extends AbstractService
             'per_page' => 100,
             'filter' => [
                 'type' => 'catalog,default,custom',
-                'ids' => $pricePoint
+                'ids' => $pricePoint,
             ],
         ];
 
         return $this->get('components_price_points', $parameters);
     }
-
-
-
 
     public function createCurrencyPricesForPricePoint(string $pricePointId, array $parameters): object
     {
@@ -74,8 +71,6 @@ class ComponentPriceService extends AbstractService
             ->put('price_points/'.$pricePointId.'/currency_prices', ['currency_prices' => $parameters])
             ->object();
     }
-
-
 
     public function archive(string $componentId, string $pricePointId): object
     {
@@ -95,5 +90,4 @@ class ComponentPriceService extends AbstractService
     {
         $this->put('components/'.$componentId.'/price_points/'.$pricePointId.'/default.json');
     }
-
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Chargify;
 
+use App\Services\Chargify\ChargifyConfig;
 use Firebase\JWT\JWT;
-use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use App\Services\Chargify\ChargifyConfig;
+use Illuminate\Support\Str;
 
 class ChargifyTokenController extends Controller
 {
@@ -16,8 +16,8 @@ class ChargifyTokenController extends Controller
 
         $payload = [
             'iss' => $config->getPublicKey(),
-            'jti' =>  Str::random(32),
-            'sub' =>  Str::random(32),
+            'jti' => Str::random(32),
+            'sub' => Str::random(32),
         ];
 
         $jwt = JWT::encode($payload, $config->getPrivateKey(), 'HS256');
