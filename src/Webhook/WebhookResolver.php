@@ -3,7 +3,6 @@
 namespace WinLocalInc\Chjs\Webhook;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 use ReflectionClass;
 use Symfony\Component\Finder\SplFileInfo;
@@ -13,6 +12,7 @@ use WinLocalInc\Chjs\Enums\WebhookEvents;
 class WebhookResolver
 {
     protected ?WebhookEvents $event = null;
+    protected const Handlers = 'Handlers';
 
     public function getHandlersByEvent(WebhookEvents $event): array
     {
@@ -27,12 +27,12 @@ class WebhookResolver
 
     protected function getAllFiles(): array
     {
-        return File::allFiles(App::basePath().'/vendor/win-local-inc/chjs/src/Webhook/Handlers');
+        return File::allFiles(__DIR__.DIRECTORY_SEPARATOR.self::Handlers);
     }
 
     protected function createClassName(SplFileInfo $file): string
     {
-        return 'WinLocalInc\\Chjs\\Webhook\\Handlers\\'.$file->getFilenameWithoutExtension();
+        return __NAMESPACE__.'\\'.self::Handlers.'\\'.$file->getFilenameWithoutExtension();
     }
 
     protected function classHandleEvent(string $absoluteClassName): bool
