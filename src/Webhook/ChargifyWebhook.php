@@ -8,8 +8,6 @@ use WinLocalInc\Chjs\Enums\WebhookEvents;
 
 class ChargifyWebhook
 {
-    protected static string $path = 'Services/Chargify/WebhookHandlers';
-
     protected string $id;
 
     protected string $event;
@@ -49,7 +47,7 @@ class ChargifyWebhook
 
     protected function handlers(WebhookEvents $event): void
     {
-        $classes = $this->webhookResolver->getHandlersByEvent($event, [self::$path]);
+        $classes = $this->webhookResolver->getHandlersByEvent($event);
         foreach ($classes as $class) {
             $class::dispatch($this->id, $this->event, $this->payload);
         }

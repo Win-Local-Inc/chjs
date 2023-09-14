@@ -3,7 +3,6 @@
 namespace WinLocalInc\Chjs\Services;
 
 use Illuminate\Support\Collection;
-use WinLocalInc\Chjs\Chargify\PaymentProfile;
 
 class PaymentProfileService extends AbstractService
 {
@@ -34,8 +33,6 @@ class PaymentProfileService extends AbstractService
     {
         return $this->post('subscriptions/'.$subscriptionId.'/payment_profiles/'.$paymentProfileId.'/change_payment_profile');
     }
-
-
 
     public function find(string $paymentProfileId): ChargifyObject
     {

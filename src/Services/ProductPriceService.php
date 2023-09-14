@@ -16,9 +16,8 @@ class ProductPriceService extends AbstractService
             'interval_unit' => 'required|string|in:month,day',
         ]);
 
-        return $this->post('products/'.$productId.'/price_points',  ['price_point' => $parameters]);
+        return $this->post('products/'.$productId.'/price_points', ['price_point' => $parameters]);
     }
-
 
     public function update(string $productId, string $pricePointId, array $parameters): ChargifyObject
     {
@@ -66,7 +65,7 @@ class ProductPriceService extends AbstractService
             'page' => 1,
             'per_page' => 100,
             'filter' => [
-                'type' => 'catalog,default'
+                'type' => 'catalog,default',
             ],
         ], $options);
 
@@ -77,5 +76,4 @@ class ProductPriceService extends AbstractService
     {
         return $this->get('products/'.$productId.'/price_points/'.$pricePointId);
     }
-  
 }

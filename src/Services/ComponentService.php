@@ -5,7 +5,6 @@ namespace WinLocalInc\Chjs\Services;
 use Illuminate\Support\Collection;
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
 
-
 class ComponentService extends AbstractService
 {
     public function create(string $productFamilyId, string $kind, array $parameters): ChargifyObject
@@ -50,7 +49,7 @@ class ComponentService extends AbstractService
             $options
         );
 
-        return $this->get('components',  $parameters);
+        return $this->get('components', $parameters);
     }
 
     public function listComponentsForProductFamily(string $productFamilyId, array $options = []): Collection
@@ -78,7 +77,6 @@ class ComponentService extends AbstractService
 
         return $this->get('components/'.$componentId.'/price_points', $parameters);
     }
-
 
     public function setDefault(string $componentId, string $pricePointId): void
     {

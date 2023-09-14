@@ -12,6 +12,7 @@ use WinLocalInc\Chjs\Enums\WebhookEvents;
 class WebhookResolver
 {
     protected ?WebhookEvents $event = null;
+
     protected const Handlers = 'Handlers';
 
     public function getHandlersByEvent(WebhookEvents $event): array

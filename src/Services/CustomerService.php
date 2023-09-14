@@ -5,7 +5,6 @@ namespace WinLocalInc\Chjs\Services;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
-use WinLocalInc\Chjs\Chargify\Customer;
 
 class CustomerService extends AbstractService
 {
