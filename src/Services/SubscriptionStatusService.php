@@ -2,15 +2,17 @@
 
 namespace WinLocalInc\Chjs\Services;
 
+use Illuminate\Support\Collection;
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
 
 class SubscriptionStatusService extends AbstractService
 {
-    public function hold(string $subscriptionId, string $until = null): ChargifyObject
+    public function hold(string $subscriptionId, ?string $until = null): ChargifyObject
     {
         $parameters = [];
 
-        if ($until) {
+        if($until)
+        {
             $parameters['hold'] = ['automatically_resume_at' => $until];
         }
 
@@ -39,7 +41,7 @@ class SubscriptionStatusService extends AbstractService
 
     public function reactivate(string $subscriptionId, array $parameters = []): ChargifyObject
     {
-        return $this->put('subscriptions/'.$subscriptionId.'/reactivate', $parameters);
+        return $this->put('subscriptions/'.$subscriptionId.'/reactivate',  $parameters);
     }
 
     public function cancel(string $subscriptionId): ChargifyObject
@@ -57,17 +59,15 @@ class SubscriptionStatusService extends AbstractService
         return $this->post('subscriptions/'.$subscriptionId.'/cancel_dunning');
     }
 
-    //    public function previewRenewal(string $subscriptionId, array $parameters): ChargifyObject
-    //    {
-    //        $this->validatePayload($parameters, [
-    //            'components' => 'require|array',
-    //            'components.*.component_id' => 'require|integer',
-    //            'components.*.quantity' => 'require|integer',
-    //            'components.*.price_point_id' => 'sometimes|integer',
-    //        ]);
-    //
-    //        return $this->getClient()
-    //            ->request('subscriptions/'.$subscriptionId.'/renewals/preview', 'post', $parameters)
-    //            ->json();
-    //    }
+    public function previewRenewal(string $subscriptionId, array $parameters): ChargifyObject
+    {
+        $this->validatePayload($parameters, [
+            'components' => 'require|array',
+            'components.*.component_id' => 'require|integer',
+            'components.*.quantity' => 'require|integer',
+            'components.*.price_point_id' => 'sometimes|integer',
+        ]);
+
+        return $this->post('subscriptions/'.$subscriptionId.'/renewals/preview', $parameters);
+    }
 }

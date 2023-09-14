@@ -62,7 +62,7 @@ class SubscriptionComponentService extends AbstractService
         return $this->post('subscriptions/'.$subscriptionId.'/allocations', $parameters);
     }
 
-    public function allocateComponentsPreview(string $subscriptionId, array $parameters): object
+    public function allocateComponentsPreview(string $subscriptionId, array $parameters): ChargifyObject
     {
         $this->validatePayload($parameters, [
             'allocations' => 'required|array',
@@ -74,8 +74,7 @@ class SubscriptionComponentService extends AbstractService
         ]);
 
         return $this
-            ->post('subscriptions/'.$subscriptionId.'/allocations/preview', $parameters)
-            ->object();
+            ->post('subscriptions/'.$subscriptionId.'/allocations/preview', $parameters);
     }
 
     public function listAllocations(string $subscriptionId, string $componentId, array $parameters = []): Collection
@@ -90,7 +89,7 @@ class SubscriptionComponentService extends AbstractService
             ->map(fn ($item) => $item['allocation']);
     }
 
-    public function createUsage(string $subscriptionId, string $componentId, array $parameters): object
+    public function createUsage(string $subscriptionId, string $componentId, array $parameters): ChargifyObject
     {
         $this->validatePayload($parameters, [
             'quantity' => 'required|numeric',
@@ -99,8 +98,7 @@ class SubscriptionComponentService extends AbstractService
         ]);
 
         return $this
-            ->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/usages', ['usage' => $parameters])
-            ->object()->usage;
+            ->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/usages', ['usage' => $parameters]);
     }
 
     public function listUsages(string $subscriptionId, string $componentId, array $parameters = []): Collection
@@ -111,9 +109,7 @@ class SubscriptionComponentService extends AbstractService
         ]);
 
         return $this
-            ->get('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/usages', $parameters)
-            ->collect()
-            ->map(fn ($item) => $item['usage']);
+            ->get('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/usages', $parameters);
     }
 
     public function activateEventBasedComponent(string $subscriptionId, string $componentId): void
@@ -133,8 +129,7 @@ class SubscriptionComponentService extends AbstractService
         ]);
 
         return $this
-            ->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/allocations/'.$allocationId, ['allocation' => ['expires_at' => $expiresAt]])
-            ->object()->usage;
+            ->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/allocations/'.$allocationId, ['allocation' => ['expires_at' => $expiresAt]]);
     }
 
     public function deletePrepaidUsageAllocation(string $subscriptionId, string $componentId, string $allocationId, string $creditScheme = 'credit'): void

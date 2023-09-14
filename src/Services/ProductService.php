@@ -2,25 +2,27 @@
 
 namespace WinLocalInc\Chjs\Services;
 
+use Illuminate\Support\Collection;
+use WinLocalInc\Chjs\Chargify\ChargifyObject;
+
 class ProductService extends AbstractService
 {
-    public function create(string $productFamilyId, array $parameters): object
+    public function create(string $productFamilyId, array $parameters): ChargifyObject
     {
-        return $this->post('product_families/'.$productFamilyId.'/products', ['product' => $parameters])
-            ->object()->product;
+        return $this->post('product_families/'.$productFamilyId.'/products', ['product' => $parameters]);
     }
 
-    public function update(string $productId, array $parameters): object
+    public function update(string $productId, array $parameters): ChargifyObject
     {
-        return $this->put('products/'.$productId, ['product' => $parameters])->object()->product;
+        return $this->put('products/'.$productId, ['product' => $parameters]);
     }
 
-    public function archive(string $productId): object
+    public function archive(string $productId): ChargifyObject
     {
-        return $this->delete('products/'.$productId)->object()->product;
+        return $this->delete('products/'.$productId);
     }
 
-    public function list(array $options = []): object
+    public function list(array $options = []): Collection
     {
         $this->validatePayload($options, [
             'page' => 'sometimes|integer|min:1',
@@ -40,20 +42,17 @@ class ProductService extends AbstractService
             'include_archived' => true,
         ], $options);
 
-        return (object) $this->get('products', $parameters)
-            ->collect()
-            ->map(fn ($item) => (object) $item['product'])
-            ->all();
+        return $this->get('products', $parameters);
 
     }
 
-    public function getProductById(string $productId): array
+    public function find(string $productId): ChargifyObject
     {
-        return $this->get('products/'.$productId)->object()->product;
+        return $this->get('products/'.$productId);
     }
 
-    public function getProductByHandle(string $handle): array
+    public function getByHandle(string $handle): ChargifyObject
     {
-        return $this->get('products/handle/'.$handle)->object()->product;
+        return $this->get('products/handle/'.$handle);
     }
 }

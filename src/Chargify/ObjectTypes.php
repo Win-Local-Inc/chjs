@@ -30,6 +30,7 @@ class ObjectTypes
         SubscriptionComponent::OBJECT_NAME => SubscriptionComponent::class,
         ComponentPrice::OBJECT_NAME => ComponentPrice::class,
         PricePoint::OBJECT_NAME => PricePoint::class,
+        PricePoints::OBJECT_NAME => PricePoints::class,
         Price::OBJECT_NAME => Price::class,
         CouponCode::OBJECT_NAME => CouponCode::class,
         Allocation::OBJECT_NAME => Allocation::class,
@@ -44,6 +45,7 @@ class ObjectTypes
         UpdatedPaymentProfile::OBJECT_NAME => UpdatedPaymentProfile::class,
         PreviousPaymentProfile::OBJECT_NAME => PreviousPaymentProfile::class,
         Migration::OBJECT_NAME => Migration::class,
+        Usage::OBJECT_NAME => Usage::class,
 
     ];
 
