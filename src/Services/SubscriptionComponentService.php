@@ -25,12 +25,11 @@ class SubscriptionComponentService extends AbstractService
         ]);
 
         $parameters = array_merge([
-            'price_point_ids' => 'not_null'
+            'price_point_ids' => 'not_null',
         ], $options);
 
-        return $this->get('subscriptions/'.$subscriptionId.'/components',  $parameters);
+        return $this->get('subscriptions/'.$subscriptionId.'/components', $parameters);
     }
-
 
     //dont use
     public function reset(string $subscriptionId): ChargifyObject
@@ -45,7 +44,6 @@ class SubscriptionComponentService extends AbstractService
             'downgrade_credit' => 'full',
             'accrue_charge' => false,
         ], $options);
-
 
         return $this->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/allocations', ['allocation' => $allocation]);
     }
@@ -64,7 +62,7 @@ class SubscriptionComponentService extends AbstractService
         return $this->post('subscriptions/'.$subscriptionId.'/allocations', $parameters);
     }
 
-    public function allocateComponentsPreview(string $subscriptionId, array $parameters): object
+    public function allocateComponentsPreview(string $subscriptionId, array $parameters): ChargifyObject
     {
         $this->validatePayload($parameters, [
             'allocations' => 'required|array',
@@ -76,8 +74,7 @@ class SubscriptionComponentService extends AbstractService
         ]);
 
         return $this
-            ->post('subscriptions/'.$subscriptionId.'/allocations/preview', $parameters)
-            ->object();
+            ->post('subscriptions/'.$subscriptionId.'/allocations/preview', $parameters);
     }
 
     public function listAllocations(string $subscriptionId, string $componentId, array $parameters = []): Collection
@@ -92,7 +89,7 @@ class SubscriptionComponentService extends AbstractService
             ->map(fn ($item) => $item['allocation']);
     }
 
-    public function createUsage(string $subscriptionId, string $componentId, array $parameters): object
+    public function createUsage(string $subscriptionId, string $componentId, array $parameters): ChargifyObject
     {
         $this->validatePayload($parameters, [
             'quantity' => 'required|numeric',
@@ -101,8 +98,7 @@ class SubscriptionComponentService extends AbstractService
         ]);
 
         return $this
-            ->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/usages', ['usage' => $parameters])
-            ->object()->usage;
+            ->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/usages', ['usage' => $parameters]);
     }
 
     public function listUsages(string $subscriptionId, string $componentId, array $parameters = []): Collection
@@ -113,9 +109,7 @@ class SubscriptionComponentService extends AbstractService
         ]);
 
         return $this
-            ->get('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/usages', $parameters)
-            ->collect()
-            ->map(fn ($item) => $item['usage']);
+            ->get('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/usages', $parameters);
     }
 
     public function activateEventBasedComponent(string $subscriptionId, string $componentId): void
@@ -135,8 +129,7 @@ class SubscriptionComponentService extends AbstractService
         ]);
 
         return $this
-            ->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/allocations/'.$allocationId, ['allocation' => ['expires_at' => $expiresAt]])
-            ->object()->usage;
+            ->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/allocations/'.$allocationId, ['allocation' => ['expires_at' => $expiresAt]]);
     }
 
     public function deletePrepaidUsageAllocation(string $subscriptionId, string $componentId, string $allocationId, string $creditScheme = 'credit'): void
@@ -150,11 +143,11 @@ class SubscriptionComponentService extends AbstractService
 
     public function eventIngestion(string $apiHandle, array $parameters): void
     {
-        $this->post(config('chjs.subdomain') . $this->getConfig()->getSubdomain().'/events/'.$apiHandle, $parameters);
+        $this->post(config('chjs.subdomain').$this->getConfig()->getSubdomain().'/events/'.$apiHandle, $parameters);
     }
 
     public function eventIngestionBulk(string $apiHandle, array $parameters): void
     {
-        $this->post(config('chjs.event_host') . config('chjs.subdomain') .'/events/'.$apiHandle.'/bulk', $parameters);
+        $this->post(config('chjs.event_host').config('chjs.subdomain').'/events/'.$apiHandle.'/bulk', $parameters);
     }
 }

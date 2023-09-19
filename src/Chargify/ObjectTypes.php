@@ -15,7 +15,7 @@ use WinLocalInc\Chjs\Chargify\Webhook\UpdatedPaymentProfile;
 
 class ObjectTypes
 {
-    const TO_COLLECTION = FALSE;
+    const TO_COLLECTION = false;
 
     const mapping = [
         PaymentProfile::OBJECT_NAME => PaymentProfile::class,
@@ -30,6 +30,7 @@ class ObjectTypes
         SubscriptionComponent::OBJECT_NAME => SubscriptionComponent::class,
         ComponentPrice::OBJECT_NAME => ComponentPrice::class,
         PricePoint::OBJECT_NAME => PricePoint::class,
+        PricePoints::OBJECT_NAME => PricePoints::class,
         Price::OBJECT_NAME => Price::class,
         CouponCode::OBJECT_NAME => CouponCode::class,
         Allocation::OBJECT_NAME => Allocation::class,
@@ -44,14 +45,14 @@ class ObjectTypes
         UpdatedPaymentProfile::OBJECT_NAME => UpdatedPaymentProfile::class,
         PreviousPaymentProfile::OBJECT_NAME => PreviousPaymentProfile::class,
         Migration::OBJECT_NAME => Migration::class,
-
+        Usage::OBJECT_NAME => Usage::class,
 
     ];
 
     public function __construct(array $data = [])
     {
         foreach ($data as $key => $value) {
-            if (is_array($value) ) {
+            if (is_array($value)) {
 
                 if (isset(self::mapping[$key])) {
                     $className = self::mapping[$key];
@@ -60,20 +61,18 @@ class ObjectTypes
                     $this->setAttribute($key, $value);
                 }
 
-
-            }else{
+            } else {
                 $this->setAttribute($key, $value);
             }
 
         }
     }
 
-
     public static function getClassName(array $array): ?string
     {
         if (isset(ObjectTypes::mapping[array_key_first($array)])) {
             return ObjectTypes::mapping[array_key_first($array)];
-        }elseif (isset(ObjectTypes::mapping[array_key_first($array[0])])) {
+        } elseif (isset(ObjectTypes::mapping[array_key_first($array[0])])) {
             return ObjectTypes::mapping[array_key_first($array[0])];
         }
 
@@ -83,15 +82,11 @@ class ObjectTypes
     public static function resolve(array $array, string $className)
     {
         $data = collect();
-        if( isset( $array[0]) && is_array( $array[0] ) )
-        {
+        if (isset($array[0]) && is_array($array[0])) {
             foreach ($array as $key => $values) {
-                if(isset($values[$className::OBJECT_NAME]))
-                {
+                if (isset($values[$className::OBJECT_NAME])) {
                     $data->push(new $className($values[$className::OBJECT_NAME]));
-                }
-                else
-                {
+                } else {
                     $data->push(new $className($values));
                 }
             }
@@ -99,9 +94,7 @@ class ObjectTypes
             return $data;
         }
 
-
-        if( isset( $array[0]) && is_array($array[0]) && isset( self::mapping[$array[0][array_key_first($array[0])]]) )
-        {
+        if (isset($array[0]) && is_array($array[0]) && isset(self::mapping[$array[0][array_key_first($array[0])]])) {
             foreach ($array as $key => $values) {
                 $data->push(new $className($values[$className::OBJECT_NAME]));
             }
@@ -109,8 +102,7 @@ class ObjectTypes
             return $data;
         }
 
-        if( isset( self::mapping[array_key_first($array)]) && self::mapping[array_key_first($array)]::TO_COLLECTION )
-        {
+        if (isset(self::mapping[array_key_first($array)]) && self::mapping[array_key_first($array)]::TO_COLLECTION) {
             foreach ($array[$className::OBJECT_NAME] as $key => $values) {
                 $data->push(new $className($values));
             }
@@ -118,8 +110,7 @@ class ObjectTypes
             return $data;
         }
 
-        if(isset($array[$className::OBJECT_NAME]))
-        {
+        if (isset($array[$className::OBJECT_NAME])) {
             return new $className($array[$className::OBJECT_NAME]);
         }
 
@@ -130,5 +121,4 @@ class ObjectTypes
     {
         return $this->$key = $value;
     }
-
 }

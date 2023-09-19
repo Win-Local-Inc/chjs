@@ -2,7 +2,6 @@
 
 namespace WinLocalInc\Chjs\Models;
 
-
 use App\Models\Workspace\Workspace;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +12,6 @@ use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 use WinLocalInc\Chjs\Enums\SubscriptionStatus;
 
 /**
- *
  * @property Workspace workspace
  * @property Product product
  * @property mixed $subscription_id
@@ -23,9 +21,12 @@ class Subscription extends Model
     use HasFactory;
 
     public $incrementing = false;
-    protected $primaryKey   = 'subscription_id';
-    protected $table        = 'chjs_subscriptions';
-    protected $guarded      = [];
+
+    protected $primaryKey = 'subscription_id';
+
+    protected $table = 'chjs_subscriptions';
+
+    protected $guarded = [];
 
     protected $casts = [
         'status' => SubscriptionStatus::class,
@@ -48,18 +49,13 @@ class Subscription extends Model
         return $this->belongsTo(Subscription::class, 'product_id');
     }
 
-
     public function productPrice(): BelongsTo
     {
         return $this->belongsTo(ProductPrice::class, 'product_price_id');
     }
 
-
     public function components(): BelongsToMany
     {
         return $this->belongsToMany(SubscriptionComponent::class, Subscription::class, 'subscription_id', 'subscription_id');
     }
-
-
-
 }

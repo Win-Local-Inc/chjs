@@ -2,8 +2,8 @@
 
 namespace Obsolete\Middleware;
 
-use Obsolete\ChargifyConfig;
 use Closure;
+use Obsolete\ChargifyConfig;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class VerifyChargifySignature

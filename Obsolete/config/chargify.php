@@ -8,5 +8,5 @@ return [
     'publicKey' => env('CHARGIFY_PUBLIC_KEY'),
     'privateKey' => env('CHARGIFY_PRIVATE_KEY'),
     'sharedKey' => env('CHARGIFY_SHARED_KEY'),
-    'timeout'=> env('CHARGIFY_TIMEOUT', 120),
+    'timeout' => env('CHARGIFY_TIMEOUT', 120),
 ];

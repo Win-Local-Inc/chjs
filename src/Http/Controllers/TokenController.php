@@ -3,9 +3,8 @@
 namespace WinLocalInc\Chjs\Http\Controllers;
 
 use Firebase\JWT\JWT;
-use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Support\Str;
 
 class TokenController
 {
@@ -13,8 +12,8 @@ class TokenController
     {
         $payload = [
             'iss' => config('chjs.public_key'),
-            'jti' =>  Str::random(32),
-            'sub' =>  Str::random(32),
+            'jti' => Str::random(32),
+            'sub' => Str::random(32),
         ];
 
         $jwt = JWT::encode($payload, config('chjs.private_key'), 'HS256');
@@ -23,5 +22,4 @@ class TokenController
             ->success(['token' => $jwt])
             ->respond(201);
     }
-
 }

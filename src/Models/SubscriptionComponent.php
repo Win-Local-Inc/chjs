@@ -2,12 +2,9 @@
 
 namespace WinLocalInc\Chjs\Models;
 
-
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use WinLocalInc\Chjs\Chjs;
 
 /**
  * @property mixed $component_id
@@ -17,10 +14,12 @@ class SubscriptionComponent extends Model
     use HasFactory;
 
     public $incrementing = false;
-    protected $primaryKey   = 'subscription_component_id';
-    protected $table        = 'chjs_subscription_components';
-    protected $guarded      = [];
 
+    protected $primaryKey = 'subscription_component_id';
+
+    protected $table = 'chjs_subscription_components';
+
+    protected $guarded = [];
 
     public function subscription(): BelongsTo
     {
@@ -32,12 +31,8 @@ class SubscriptionComponent extends Model
         return $this->belongsTo(Component::class, 'component_id');
     }
 
-
     public function componentPrice(): BelongsTo
     {
         return $this->belongsTo(ComponentPrice::class, 'component_price_id');
     }
-
-
-
 }

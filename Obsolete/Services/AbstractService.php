@@ -2,10 +2,10 @@
 
 namespace Obsolete\Services;
 
+use Illuminate\Support\Facades\Validator;
 use Obsolete\Chargify;
 use Obsolete\ChargifyConfig;
 use Obsolete\Interfaces\ChargifyHttpClientInterface;
-use Illuminate\Support\Facades\Validator;
 
 abstract class AbstractService
 {

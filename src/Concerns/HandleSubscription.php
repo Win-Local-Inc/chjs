@@ -20,13 +20,13 @@ trait HandleSubscription
     //adding status check
     //add exceptions
 
-    public function swapSubscriptionProduct(ProductPrice $productPrice, ?int $customPrice = null): static
+    public function swapSubscriptionProduct(ProductPrice $productPrice, int $customPrice = null): static
     {
         //Subscriptions should be in the active or trialing
 
         $data = ['product_id' => $productPrice->product_id];
 
-        if (!$customPrice) {
+        if (! $customPrice) {
             $data['product_price_point_id'] = $productPrice->product_price_id;
         } else {
             $data['custom_price']['price_in_cents'] = $customPrice;
@@ -34,7 +34,7 @@ trait HandleSubscription
             $data['custom_price']['interval_unit'] = 'month';
         }
 
-        /** @var Subscription $maxioSubscription **/
+        /** @var Subscription $maxioSubscription * */
         $maxioSubscription = maxio()->subscription->update(subscriptionId: $this->subscription->subscription_id, parameters: $data);
 
         $this->subscription->forceFill(
@@ -47,14 +47,14 @@ trait HandleSubscription
                 'subscription_interval' => SubscriptionInterval::getIntervalUnit($maxioSubscription->product->interval),
                 'subscription_price_in_cents' => $maxioSubscription->product->price_in_cents,
                 'next_billing_at' => $maxioSubscription->next_assessment_at,
-                'updated_at' => $maxioSubscription->updated_at
+                'updated_at' => $maxioSubscription->updated_at,
             ]
         )->save();
 
         return $this;
     }
 
-    public function addSubscriptionComponent(Component $component, int $qty, ?int $customPrice = null, array $options = []): static
+    public function addSubscriptionComponent(Component $component, int $qty, int $customPrice = null, array $options = []): static
     {
         $data = ['component_id' => $component->component_id, 'quantity' => $qty];
         if ($customPrice) {
@@ -63,9 +63,9 @@ trait HandleSubscription
                 'prices' => [
                     [
                         'starting_quantity' => 1,
-                        'unit_price' => $customPrice
-                    ]
-                ]
+                        'unit_price' => $customPrice,
+                    ],
+                ],
             ];
         }
 
@@ -81,9 +81,7 @@ trait HandleSubscription
             ->list(subscriptionId: $this->subscription->subscription_id)
             ->where('component_id', $component->component_id)->first();
 
-
         $componentPrice = maxio()->componentPrice->list(['filter' => ['ids' => $maxioComponent->price_point_id]]);
-
 
         SubscriptionComponent::create(
             [
@@ -103,8 +101,7 @@ trait HandleSubscription
         return $this;
     }
 
-
-    public function swapSubscriptionComponent(Component $component, ?int $customPrice = null, array $options = []): static
+    public function swapSubscriptionComponent(Component $component, int $customPrice = null, array $options = []): static
     {
         $data = ['component_id' => $component->component_id];
         $subscriptionComponent = SubscriptionComponent::where('component_id', $component->component_id)
@@ -115,14 +112,12 @@ trait HandleSubscription
                 'prices' => [
                     [
                         'starting_quantity' => 1,
-                        'unit_price' => $customPrice
-                    ]
-                ]
+                        'unit_price' => $customPrice,
+                    ],
+                ],
             ];
             $data['quantity'] = $subscriptionComponent->subscription_component_quantity + 1;
-        }
-        else
-        {
+        } else {
             $data['price_point_id'] = $component->price->component_price_id;
             $data['quantity'] = $subscriptionComponent->subscription_component_quantity;
         }
@@ -138,7 +133,6 @@ trait HandleSubscription
         $maxioComponent = maxio()->subscriptionComponent
             ->list(subscriptionId: $this->subscription->subscription_id)
             ->where('component_id', $component->component_id)->first();
-
 
         $componentPrice = maxio()->componentPrice->list(['filter' => ['ids' => $maxioComponent->price_point_id]]);
 
@@ -174,7 +168,7 @@ trait HandleSubscription
 
         $component->update([
             'subscription_component_quantity' => $maxioSubscriptionComponent->quantity,
-            'updated_at' => $maxioSubscriptionComponent->created_at
+            'updated_at' => $maxioSubscriptionComponent->created_at,
         ]);
 
         return $this;
@@ -191,8 +185,9 @@ trait HandleSubscription
 
         $component->update([
             'subscription_component_quantity' => $maxioSubscriptionComponent->quantity,
-            'updated_at' => $maxioSubscriptionComponent->created_at
+            'updated_at' => $maxioSubscriptionComponent->created_at,
         ]);
+
         return $this;
     }
 
@@ -279,6 +274,4 @@ trait HandleSubscription
             'updated_at' => $maxioSubscription->updated_at,
         ])->save();
     }
-
-
 }

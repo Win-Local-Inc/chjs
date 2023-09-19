@@ -10,12 +10,12 @@ use App\Models\Chargify\ChargifyProductPricePoint;
 use App\Models\Chargify\ChargifySubscription;
 use App\Models\Chargify\ChargifySubscriptionGroup;
 use App\Models\User;
-use Obsolete\Attributes\HandleEvents;
-use Obsolete\ChargifyUtility;
-use Obsolete\Enums\WebhookEvents;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Obsolete\Attributes\HandleEvents;
+use Obsolete\ChargifyUtility;
+use Obsolete\Enums\WebhookEvents;
 
 #[HandleEvents(
     WebhookEvents::PaymentSuccess,

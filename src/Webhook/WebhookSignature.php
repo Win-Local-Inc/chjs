@@ -6,14 +6,12 @@ use WinLocalInc\Chjs\Exceptions\SignatureVerificationException;
 
 class WebhookSignature
 {
-
     /**
      * @throws SignatureVerificationException
      */
     public static function verifyHeader($payload, $header, $secret): void
     {
-        if(! $header)
-        {
+        if (! $header) {
             throw SignatureVerificationException::factory(
                 'No signatures header found with expected scheme',
                 $payload,
@@ -29,5 +27,4 @@ class WebhookSignature
             );
         }
     }
-
 }

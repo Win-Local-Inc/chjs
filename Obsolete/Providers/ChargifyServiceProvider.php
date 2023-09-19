@@ -3,12 +3,12 @@
 namespace App\Providers;
 
 use App\Services\Chargify\Chargify;
-use Illuminate\Support\ServiceProvider;
 use App\Services\Chargify\ChargifyConfig;
 use App\Services\Chargify\ChargifyHttpClient;
-use App\Services\Chargify\Factories\WebhookResolver;
 use App\Services\Chargify\Factories\ChargifyServiceFactory;
+use App\Services\Chargify\Factories\WebhookResolver;
 use App\Services\Chargify\Interfaces\WebhookResolverInterface;
+use Illuminate\Support\ServiceProvider;
 
 class ChargifyServiceProvider extends ServiceProvider
 {
@@ -16,8 +16,8 @@ class ChargifyServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ChargifyConfig::class, function () {
             return new ChargifyConfig(
-                hostname: rtrim(trim(config('chargify.hostname')), '/') . '/',
-                eventsHostname: rtrim(trim(config('chargify.eventsHostname')), '/') . '/',
+                hostname: rtrim(trim(config('chargify.hostname')), '/').'/',
+                eventsHostname: rtrim(trim(config('chargify.eventsHostname')), '/').'/',
                 subdomain: config('chargify.subdomain'),
                 apiKey: config('chargify.apiKey'),
                 publicKey: config('chargify.publicKey'),
@@ -33,6 +33,7 @@ class ChargifyServiceProvider extends ServiceProvider
 
         $this->app->bind(Chargify::class, function () {
             $chargifyConfig = $this->app->make(ChargifyConfig::class);
+
             return new Chargify(
                 $chargifyConfig,
                 new ChargifyHttpClient($chargifyConfig),
@@ -40,7 +41,6 @@ class ChargifyServiceProvider extends ServiceProvider
             );
         });
     }
-
 
     public function register()
     {

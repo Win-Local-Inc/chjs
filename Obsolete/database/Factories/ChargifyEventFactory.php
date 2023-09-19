@@ -26,7 +26,7 @@ class ChargifyEventFactory extends Factory
                     'id' => random_int(1000000, 9999999),
                     'subdomain' => $this->faker->word(),
                 ],
-            ]
+            ],
         ];
     }
 }

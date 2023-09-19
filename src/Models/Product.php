@@ -15,12 +15,15 @@ class Product extends Model
     use HasFactory;
 
     public $incrementing = false;
-    protected $primaryKey   = 'product_id';
-    protected $table        = 'chjs_products';
-    protected $guarded      = [];
+
+    protected $primaryKey = 'product_id';
+
+    protected $table = 'chjs_products';
+
+    protected $guarded = [];
 
     protected $casts = [
-        'product_is_active' => IsActive::class
+        'product_is_active' => IsActive::class,
     ];
 
     public function productPrices(): HasMany

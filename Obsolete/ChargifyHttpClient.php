@@ -2,10 +2,10 @@
 
 namespace Obsolete;
 
-use Obsolete\Interfaces\ChargifyHttpClientInterface;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Obsolete\Interfaces\ChargifyHttpClientInterface;
 
 class ChargifyHttpClient implements ChargifyHttpClientInterface
 {
