@@ -3,6 +3,7 @@
 namespace WinLocalInc\Chjs\Services;
 
 use Illuminate\Support\Collection;
+use WinLocalInc\Chjs\Chargify\ChargifyObject;
 
 class PaymentProfileService extends AbstractService
 {
