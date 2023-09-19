@@ -41,9 +41,9 @@ class SubscriptionComponentService extends AbstractService
     public function updateQuantity(string $subscriptionId, string $componentId, array $options = []): ChargifyObject
     {
         $allocation = array_merge([
-            'upgrade_charge' => 'prorated',
-            'downgrade_credit' => 'prorated',
-            'accrue_charge' => true,
+            'upgrade_charge' => 'full',
+            'downgrade_credit' => 'full',
+            'accrue_charge' => false,
         ], $options);
 
 
