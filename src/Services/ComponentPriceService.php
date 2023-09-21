@@ -55,7 +55,7 @@ class ComponentPriceService extends AbstractService
             ],
         ];
 
-        return $this->get('components_price_points', $parameters);
+        return $this->get('components_price_points', $parameters)[0];
     }
 
     public function createCurrencyPricesForPricePoint(string $pricePointId, array $parameters): ChargifyObject

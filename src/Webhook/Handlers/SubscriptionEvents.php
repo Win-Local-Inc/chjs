@@ -2,10 +2,10 @@
 
 namespace WinLocalInc\Chjs\Webhook\Handlers;
 
-use Illuminate\Support\Facades\DB;
 use WinLocalInc\Chjs\Attributes\HandleEvents;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
+use WinLocalInc\Chjs\Models\Subscription;
 use WinLocalInc\Chjs\Webhook\ChargifyUtility;
 
 #[HandleEvents(
@@ -26,7 +26,7 @@ class SubscriptionEvents extends AbstractHandler
     {
         $data = $payload['subscription'];
 
-        DB::table('chjs_subscriptions')->upsert([[
+        Subscription::upsert([[
             'subscription_id' => $data['id'],
             'workspace_id' => $data['reference'],
             'product_id' => $data['product']['id'],
@@ -38,7 +38,6 @@ class SubscriptionEvents extends AbstractHandler
             'subscription_price_in_cents' => $data['total_revenue_in_cents'],
             'next_billing_at' => ChargifyUtility::getFixedDateTime($data['next_assessment_at']),
             'ends_at' => ChargifyUtility::getFixedDateTime($data['scheduled_cancellation_at']),
-            'self_payment' => 1,
         ]], ['subscription_id']);
     }
 }
