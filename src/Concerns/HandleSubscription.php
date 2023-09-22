@@ -35,7 +35,7 @@ trait HandleSubscription
         }
 
         /** @var Subscription $maxioSubscription * */
-        $maxioSubscription = maxio()->subscription->update(subscriptionId: $this->subscription->subscription_id, parameters: $data);
+        $maxioSubscription = maxio()->subscription->migrateProduct(subscriptionId: $this->subscription->subscription_id, parameters: $data);
 
         $this->subscription->forceFill(
             [

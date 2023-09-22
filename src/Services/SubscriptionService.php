@@ -77,10 +77,11 @@ class SubscriptionService extends AbstractService
 
     public function migrateProduct(string $subscriptionId, array $parameters): ChargifyObject
     {
-        $this->validatePayload($parameters, [
-            'product_id' => 'required_without:product_price_point_id|integer',
-            'product_price_point_id' => 'required_without:product_id|integer',
-        ]);
+        $parameters = array_merge([
+            'preserve_period' => true,
+            'include_trial' => false,
+            'include_initial_charge' => false
+        ], $parameters);
 
         return $this->post('subscriptions/'.$subscriptionId.'/migrations', ['migration' => $parameters]);
     }

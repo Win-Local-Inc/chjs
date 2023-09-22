@@ -61,7 +61,7 @@ class CustomerService extends AbstractService
         return $this->get('customers/'.$customerId.'/subscriptions');
     }
 
-    public function getById(string $customerId): ChargifyObject
+    public function find(string $customerId): ChargifyObject
     {
         return $this->get('customers/'.$customerId);
     }

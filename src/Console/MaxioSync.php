@@ -161,7 +161,7 @@ class MaxioSync extends Command
                     'component_price_name' => $componentPricePoint->name,
                     'component_price_scheme' => $componentPricePoint->pricing_scheme,
                     'component_price_type' => $componentPricePoint->type,
-                    'component_price_in_cents' => $componentPricePoint->prices[0]['unit_price'],
+                    'component_price_in_cents' => $componentPricePoint->prices->first()->unit_price,
                     'component_price_is_active' => is_null($componentPricePoint->archived_at) ? IsActive::Active : IsActive::Inactive,
                     'created_at' => $componentPricePoint->created_at,
                     'updated_at' => $componentPricePoint->updated_at,
