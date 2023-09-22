@@ -2,11 +2,13 @@
 
 namespace WinLocalInc\Chjs\Concerns;
 
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
 use WinLocalInc\Chjs\Exceptions\CustomerAlreadyCreated;
 use WinLocalInc\Chjs\Exceptions\InvalidCustomer;
+use WinLocalInc\Chjs\Models\ComponentPrice;
+use WinLocalInc\Chjs\Models\Subscription;
+use WinLocalInc\Chjs\Models\SubscriptionComponent;
 
 trait HandleCustomer
 {
@@ -110,76 +112,17 @@ trait HandleCustomer
     }
 
 
-    /**
-     * Get the total balance of the customer.
-     *
-     * @return string
-     */
-    public function balance()
+    public function firstActiveSubscription()
     {
-        return $this->formatAmount($this->rawBalance());
+        return $this->subscriptions('active')->first() ?? null;
     }
 
-    /**
-     * Get the raw total balance of the customer.
-     *
-     * @return int
-     */
-    public function rawBalance()
+    public function subscriptions($status = null)
     {
-        if (! $this->hasChargifyId()) {
-            return 0;
-        }
-
-        return $this->asChargifyCustomer()->balance;
+        return Subscription::where( 'user_id', $this->user_id )
+            ->when( $status, function ($q) use ($status) {
+                $q->where('status', $status);
+            })->get();
     }
-
-    /**
-     * Return a customer's balance transactions.
-     *
-     * @param  int  $limit
-     * @return \Illuminate\Support\Collection
-     */
-    public function balanceTransactions($limit = 10, array $options = [])
-    {
-        if (! $this->hasChargifyId()) {
-            return new Collection();
-        }
-
-        $transactions = $this->chargify()
-            ->customers
-            ->allBalanceTransactions($this->chargify_id, array_merge(['limit' => $limit], $options));
-
-        return Collection::make($transactions->data)->map(function ($transaction) {
-            return new CustomerBalanceTransaction($this, $transaction);
-        });
-    }
-
-
-    public function creditBalance($amount, $description = null, array $options = [])
-    {
-        return $this->applyBalance(-$amount, $description, $options);
-    }
-
-    public function debitBalance($amount, $description = null, array $options = [])
-    {
-        return $this->applyBalance($amount, $description, $options);
-    }
-
-    public function applyBalance($amount, $description = null, array $options = [])
-    {
-        $this->assertCustomerExists();
-
-        $transaction = $this->chargify()
-            ->customers
-            ->createBalanceTransaction($this->chargify_id, array_filter(array_merge([
-                'amount' => $amount,
-                'currency' => $this->preferredCurrency(),
-                'description' => $description,
-            ], $options)));
-
-        return new CustomerBalanceTransaction($this, $transaction);
-    }
-
 
 }

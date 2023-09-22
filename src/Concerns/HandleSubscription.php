@@ -85,7 +85,6 @@ trait HandleSubscription
 
         SubscriptionComponent::create(
             [
-                'subscription_component_id' => $maxioComponent->id,
                 'subscription_id' => $this->subscription->subscription_id,
                 'component_id' => $maxioComponent->component_id,
                 'component_handle' => $maxioComponent->component_handle,
@@ -140,7 +139,6 @@ trait HandleSubscription
 
         SubscriptionComponent::create(
             [
-                'subscription_component_id' => $maxioComponent->id,
                 'subscription_id' => $this->subscription->subscription_id,
                 'component_id' => $maxioComponent->component_id,
                 'component_handle' => $maxioComponent->component_handle,

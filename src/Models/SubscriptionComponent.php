@@ -15,7 +15,7 @@ class SubscriptionComponent extends Model
 
     public $incrementing = false;
 
-    protected $primaryKey = 'subscription_component_id';
+    protected $primaryKey = ['subscription_id', 'component_id'];
 
     protected $table = 'chjs_subscription_components';
 

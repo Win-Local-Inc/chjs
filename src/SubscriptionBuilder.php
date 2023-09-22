@@ -138,6 +138,7 @@ class SubscriptionBuilder
         $subscription = Subscription::create(
             [
                 'subscription_id' => $subscriptionMaxio->id,
+                'user_id' => $this->workspace->owner->user_id,
                 'workspace_id' => $this->workspace->workspace_id,
                 'product_id' => $this->pricePoint->product_id,
                 'product_handle' => $this->pricePoint->product->product_handle,
