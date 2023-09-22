@@ -164,7 +164,6 @@ class SubscriptionBuilder
 
                 SubscriptionComponent::create(
                     [
-                        'subscription_component_id' => $component->id,
                         'subscription_id' => $subscription->subscription_id,
                         'component_id' => $component->component_id,
                         'component_handle' => $component->component_handle,

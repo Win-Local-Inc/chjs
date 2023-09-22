@@ -5,6 +5,7 @@ namespace WinLocalInc\Chjs\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Thiagoprz\CompositeKey\HasCompositeKey;
 
 /**
  * @property mixed $component_id
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class SubscriptionComponent extends Model
 {
     use HasFactory;
+    use HasCompositeKey;
 
     public $incrementing = false;
 
