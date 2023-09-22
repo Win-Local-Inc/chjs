@@ -18,7 +18,9 @@ use WinLocalInc\Chjs\Webhook\ChargifyUtility;
     WebhookEvents::DunningStepReached,
     WebhookEvents::BillingDateChange,
     WebhookEvents::SubscriptionStateChange,
-    WebhookEvents::DelayedSubscriptionCreationSuccess
+    WebhookEvents::DelayedSubscriptionCreationSuccess,
+    WebhookEvents::UpgradeDowngradeSuccess,
+    WebhookEvents::UpgradeDowngradeFailure,
 )]
 class SubscriptionEvents extends AbstractHandler
 {
