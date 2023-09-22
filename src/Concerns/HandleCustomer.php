@@ -112,11 +112,6 @@ trait HandleCustomer
     }
 
 
-    public function firstActiveSubscription()
-    {
-        return $this->subscriptions('active')->first() ?? null;
-    }
-
     public function subscriptions($status = null)
     {
         return Subscription::where( 'user_id', $this->user_id )

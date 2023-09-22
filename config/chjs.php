@@ -15,5 +15,5 @@ return [
 
 
 
-    'ads_component' => env('ADS_COMPONENT', 3081430),
+    'ads_component' => env('ADS_COMPONENT', 'ads'),
 ];

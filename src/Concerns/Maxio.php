@@ -4,6 +4,6 @@ namespace WinLocalInc\Chjs\Concerns;
 
 trait Maxio
 {
-    use HandleCustomer;
+    use HandleSubscription;
     use HandleWallet;
 }

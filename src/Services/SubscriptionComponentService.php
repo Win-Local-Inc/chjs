@@ -89,16 +89,10 @@ class SubscriptionComponentService extends AbstractService
             ->map(fn ($item) => $item['allocation']);
     }
 
-    public function createUsage(string $subscriptionId, string $componentId, array $parameters): ChargifyObject
+    public function createUsage(string $subscriptionId, string $componentId, int $qty): ChargifyObject
     {
-        $this->validatePayload($parameters, [
-            'quantity' => 'required|numeric',
-            'price_point_id' => 'sometimes|string',
-            'memo' => 'sometimes|string',
-        ]);
-
         return $this
-            ->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/usages', ['usage' => $parameters]);
+            ->post('subscriptions/'.$subscriptionId.'/components/'.$componentId.'/usages', ['usage' => ['quantity' => $qty]]);
     }
 
     public function listUsages(string $subscriptionId, string $componentId, array $parameters = []): Collection
