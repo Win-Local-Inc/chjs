@@ -46,11 +46,6 @@ class Subscription extends Model
     }
 
 
-    public function user(): BelongsTo
-    {
-        return $this->workspace->owner;
-    }
-
     public function product(): BelongsTo
     {
         return $this->belongsTo(Subscription::class, 'product_id');
