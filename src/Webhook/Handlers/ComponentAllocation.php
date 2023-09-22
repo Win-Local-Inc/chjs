@@ -16,21 +16,18 @@ class ComponentAllocation extends AbstractHandler
         // need to get unit_price and handle
         $pricePoint = maxio()->componentPrice->find($payload['price_point_id']);
         // all prices will be per_unit so only 1 element in array
-        $newPrice = (int) $pricePoint->prices[0]->unit_price * (int) $payload['new_allocation'];
+        $newPrice = (int) $pricePoint->prices[0]->unit_price * (int) $payload['allocated_quantity'];
 
-        SubscriptionComponent::updateOrInsert(
-            [
+        SubscriptionComponent::upsert(
+            [[
                 'subscription_id' => $payload['subscription']['id'],
                 'component_id' => $payload['component']['id'],
-            ],
-            [
                 'component_handle' => $payload['component']['handle'],
                 'component_price_handle' => $pricePoint->handle,
                 'component_price_id' => $payload['price_point_id'],
-                'subscription_component_quantity' => $payload['new_allocation'],
+                'subscription_component_quantity' => $payload['allocated_quantity'],
                 'subscription_component_price' => $newPrice,
-            ]
+            ]]
         );
-
     }
 }
