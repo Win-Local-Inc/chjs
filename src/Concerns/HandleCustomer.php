@@ -2,13 +2,10 @@
 
 namespace WinLocalInc\Chjs\Concerns;
 
-use Illuminate\Support\Collection;
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
 use WinLocalInc\Chjs\Exceptions\CustomerAlreadyCreated;
 use WinLocalInc\Chjs\Exceptions\InvalidCustomer;
-use WinLocalInc\Chjs\Models\ComponentPrice;
 use WinLocalInc\Chjs\Models\Subscription;
-use WinLocalInc\Chjs\Models\SubscriptionComponent;
 
 trait HandleCustomer
 {
@@ -68,7 +65,7 @@ trait HandleCustomer
     /**
      * @throws CustomerAlreadyCreated
      */
-    public function createOrGetChargifyCustomer():object
+    public function createOrGetChargifyCustomer(): object
     {
         if ($this->hasChargifyId()) {
             return maxio()->customer->find($this->hasChargifyId());
@@ -91,7 +88,6 @@ trait HandleCustomer
         );
     }
 
-
     public function syncChargifyCustomerDetails(): ChargifyObject
     {
         return $this->updateChargifyCustomer([
@@ -111,13 +107,11 @@ trait HandleCustomer
         ]);
     }
 
-
     public function subscriptions($status = null)
     {
-        return Subscription::where( 'user_id', $this->user_id )
-            ->when( $status, function ($q) use ($status) {
+        return Subscription::where('user_id', $this->user_id)
+            ->when($status, function ($q) use ($status) {
                 $q->where('status', $status);
             })->get();
     }
-
 }

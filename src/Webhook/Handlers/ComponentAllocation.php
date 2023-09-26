@@ -28,7 +28,7 @@ class ComponentAllocation extends AbstractHandler
                 'subscription_component_quantity' => $payload['allocated_quantity'],
                 'subscription_component_price' => $newPrice,
             ]],
-            ['subscription_id','component_id']
+            ['subscription_id', 'component_id']
         );
     }
 }

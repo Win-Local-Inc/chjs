@@ -12,8 +12,8 @@ use Thiagoprz\CompositeKey\HasCompositeKey;
  */
 class SubscriptionComponent extends Model
 {
-    use HasFactory;
     use HasCompositeKey;
+    use HasFactory;
 
     public $incrementing = false;
 

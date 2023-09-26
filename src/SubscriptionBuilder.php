@@ -2,8 +2,8 @@
 
 namespace WinLocalInc\Chjs;
 
-use App\Models\Workspace\Workspace;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
 use WinLocalInc\Chjs\Models\ProductPrice;
@@ -32,7 +32,7 @@ class SubscriptionBuilder
 
     protected bool $isSelfPayment = true;
 
-    public function __construct(protected Workspace $workspace)
+    public function __construct(protected Model $workspace)
     {
         $this->customerId = $this->workspace->owner_id;
     }

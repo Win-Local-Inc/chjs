@@ -18,7 +18,7 @@ class CustomerUpsert extends AbstractHandler
         $id = $payload['customer']['id'] ?? null;
         if ($reference) {
             DB::table('users')
-                ->where(['id' => $reference])
+                ->where(['user_id' => $reference])
                 ->update(['chargify_id' => $id]);
         }
     }

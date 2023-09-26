@@ -2,9 +2,6 @@
 
 namespace WinLocalInc\Chjs\Concerns;
 
-use Illuminate\Support\Collection;
-use WinLocalInc\Chjs\Chargify\ChargifyObject;
-use WinLocalInc\Chjs\Exceptions\CustomerAlreadyCreated;
 use WinLocalInc\Chjs\Exceptions\InvalidCustomer;
 use WinLocalInc\Chjs\Models\ComponentPrice;
 use WinLocalInc\Chjs\Models\Subscription;
@@ -12,8 +9,6 @@ use WinLocalInc\Chjs\Models\SubscriptionComponent;
 
 trait HandleWallet
 {
-
-
     /**
      * @throws InvalidCustomer
      */
@@ -36,7 +31,7 @@ trait HandleWallet
         $componentPrice = maxio()->componentPrice->list(['filter' => ['ids' => $maxioComponent->price_point_id]]);
 
         SubscriptionComponent::updateOrCreate(
-            [   'subscription_id' => $this->subscription->subscription_id,
+            ['subscription_id' => $this->subscription->subscription_id,
                 'component_id' => $maxioComponent->component_id,
             ],
             [
@@ -62,9 +57,8 @@ trait HandleWallet
             ->list(subscriptionId: $this->subscription->subscription_id)
             ->where('component_id', $adComponentPrice->component_id)->first();
 
-        if($maxioComponent->allocated_quantity - $maxioComponent->unit_balance - $mount < 0)
-        {
-            throw new \Exception("request amount is higher than user balance");
+        if ($maxioComponent->allocated_quantity - $maxioComponent->unit_balance - $mount < 0) {
+            throw new \Exception('request amount is higher than user balance');
         }
 
         maxio()->subscriptionComponent->createUsage(
@@ -80,7 +74,7 @@ trait HandleWallet
         $componentPrice = maxio()->componentPrice->list(['filter' => ['ids' => $maxioComponent->price_point_id]]);
 
         SubscriptionComponent::updateOrCreate(
-            [   'subscription_id' => $this->subscription->subscription_id,
+            ['subscription_id' => $this->subscription->subscription_id,
                 'component_id' => $maxioComponent->component_id,
             ],
             [
@@ -102,9 +96,6 @@ trait HandleWallet
         $adComponent = $this->subscription->components()
             ->where('component_handle', config('chjs.ads_component'))->first();
 
-        return $adComponent ?  (int) ($adComponent->subscription_component_quantity * 100) : 0;
+        return $adComponent ? (int) ($adComponent->subscription_component_quantity * 100) : 0;
     }
-
-
-
 }

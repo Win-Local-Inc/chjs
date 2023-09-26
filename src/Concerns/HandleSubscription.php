@@ -111,7 +111,7 @@ trait HandleSubscription
                 'prices' => [
                     [
                         'starting_quantity' => 1,
-                        'unit_price' => $customPrice/100,
+                        'unit_price' => $customPrice / 100,
                     ],
                 ],
             ];
@@ -134,7 +134,6 @@ trait HandleSubscription
             ->where('component_id', $component->component_id)->first();
 
         $componentPrice = maxio()->componentPrice->list(['filter' => ['ids' => $maxioComponent->price_point_id]]);
-
 
         SubscriptionComponent::updateOrCreate(
             [

@@ -80,7 +80,7 @@ class SubscriptionService extends AbstractService
         $parameters = array_merge([
             'preserve_period' => true,
             'include_trial' => false,
-            'include_initial_charge' => false
+            'include_initial_charge' => false,
         ], $parameters);
 
         return $this->post('subscriptions/'.$subscriptionId.'/migrations', ['migration' => $parameters]);

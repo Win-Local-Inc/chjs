@@ -16,6 +16,6 @@ class ChjsFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'chjs';
+        return Chjs::class;
     }
 }
