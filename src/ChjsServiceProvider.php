@@ -71,15 +71,15 @@ class ChjsServiceProvider extends ServiceProvider
             return new ChjsBase(
                 hostname: config('chjs.hostname'),
                 apiKey: config('chjs.api_key'),
-                timeout: config('chjs.time_out')
+                timeout: config('chjs.timeout')
             );
         });
 
-        $this->app->bind('chjs', function () {
+        $this->app->singleton(Chjs::class, function () {
             return new Chjs(
                 hostname: config('chjs.hostname'),
                 apiKey: config('chjs.api_key'),
-                timeout: config('chjs.time_out')
+                timeout: config('chjs.timeout')
             );
         });
     }

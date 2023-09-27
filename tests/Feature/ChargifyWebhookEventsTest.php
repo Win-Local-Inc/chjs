@@ -19,6 +19,7 @@ use WinLocalInc\Chjs\Tests\Database\Models\User;
 use WinLocalInc\Chjs\Tests\Database\Models\Workspace;
 use WinLocalInc\Chjs\Tests\TestCase;
 use WinLocalInc\Chjs\Webhook\Handlers\SubscriptionEvents;
+use WinLocalInc\Chjs\Webhook\Handlers\SubscriptionPaymentUpdate;
 
 class ChargifyWebhookEventsTest extends TestCase
 {
@@ -175,50 +176,47 @@ class ChargifyWebhookEventsTest extends TestCase
         ]);
     }
 
-    // public function testChargifyWebhookSubscriptionPaymentUpdateEvent()
-    // {
-    //     $subscriptionId = random_int(1000000, 9999999);
-    //     $customerId = random_int(1000000, 9999999);
-    //     $paymentProfileId = random_int(1000000, 9999999);
+    public function testChargifyWebhookSubscriptionPaymentUpdateEvent()
+    {
+        $subscriptionId = random_int(1000000, 9999999);
+        $customerId = random_int(1000000, 9999999);
+        $paymentProfileId = random_int(1000000, 9999999);
 
-    //     Http::fake([
-    //         'chargify.test/*' => Http::sequence()
-    //             ->push([[
-    //                 'payment_profile' => [
-    //                     'id' => $paymentProfileId,
-    //                     'customer_id' => $customerId,
-    //                 ],
-    //             ]], 200)
-    //             ->push([
-    //                 'payment_profile' => [
-    //                     'id' => $paymentProfileId,
-    //                     'customer_id' => $customerId,
-    //                 ],
-    //             ], 200)
-    //             ->push([
-    //                 'subscription' => [
-    //                     'id' => $subscriptionId,
-    //                 ],
-    //             ], 200),
-    //     ]);
+        Http::fake([
+            'chargify.test/*' => Http::sequence()
+                ->push([[
+                    'payment_profile' => [
+                        'id' => $paymentProfileId,
+                        'customer_id' => $customerId,
+                    ],
+                ]], 200)
+                ->push([
+                    'payment_profile' => [
+                        'id' => $paymentProfileId,
+                        'customer_id' => $customerId,
+                    ],
+                ], 200)
+                ->push([
+                    'subscription' => [
+                        'id' => $subscriptionId,
+                    ],
+                ], 200),
+        ]);
 
-    //     $chargifyEvent = ChargifyEvent::create([
-    //         'id' => random_int(1000000, 9999999),
-    //         'event_name' => WebhookEvents::PaymentSuccess->value,
-    //         'payload' => [
-    //             'subscription' => [
-    //                 'id' => $subscriptionId,
-    //                 'customer' => [
-    //                     'id' => $customerId,
-    //                 ],
-    //                 'payment_collection_method' => SubscriptionPaymentCollectionMethod::Remittance->value,
-    //             ],
-    //         ],
-    //     ]);
+        SubscriptionPaymentUpdate::dispatch(
+            random_int(1000000, 9999999),
+            WebhookEvents::PaymentSuccess->value,
+            [
+                'subscription' => [
+                    'id' => $subscriptionId,
+                    'customer' => [
+                        'id' => $customerId,
+                    ],
+                    'payment_collection_method' => PaymentCollectionMethod::Remittance->value,
+                ],
+            ]
+        );
 
-    //     SubscriptionPaymentUpdate::dispatch($chargifyEvent->id);
-
-    //     Http::assertSentCount(3);
-    // }
-
+        Http::assertSentCount(3);
+    }
 }
