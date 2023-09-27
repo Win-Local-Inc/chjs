@@ -7,10 +7,6 @@ use WinLocalInc\Chjs\ChjsServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
-    protected $loadEnvironmentVariables = false;
-
-    protected $enablesPackageDiscoveries = true;
-
     protected function setUp(): void
     {
         parent::setUp();

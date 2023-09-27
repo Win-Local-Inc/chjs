@@ -23,12 +23,8 @@
         <server name="APP_URL" value="http://127.0.0.1:8000" />
         <server name="LOG_CHANNEL" value="null" />
         <server name="BROADCAST_DRIVER" value="log" />
-        <server name="DB_CONNECTION" value="mysql" />
-        <server name="DB_HOST" value="127.0.0.1" />
-        <server name="DB_PORT" value="3306" />
-        <server name="DB_DATABASE" value="testing" />
-        <server name="DB_USERNAME" value="root" />
-        <server name="DB_PASSWORD" value="root" />
+        <server name="DB_CONNECTION" value="sqlite"/> 
+        <server name="DB_DATABASE" value=":memory:"/>
         <server name="CHARGIFY_SHARED_KEY" value="ASDF" />
         <server name="CHARGIFY_API_KEY" value="ASDF" />
         <server name="CHARGIFY_PUBLIC_KEY" value="ASDF" />
