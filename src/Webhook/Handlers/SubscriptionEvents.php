@@ -30,13 +30,14 @@ class SubscriptionEvents extends AbstractHandler
 
         Subscription::upsert([[
             'subscription_id' => $data['id'],
+            'user_id' => $data['customer']['reference'],
             'workspace_id' => $data['reference'],
             'product_id' => $data['product']['id'],
             'product_handle' => $data['product']['handle'],
             'product_price_handle' => $data['product']['product_price_point_handle'],
             'status' => $data['state'],
             'payment_collection_method' => $data['payment_collection_method'],
-            'subscription_interval' => SubscriptionInterval::getIntervalUnit((int) $data['product']['handle']['interval'])->value,
+            'subscription_interval' => SubscriptionInterval::getIntervalUnit((int) $data['product']['interval'])->value,
             'subscription_price_in_cents' => $data['total_revenue_in_cents'],
             'next_billing_at' => ChargifyUtility::getFixedDateTime($data['next_assessment_at']),
             'ends_at' => ChargifyUtility::getFixedDateTime($data['scheduled_cancellation_at']),

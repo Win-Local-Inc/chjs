@@ -18,8 +18,12 @@ class TokenController
 
         $jwt = JWT::encode($payload, config('chjs.private_key'), 'HS256');
 
-        return responder()
-            ->success(['token' => $jwt])
-            ->respond(201);
+        return new JsonResponse([
+            'status' => 201,
+            'success' => true,
+            'data' => [
+                'token' => $jwt,
+            ],
+        ], 201);
     }
 }

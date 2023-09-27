@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+return new class() extends Migration
 {
     /**
      * Run the migrations.
@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('component_id')->constrained('chjs_components', 'component_id')->cascadeOnDelete();
             $table->string('component_handle', 52)->index();
             $table->string('component_price_handle', 52)->index();
-            $table->foreignId('component_price_id')->index();
+            $table->foreignId('component_price_id')->index()->nullable();
             $table->unsignedMediumInteger('subscription_component_price')->default(0);
             $table->unsignedMediumInteger('subscription_component_quantity')->default(0);
             $table->timestamps();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace WinLocalInc\Chjs\Tests\Feature;
 
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
