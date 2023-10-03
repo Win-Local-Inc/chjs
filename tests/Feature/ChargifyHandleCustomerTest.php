@@ -4,6 +4,8 @@ namespace WinLocalInc\Chjs\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
+use WinLocalInc\Chjs\Exceptions\InvalidCustomer;
 use WinLocalInc\Chjs\Tests\Database\Models\User;
 use WinLocalInc\Chjs\Tests\Database\Models\Workspace;
 use WinLocalInc\Chjs\Tests\TestCase;
@@ -52,5 +54,50 @@ class ChargifyHandleCustomerTest extends TestCase
         $this->assertEquals($user->chargify_id, $customerId);
 
         Http::assertSentCount(2);
+    }
+
+    public function testCustomerAsChargifyCustomerException()
+    {
+        $this->expectException(InvalidCustomer::class);
+
+        $workspace = Workspace::factory()->create();
+
+        $user = User::factory()
+            ->set(
+                'workspace_id',
+                $workspace->workspace_id
+            )
+            ->create();
+
+        $user->asChargifyCustomer();
+    }
+
+    public function testCustomerAsChargifyCustomerSuccess()
+    {
+        $customerId = Uuid::uuid4()->toString();
+
+        $user = User::factory()
+            ->set(
+                'chargify_id',
+                $customerId
+            )
+            ->create();
+
+        Http::fake([
+            'chargify.test/*' => Http::sequence()
+                ->push([
+                    'customer' => [
+                        'id' => $customerId,
+                        'first_name' => $user->firstname,
+                        'last_name' => $user->lastname,
+                        'email' => $user->email,
+                    ],
+                ], 200),
+        ]);
+
+        $customerObject = $user->asChargifyCustomer();
+
+        $this->assertTrue($customerObject instanceof \WinLocalInc\Chjs\Chargify\Customer);
+        $this->assertEquals($customerObject->id, $customerId);
     }
 }

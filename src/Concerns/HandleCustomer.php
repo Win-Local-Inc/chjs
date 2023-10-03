@@ -58,7 +58,8 @@ trait HandleCustomer
     public function updateChargifyCustomer(array $options = []): ChargifyObject
     {
         return maxio()->customer->update(
-            $this->chargify_id, $options
+            $this->chargify_id,
+            $options
         );
     }
 
@@ -79,12 +80,12 @@ trait HandleCustomer
      *
      * @return \Chargify\Customer
      */
-    public function asChargifyCustomer(array $expand = [])
+    public function asChargifyCustomer(): ChargifyObject
     {
         $this->assertCustomerExists();
 
-        return $this->chargify()->customers->retrieve(
-            $this->chargify_id, ['expand' => $expand]
+        return maxio()->customer->find(
+            $this->chargify_id
         );
     }
 
