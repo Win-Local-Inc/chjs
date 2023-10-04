@@ -4,6 +4,7 @@ namespace WinLocalInc\Chjs;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use WinLocalInc\Chjs\Chargify\PricePoints;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
 use WinLocalInc\Chjs\Models\ProductPrice;
@@ -14,7 +15,7 @@ class SubscriptionBuilder
 {
     protected ProductPrice $pricePoint;
 
-    protected string $customerId;
+    protected string $userId;
 
     protected ?string $nextBillingAt = null;
 
@@ -34,7 +35,7 @@ class SubscriptionBuilder
 
     public function __construct(protected Model $workspace)
     {
-        $this->customerId = $this->workspace->owner_id;
+        $this->userId = $this->workspace->owner_id;
     }
 
     public function price(ProductPrice $pricePoint): static
@@ -160,8 +161,13 @@ class SubscriptionBuilder
 
             $componentPrices = maxio()->componentPrice->list(['filter' => ['ids' => implode(',', $pricePoints)]]);
 
-            foreach ($components as $component) {
+            $pricesMap = $componentPrices->reduce(function (array $carry, PricePoints $item) {
+                $carry[$item->price_point->component_id] = $item->price_point->prices->first()->unit_price;
 
+                return $carry;
+            }, []);
+
+            foreach ($components as $component) {
                 SubscriptionComponent::create(
                     [
                         'subscription_id' => $subscription->subscription_id,
@@ -169,7 +175,7 @@ class SubscriptionBuilder
                         'component_handle' => $component->component_handle,
                         'component_price_handle' => $component->price_point_handle,
                         'component_price_id' => $component->price_point_id,
-                        'subscription_component_price' => $componentPrices->where('component_id', $component->component_id)->first()->prices->first()->unit_price,
+                        'subscription_component_price' => $pricesMap[$component->component_id],
                         'subscription_component_quantity' => $component->allocated_quantity,
                         'created_at' => $component->created_at,
                         'updated_at' => $component->updated_at,
@@ -183,6 +189,11 @@ class SubscriptionBuilder
 
     }
 
+    public function preview()
+    {
+        return maxio()->subscription->preview($this->paramsPreparation());
+    }
+
     protected function paramsPreparation(): array
     {
         $parameters = [];
@@ -194,7 +205,7 @@ class SubscriptionBuilder
 
         $parameters['payment_collection_method'] = $this->paymentCollectionMethod;
         $parameters['product_handle'] = $this->pricePoint->product_handle;
-        $parameters['customer_reference'] = $this->customerId;
+        $parameters['customer_reference'] = $this->userId;
         $parameters['reference'] = $this->workspace->workspace_id;
 
         if ($this->token) {
