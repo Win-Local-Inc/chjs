@@ -28,12 +28,16 @@ abstract class AbstractService
         Validator::make($parameters, $check)->validate();
     }
 
-    public function request(string $path, string $method, array $parameters = []): ChargifyObject|Collection
+    public function request(string $path, string $method, array $parameters = [], $asArray = false): ChargifyObject|Collection|array
     {
         $response = $this->httpClient->$method(ltrim($path, '/').'.json', $parameters);
 
         if ($response->successful()) {
             $jsonResponse = $response->json();
+
+            if ($asArray) {
+                return $jsonResponse;
+            }
 
             if (is_array($jsonResponse)) {
                 $className = ObjectTypes::getClassName($jsonResponse);
@@ -49,28 +53,28 @@ abstract class AbstractService
         return $response->throw();
     }
 
-    public function get(string $path, array $parameters = []): ChargifyObject|Collection
+    public function get(string $path, array $parameters = [], $asArray = false): ChargifyObject|Collection|array
     {
-        return $this->request($path, 'get', $parameters);
+        return $this->request($path, 'get', $parameters, $asArray);
     }
 
-    public function post(string $path, array $parameters = []): ChargifyObject|Collection
+    public function post(string $path, array $parameters = [], $asArray = false): ChargifyObject|Collection|array
     {
-        return $this->request($path, 'post', $parameters);
+        return $this->request($path, 'post', $parameters, $asArray);
     }
 
-    public function put(string $path, array $parameters = []): ChargifyObject|Collection
+    public function put(string $path, array $parameters = [], $asArray = false): ChargifyObject|Collection|array
     {
-        return $this->request($path, 'put', $parameters);
+        return $this->request($path, 'put', $parameters, $asArray);
     }
 
-    public function patch(string $path, array $parameters = []): ChargifyObject|Collection
+    public function patch(string $path, array $parameters = [], $asArray = false): ChargifyObject|Collection|array
     {
-        return $this->request($path, 'patch', $parameters);
+        return $this->request($path, 'patch', $parameters, $asArray);
     }
 
-    public function delete(string $path, array $parameters = []): ChargifyObject|Collection
+    public function delete(string $path, array $parameters = [], $asArray = false): ChargifyObject|Collection|array
     {
-        return $this->request($path, 'delete', $parameters);
+        return $this->request($path, 'delete', $parameters, $asArray);
     }
 }

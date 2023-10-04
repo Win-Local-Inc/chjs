@@ -15,9 +15,9 @@ use WinLocalInc\Chjs\Chargify\Webhook\UpdatedPaymentProfile;
 
 class ObjectTypes
 {
-    const TO_COLLECTION = false;
+    public const TO_COLLECTION = false;
 
-    const mapping = [
+    public const mapping = [
         PaymentProfile::OBJECT_NAME => PaymentProfile::class,
         Customer::OBJECT_NAME => Customer::class,
         Subscription::OBJECT_NAME => Subscription::class,
@@ -46,7 +46,8 @@ class ObjectTypes
         PreviousPaymentProfile::OBJECT_NAME => PreviousPaymentProfile::class,
         Migration::OBJECT_NAME => Migration::class,
         Usage::OBJECT_NAME => Usage::class,
-
+        NextBillingManifest::OBJECT_NAME => NextBillingManifest::class,
+        CurrentBillingManifest::OBJECT_NAME => CurrentBillingManifest::class,
     ];
 
     public function __construct(array $data = [])

@@ -18,7 +18,7 @@ use WinLocalInc\Chjs\Tests\TestCase;
 
 class ChargifySubscriptionBuilderTest extends TestCase
 {
-    public function testCreatSubscription()
+    public function testCreateSubscription()
     {
         $workspace = Workspace::factory()->create();
         $customerId = Uuid::uuid4()->toString();

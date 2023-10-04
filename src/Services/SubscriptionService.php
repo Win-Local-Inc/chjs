@@ -48,9 +48,9 @@ class SubscriptionService extends AbstractService
         return $this->put('subscriptions/'.$subscriptionId.'/activate');
     }
 
-    public function preview(array $parameters): ChargifyObject
+    public function preview(array $parameters): array
     {
-        return $this->post('subscriptions/preview', ['subscription' => $parameters]);
+        return $this->post('subscriptions/preview', ['subscription' => $parameters], true);
     }
 
     public function list(array $options = []): Collection

@@ -5,7 +5,9 @@ namespace WinLocalInc\Chjs\Tests\Database\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use WinLocalInc\Chjs\Concerns\HandleSubscription;
+use WinLocalInc\Chjs\Models\Subscription;
 
 class Workspace extends Model
 {
@@ -25,5 +27,10 @@ class Workspace extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id', 'user_id');
+    }
+
+    public function subscription(): HasOne
+    {
+        return $this->hasOne(Subscription::class, 'workspace_id');
     }
 }
