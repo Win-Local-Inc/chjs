@@ -4,6 +4,8 @@ namespace WinLocalInc\Chjs\Services;
 
 use Illuminate\Support\Collection;
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
+use WinLocalInc\Chjs\Chargify\ObjectTypes;
+use WinLocalInc\Chjs\Chargify\Preview;
 
 class SubscriptionService extends AbstractService
 {
@@ -48,9 +50,11 @@ class SubscriptionService extends AbstractService
         return $this->put('subscriptions/'.$subscriptionId.'/activate');
     }
 
-    public function preview(array $parameters): array
+    public function preview(array $parameters): ChargifyObject
     {
-        return $this->post('subscriptions/preview', ['subscription' => $parameters], true);
+        $response = ['preview' => $this->post('subscriptions/preview', ['subscription' => $parameters], true)];
+
+        return ObjectTypes::resolve($response, Preview::class);
     }
 
     public function list(array $options = []): Collection
@@ -88,11 +92,6 @@ class SubscriptionService extends AbstractService
 
     public function migrateProductPreview(string $subscriptionId, array $parameters): ChargifyObject
     {
-        $this->validatePayload($parameters, [
-            'product_id' => 'required_without:product_price_point_id|integer',
-            'product_price_point_id' => 'required_without:product_id|integer',
-        ]);
-
         return $this->post('subscriptions/'.$subscriptionId.'/migrations/preview', ['migration' => $parameters]);
     }
 }

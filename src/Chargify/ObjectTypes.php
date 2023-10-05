@@ -48,6 +48,7 @@ class ObjectTypes
         Usage::OBJECT_NAME => Usage::class,
         NextBillingManifest::OBJECT_NAME => NextBillingManifest::class,
         CurrentBillingManifest::OBJECT_NAME => CurrentBillingManifest::class,
+        Preview::OBJECT_NAME => Preview::class,
     ];
 
     public function __construct(array $data = [])
@@ -71,10 +72,11 @@ class ObjectTypes
 
     public static function getClassName(array $array): ?string
     {
-        if (isset(ObjectTypes::mapping[array_key_first($array)])) {
-            return ObjectTypes::mapping[array_key_first($array)];
-        } elseif (isset(ObjectTypes::mapping[array_key_first($array[0])])) {
+
+        if (array_key_exists(0, $array) && isset(ObjectTypes::mapping[array_key_first($array[0])])) {
             return ObjectTypes::mapping[array_key_first($array[0])];
+        } elseif (isset(ObjectTypes::mapping[array_key_first($array)])) {
+            return ObjectTypes::mapping[array_key_first($array)];
         }
 
         return null;

@@ -180,7 +180,112 @@ class ChargifyHandlePreviewTest extends TestCase
             ->component($componentPrice, 10)
             ->preview();
 
-        $this->assertArrayHasKey('current_billing_manifest', $response);
-        $this->assertArrayHasKey('next_billing_manifest', $response);
+        $this->assertObjectHasProperty('current_billing_manifest', $response);
+        $this->assertObjectHasProperty('next_billing_manifest', $response);
+    }
+
+    public function testChargifySwapSubscriptionPreview()
+    {
+        $workspace = Workspace::factory()->create();
+
+        $user = User::factory()
+            ->set(
+                'chargify_id',
+                Uuid::uuid4()->toString()
+            )
+            ->set(
+                'workspace_id',
+                $workspace->workspace_id
+            )
+            ->create();
+
+        $workspace->owner_id = $user->user_id;
+        $workspace->save();
+
+        $product = Product::factory()->count(1)->has(
+            ProductPrice::factory()->count(1),
+            'productPrices'
+        )->create()
+            ->first();
+
+        $productPrice = $product->productPrices()->first();
+
+        $productNew = Product::factory()->count(1)->has(
+            ProductPrice::factory()->count(1),
+            'productPrices'
+        )->create()
+            ->first();
+
+        $productPriceNew = $productNew->productPrices()->first();
+
+        $component = Component::factory()->count(1)->has(
+            ComponentPrice::factory()->count(1),
+            'price'
+        )->create()
+            ->first();
+
+        $componentPrice = $component->price()->first();
+
+        $subscription = Subscription::factory()
+            ->set(
+                'user_id',
+                $user->user_id
+            )
+            ->set(
+                'workspace_id',
+                $workspace->workspace_id
+            )
+            ->set(
+                'product_id',
+                $product->product_id
+            )
+            ->set(
+                'product_handle',
+                $product->product_handle
+            )
+            ->set(
+                'product_price_handle',
+                $productPrice->product_price_handle
+            )
+            ->create();
+
+        SubscriptionComponent::factory()
+            ->set(
+                'subscription_id',
+                $subscription->subscription_id
+            )
+            ->set(
+                'component_id',
+                $component->component_id
+            )
+            ->set(
+                'component_handle',
+                $component->component_handle
+            )
+            ->set(
+                'component_price_handle',
+                $componentPrice->component_price_handle
+            )
+            ->set(
+                'component_price_id',
+                $componentPrice->component_price_id
+            )
+            ->create();
+
+        Http::fake([
+            'chargify.test/*' => Http::sequence()
+                ->push([
+                    'migration' => [
+                        'prorated_adjustment_in_cents' => 0,
+                        'charge_in_cents' => 5000,
+                        'payment_due_in_cents' => 0,
+                        'credit_applied_in_cents' => 0,
+                    ],
+                ], 200),
+        ]);
+
+        $migration = $workspace->swapSubscriptionProductPreview($productPriceNew);
+
+        $this->assertObjectHasProperty('charge_in_cents', $migration);
     }
 }
