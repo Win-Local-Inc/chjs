@@ -29,6 +29,8 @@ enum WebhookEvents: string
 
     case InvoiceIssued = 'invoice_issued';
 
+    case ItemPricePointChanged = 'item_price_point_changed';
+
     case MeteredUsage = 'metered_usage';
 
     case PaymentFailure = 'payment_failure';
