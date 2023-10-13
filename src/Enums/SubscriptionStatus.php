@@ -4,6 +4,7 @@ namespace WinLocalInc\Chjs\Enums;
 
 enum SubscriptionStatus: string
 {
+    use EnumHelpers;
     case Active = 'active';
     case Canceled = 'canceled';
     case Expired = 'expired';

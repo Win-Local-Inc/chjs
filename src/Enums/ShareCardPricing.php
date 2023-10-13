@@ -2,9 +2,8 @@
 
 namespace WinLocalInc\Chjs\Enums;
 
-enum IsActive: int
+enum ShareCardPricing: string
 {
     use EnumHelpers;
-    case Active = 1;
-    case Inactive = 0;
+    case ZERO = 'sharecard_zero';
 }

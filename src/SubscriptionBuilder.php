@@ -4,6 +4,7 @@ namespace WinLocalInc\Chjs;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 use WinLocalInc\Chjs\Chargify\PricePoints;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
@@ -30,8 +31,6 @@ class SubscriptionBuilder
     protected ?array $components = null;
 
     protected string $paymentCollectionMethod = 'automatic';
-
-    protected bool $isSelfPayment = true;
 
     public function __construct(protected Model $workspace)
     {
@@ -104,13 +103,6 @@ class SubscriptionBuilder
         return $this;
     }
 
-    public function selfPayment(bool $isSelfPayment): static
-    {
-        $this->isSelfPayment = $isSelfPayment;
-
-        return $this;
-    }
-
     public function remittance(): static
     {
         $this->paymentCollectionMethod = 'remittance';
@@ -134,21 +126,19 @@ class SubscriptionBuilder
 
     public function create()
     {
-        $subscriptionMaxio = maxio()->subscription->create($this->paramsPreparation());
+        $subscriptionMaxio = maxio()->subscription->create($this->formulateSubscriptionParameters());
 
         $subscription = Subscription::create(
             [
                 'subscription_id' => $subscriptionMaxio->id,
-                'user_id' => $this->workspace->owner->user_id,
                 'workspace_id' => $this->workspace->workspace_id,
+                'user_id' => $this->workspace->owner->user_id,
                 'product_id' => $this->pricePoint->product_id,
                 'product_handle' => $this->pricePoint->product->product_handle,
-                'product_price_handle' => $this->pricePoint->product_price_handle,
                 'status' => $subscriptionMaxio->state,
                 'payment_collection_method' => $subscriptionMaxio->payment_collection_method,
                 'subscription_interval' => $this->pricePoint->product_price_interval,
-                'subscription_price_in_cents' => $subscriptionMaxio->product_price_in_cents,
-                'self_payment' => $this->isSelfPayment,
+                'total_revenue_in_cents' => $subscriptionMaxio->total_revenue_in_cents,
                 'next_billing_at' => $subscriptionMaxio->next_assessment_at,
                 'created_at' => $subscriptionMaxio->created_at,
                 'updated_at' => $subscriptionMaxio->updated_at,
@@ -177,6 +167,7 @@ class SubscriptionBuilder
                         'component_price_id' => $component->price_point_id,
                         'subscription_component_price' => $pricesMap[$component->component_id],
                         'subscription_component_quantity' => $component->allocated_quantity,
+                        'is_main_component' => ProductStructure::isMainComponent(product: $this->pricePoint->product->product_handle, component: $component->component_handle),
                         'created_at' => $component->created_at,
                         'updated_at' => $component->updated_at,
                     ]
@@ -191,17 +182,24 @@ class SubscriptionBuilder
 
     public function preview()
     {
-        return maxio()->subscription->preview($this->paramsPreparation());
+        return maxio()->subscription->preview($this->formulateSubscriptionParameters());
     }
 
-    protected function paramsPreparation(): array
+    protected function formulateSubscriptionParameters(): array
     {
         $parameters = [];
+
+        if (empty($this->components)) {
+            throw new InvalidArgumentException("can't create subscription without components");
+        }
+
         if ($this->customPrice) {
             $parameters['custom_price'] = $this->customPrice;
         } else {
             $parameters['product_price_point_handle'] = $this->pricePoint->product_price_handle;
         }
+
+        $parameters['components'] = $this->components;
 
         $parameters['payment_collection_method'] = $this->paymentCollectionMethod;
         $parameters['product_handle'] = $this->pricePoint->product_handle;
@@ -217,11 +215,6 @@ class SubscriptionBuilder
 
         if ($this->trialEndedAt) {
             $parameters['next_billing_at'] = $this->trialEndedAt;
-            //create subscription notes with trailing information
-        }
-
-        if ($this->components) {
-            $parameters['components'] = $this->components;
         }
 
         if ($this->paymentProfile) {
