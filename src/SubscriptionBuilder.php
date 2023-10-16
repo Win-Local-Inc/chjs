@@ -5,7 +5,9 @@ namespace WinLocalInc\Chjs;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
+use WinLocalInc\Chjs\Chargify\ChargifyObject;
 use WinLocalInc\Chjs\Chargify\PricePoints;
+use WinLocalInc\Chjs\Enums\ProductPricing;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
 use WinLocalInc\Chjs\Models\ProductPrice;
@@ -17,8 +19,6 @@ class SubscriptionBuilder
     protected ProductPrice $pricePoint;
 
     protected string $userId;
-
-    protected ?string $nextBillingAt = null;
 
     protected ?string $trialEndedAt = null;
 
@@ -32,28 +32,12 @@ class SubscriptionBuilder
 
     protected string $paymentCollectionMethod = 'automatic';
 
-    public function __construct(protected Model $workspace)
+    public function __construct(protected Model $workspace, protected ProductPricing $productPricing)
     {
         $this->userId = $this->workspace->owner_id;
+        $this->pricePoint = ProductPrice::find($productPricing->value);
     }
 
-    public function price(ProductPrice $pricePoint): static
-    {
-        $this->pricePoint = $pricePoint;
-
-        return $this;
-    }
-
-    public function customPrice(ProductPrice $pricePoint, int $customPrice = null): static
-    {
-        $this->pricePoint = $pricePoint;
-
-        $this->customPrice['price_in_cents'] = $customPrice;
-        $this->customPrice['interval'] = $pricePoint->product_price_interval->getInterval();
-        $this->customPrice['interval_unit'] = 'month';
-
-        return $this;
-    }
 
     public function component(ComponentPrice $componentPrice, int $quantity = 1): static
     {
@@ -180,7 +164,7 @@ class SubscriptionBuilder
 
     }
 
-    public function preview()
+    public function preview(): ChargifyObject
     {
         return maxio()->subscription->preview($this->formulateSubscriptionParameters());
     }
@@ -193,11 +177,7 @@ class SubscriptionBuilder
             throw new InvalidArgumentException("can't create subscription without components");
         }
 
-        if ($this->customPrice) {
-            $parameters['custom_price'] = $this->customPrice;
-        } else {
-            $parameters['product_price_point_handle'] = $this->pricePoint->product_price_handle;
-        }
+        $parameters['product_price_point_handle'] = $this->pricePoint->product_price_handle;
 
         $parameters['components'] = $this->components;
 
@@ -206,7 +186,10 @@ class SubscriptionBuilder
         $parameters['customer_reference'] = $this->userId;
         $parameters['reference'] = $this->workspace->workspace_id;
 
-        if ($this->token) {
+        if ($this->paymentProfile) {
+            $parameters['payment_profile_id'] = $this->paymentProfile;
+        }
+        elseif ($this->token) {
             $parameters['credit_card_attributes'] = [
                 'chargify_token' => $this->token,
                 'payment_type' => 'credit_card',
@@ -215,10 +198,6 @@ class SubscriptionBuilder
 
         if ($this->trialEndedAt) {
             $parameters['next_billing_at'] = $this->trialEndedAt;
-        }
-
-        if ($this->paymentProfile) {
-            $parameters['payment_profile_id'] = $this->paymentProfile;
         }
 
         return $parameters;
