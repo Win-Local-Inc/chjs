@@ -4,6 +4,7 @@ namespace WinLocalInc\Chjs\Enums;
 
 enum SubscriptionInterval: string
 {
+    use EnumHelpers;
     case Month = 'month';
     case Quarterly = 'quarterly';
     case Biannual = 'biannual';
@@ -14,7 +15,6 @@ enum SubscriptionInterval: string
     {
         return match ($interval) {
             1 => SubscriptionInterval::Month,
-            3 => SubscriptionInterval::Quarterly,
             6 => SubscriptionInterval::Biannual,
             9 => SubscriptionInterval::Trimester,
             default => SubscriptionInterval::Year,

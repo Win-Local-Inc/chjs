@@ -39,7 +39,7 @@ class ProductService extends AbstractService
         $parameters = array_merge([
             'page' => 1,
             'per_page' => 100,
-            'include_archived' => true,
+            'include_archived' => false,
         ], $options);
 
         return $this->get('products', $parameters);

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('product_handle', 52);
             $table->string('product_price_handle', 52)->unique();
             $table->string('product_price_name', 52);
-            $table->char('product_price_interval', 5)->default(SubscriptionInterval::Month->value);
+            $table->enum('product_price_interval', SubscriptionInterval::values())->default(SubscriptionInterval::Month->value);
             $table->unsignedMediumInteger('product_price_in_cents')->default(0);
             $table->boolean('product_price_is_active')->default(IsActive::Active->value);
             $table->timestamps();

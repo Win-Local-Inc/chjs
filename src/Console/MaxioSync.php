@@ -98,13 +98,19 @@ class MaxioSync extends Command
 
         foreach ($productPricePoints as $productPricePoint) {
             $this->info('product price: '.$productPricePoint->name);
+            $productHandle = Product::find($productPricePoint->product_id)?->product_handle;
+            if(!$productHandle)
+            {
+                continue;
+            }
+
             ProductPrice::updateOrInsert(
                 [
                     'product_price_id' => $productPricePoint->id,
                 ],
                 [
                     'product_id' => $productPricePoint->product_id,
-                    'product_handle' => Product::find($productPricePoint->product_id)->product_handle,
+                    'product_handle' => $productHandle,
                     'product_price_handle' => $productPricePoint->handle,
                     'product_price_name' => $productPricePoint->name,
                     'product_price_interval' => SubscriptionInterval::getIntervalUnit($productPricePoint->interval),
