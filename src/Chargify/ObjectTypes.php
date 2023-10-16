@@ -49,6 +49,7 @@ class ObjectTypes
         NextBillingManifest::OBJECT_NAME => NextBillingManifest::class,
         CurrentBillingManifest::OBJECT_NAME => CurrentBillingManifest::class,
         Preview::OBJECT_NAME => Preview::class,
+        AllocationPreview::OBJECT_NAME => AllocationPreview::class,
     ];
 
     public function __construct(array $data = [])
