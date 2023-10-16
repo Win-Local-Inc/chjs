@@ -15,7 +15,7 @@ return new class() extends Migration
                 IF NEW.is_main_component = 1 THEN
                     UPDATE chjs_subscriptions
                     SET component_handle = NEW.component_handle
-                    WHERE id = NEW.subscription_id;
+                    WHERE subscription_id = NEW.subscription_id;
                 END IF;
             END;
         ');
@@ -28,7 +28,7 @@ return new class() extends Migration
                 IF NEW.is_main_component = 1 THEN
                     UPDATE chjs_subscriptions
                     SET component_handle = NEW.component_handle
-                    WHERE id = NEW.subscription_id;
+                    WHERE subscription_id = NEW.subscription_id;
                 END IF;
             END;
         ');
