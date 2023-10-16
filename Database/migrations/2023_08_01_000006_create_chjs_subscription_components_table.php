@@ -22,7 +22,7 @@ return new class() extends Migration
             $table->unsignedMediumInteger('subscription_component_price')->default(0);
             $table->unsignedMediumInteger('subscription_component_quantity')->default(0);
             $table->timestamps();
-            $table->unique(['subscription_id', 'is_main_component']);
+            $table->unique(['subscription_id', 'is_main_component'], 'unique_sub_main_component');
         });
     }
 
