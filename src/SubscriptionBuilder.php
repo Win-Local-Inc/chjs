@@ -35,7 +35,7 @@ class SubscriptionBuilder
     public function __construct(protected Model $workspace, protected ProductPricing $productPricing)
     {
         $this->userId = $this->workspace->owner_id;
-        $this->pricePoint = ProductPrice::find($productPricing->value);
+        $this->pricePoint = ProductPrice::where('product_price_handle', $productPricing->value)->first();
     }
 
 
@@ -136,16 +136,18 @@ class SubscriptionBuilder
             $componentPrices = maxio()->componentPrice->list(['filter' => ['ids' => implode(',', $pricePoints)]]);
 
             $pricesMap = $componentPrices->reduce(function (array $carry, PricePoints $item) {
-                $carry[$item->price_point->component_id] = $item->price_point->prices->first()->unit_price;
+                $carry[$item->component_id] = $item->prices->first()->unit_price;
 
                 return $carry;
             }, []);
 
             foreach ($components as $component) {
-                SubscriptionComponent::create(
+                SubscriptionComponent::updateOrCreate(
                     [
                         'subscription_id' => $subscription->subscription_id,
                         'component_id' => $component->component_id,
+                    ],
+                    [
                         'component_handle' => $component->component_handle,
                         'component_price_handle' => $component->price_point_handle,
                         'component_price_id' => $component->price_point_id,

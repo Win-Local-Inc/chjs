@@ -84,10 +84,12 @@ trait HandleSubscription
 
         $componentPrice = maxio()->componentPrice->list(['filter' => ['ids' => $maxioComponent->price_point_id]]);
 
-        SubscriptionComponent::create(
+        SubscriptionComponent::updateOrCreate(
             [
                 'subscription_id' => $this->subscription->subscription_id,
                 'component_id' => $maxioComponent->component_id,
+            ],
+            [
                 'component_handle' => $maxioComponent->component_handle,
                 'component_price_handle' => $maxioComponent->price_point_handle,
                 'component_price_id' => $maxioComponent->price_point_id,
