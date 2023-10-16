@@ -4,6 +4,7 @@ namespace WinLocalInc\Chjs\Concerns;
 
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
 use WinLocalInc\Chjs\Chargify\Subscription;
+use WinLocalInc\Chjs\Enums\ProductPricing;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ProductPrice;
@@ -12,9 +13,9 @@ use WinLocalInc\Chjs\SubscriptionBuilder;
 
 trait HandleSubscription
 {
-    public function newSubscription(): SubscriptionBuilder
+    public function newSubscription(ProductPricing $productPricing): SubscriptionBuilder
     {
-        return new SubscriptionBuilder($this);
+        return new SubscriptionBuilder($this, $productPricing);
     }
 
     //adding status check
