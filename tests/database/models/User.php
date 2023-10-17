@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use WinLocalInc\Chjs\Concerns\HandleCustomer;
+use WinLocalInc\Chjs\Tests\Database\Factories\UserFactory;
 
 class User extends Authenticatable
 {
@@ -30,5 +31,10 @@ class User extends Authenticatable
     public function activeWorkspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class, 'workspace_id');
+    }
+
+    protected static function newFactory()
+    {
+        return UserFactory::new();
     }
 }

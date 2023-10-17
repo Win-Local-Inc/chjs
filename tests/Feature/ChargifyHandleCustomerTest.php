@@ -4,7 +4,6 @@ namespace WinLocalInc\Chjs\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Ramsey\Uuid\Uuid;
 use WinLocalInc\Chjs\Exceptions\InvalidCustomer;
 use WinLocalInc\Chjs\Tests\Database\Models\User;
 use WinLocalInc\Chjs\Tests\Database\Models\Workspace;
@@ -74,7 +73,7 @@ class ChargifyHandleCustomerTest extends TestCase
 
     public function testCustomerAsChargifyCustomerSuccess()
     {
-        $customerId = Uuid::uuid4()->toString();
+        $customerId = random_int(1000000, 9999999);
 
         $user = User::factory()
             ->set(

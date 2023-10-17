@@ -16,7 +16,7 @@ return new class() extends Migration
             $table->string('firstname')->nullable();
             $table->string('lastname')->nullable();
             $table->string('email')->unique();
-            $table->string('chargify_id')->nullable()->index();
+            // $table->string('chargify_id')->nullable()->index();
             $table->foreignUuid('workspace_id')
                 ->nullable()
                 ->constrained('workspaces', 'workspace_id')

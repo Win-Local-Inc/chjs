@@ -5,8 +5,8 @@ namespace WinLocalInc\Chjs\Tests\Feature;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Ramsey\Uuid\Uuid;
 use WinLocalInc\Chjs\Enums\PaymentCollectionMethod;
+use WinLocalInc\Chjs\Enums\ProductPricing;
 use WinLocalInc\Chjs\Enums\SubscriptionStatus;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
@@ -21,7 +21,7 @@ class ChargifySubscriptionBuilderTest extends TestCase
     public function testCreateSubscription()
     {
         $workspace = Workspace::factory()->create();
-        $customerId = Uuid::uuid4()->toString();
+        $customerId = random_int(1000000, 9999999);
 
         $user = User::factory()
             ->set(
@@ -140,21 +140,19 @@ class ChargifySubscriptionBuilderTest extends TestCase
                 ->push([
                     'price_points' => [
                         [
-                            'price_point' => [
-                                'id' => $componentPrice->component_price_id,
-                                'type' => 'default',
-                                'component_id' => $component->component_id,
-                                'handle' => $componentPrice->component_price_handle,
-                                'created_at' => '2023-01-01 10:00:00',
-                                'updated_at' => '2023-01-01 10:00:00',
-                                'prices' => [
-                                    [
-                                        'id' => 1,
-                                        'component_id' => $component->component_id,
-                                        'unit_price' => '10.0',
-                                        'price_point_id' => $componentPrice->component_price_id,
-                                        'formatted_unit_price' => '$1.00',
-                                    ],
+                            'id' => $componentPrice->component_price_id,
+                            'type' => 'default',
+                            'component_id' => $component->component_id,
+                            'handle' => $componentPrice->component_price_handle,
+                            'created_at' => '2023-01-01 10:00:00',
+                            'updated_at' => '2023-01-01 10:00:00',
+                            'prices' => [
+                                [
+                                    'id' => 1,
+                                    'component_id' => $component->component_id,
+                                    'unit_price' => '10.0',
+                                    'price_point_id' => $componentPrice->component_price_id,
+                                    'formatted_unit_price' => '$1.00',
                                 ],
                             ],
                         ],
@@ -162,8 +160,7 @@ class ChargifySubscriptionBuilderTest extends TestCase
                 ], 200),
         ]);
 
-        $workspace->newSubscription()
-            ->price($productPrice)
+        $workspace->newSubscription(ProductPricing::from($productPrice->product_price_handle))
             ->paymentProfile($paymentProfileId)
             ->component($componentPrice, 10)
             ->create();

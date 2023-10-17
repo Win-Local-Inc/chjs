@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use WinLocalInc\Chjs\Enums\IsActive;
+use WinLocalInc\Chjs\Tests\Database\Factories\ProductFactory;
 
 /**
  * @property mixed $product_handle
@@ -29,5 +30,10 @@ class Product extends Model
     public function productPrices(): HasMany
     {
         return $this->hasMany(ProductPrice::class, 'product_id');
+    }
+
+    protected static function newFactory()
+    {
+        return ProductFactory::new();
     }
 }

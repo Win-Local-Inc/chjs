@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use WinLocalInc\Chjs\Concerns\HandlePreview;
 use WinLocalInc\Chjs\Concerns\HandleSubscription;
 use WinLocalInc\Chjs\Models\Subscription;
+use WinLocalInc\Chjs\Tests\Database\Factories\WorkspaceFactory;
 
 class Workspace extends Model
 {
@@ -34,5 +35,10 @@ class Workspace extends Model
     public function subscription(): HasOne
     {
         return $this->hasOne(Subscription::class, 'workspace_id');
+    }
+
+    protected static function newFactory()
+    {
+        return WorkspaceFactory::new();
     }
 }

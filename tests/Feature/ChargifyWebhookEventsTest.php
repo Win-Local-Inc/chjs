@@ -5,7 +5,6 @@ namespace WinLocalInc\Chjs\Tests\Feature;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Ramsey\Uuid\Uuid;
 use WinLocalInc\Chjs\Enums\PaymentCollectionMethod;
 use WinLocalInc\Chjs\Enums\SubscriptionStatus;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
@@ -27,11 +26,11 @@ class ChargifyWebhookEventsTest extends TestCase
     public function testChargifyWebhookEventsSubscriptionEvent()
     {
         $workspace = Workspace::factory()->create();
-
+        $customerId = random_int(1000000, 9999999);
         $user = User::factory()
             ->set(
                 'chargify_id',
-                Uuid::uuid4()->toString()
+                $customerId
             )
             ->set(
                 'workspace_id',
@@ -71,10 +70,6 @@ class ChargifyWebhookEventsTest extends TestCase
             ->set(
                 'product_handle',
                 $product->product_handle
-            )
-            ->set(
-                'product_price_handle',
-                $productPrice->product_price_handle
             )
             ->create();
 
@@ -224,11 +219,11 @@ class ChargifyWebhookEventsTest extends TestCase
     public function testChargifyWebhookComponentPriceChangeEvent()
     {
         $workspace = Workspace::factory()->create();
-
+        $customerId = random_int(1000000, 9999999);
         $user = User::factory()
             ->set(
                 'chargify_id',
-                Uuid::uuid4()->toString()
+                $customerId
             )
             ->set(
                 'workspace_id',
@@ -268,10 +263,6 @@ class ChargifyWebhookEventsTest extends TestCase
             ->set(
                 'product_handle',
                 $product->product_handle
-            )
-            ->set(
-                'product_price_handle',
-                $productPrice->product_price_handle
             )
             ->create();
 

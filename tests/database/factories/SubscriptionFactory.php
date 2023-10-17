@@ -15,7 +15,6 @@ class SubscriptionFactory extends Factory
         return [
             'subscription_id' => random_int(1000000, 9999999),
             'product_handle' => Str::random(),
-            'product_price_handle' => Str::random(),
         ];
     }
 }

@@ -2,15 +2,16 @@
 
 namespace WinLocalInc\Chjs\Models;
 
-use App\Models\User;
 use App\Models\Workspace\Workspace;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use WinLocalInc\Chjs\Chjs;
 use WinLocalInc\Chjs\Enums\PaymentCollectionMethod;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 use WinLocalInc\Chjs\Enums\SubscriptionStatus;
+use WinLocalInc\Chjs\Tests\Database\Factories\SubscriptionFactory;
 
 /**
  * @property Workspace workspace
@@ -37,12 +38,12 @@ class Subscription extends Model
 
     public function workspace(): BelongsTo
     {
-        return $this->belongsTo(Workspace::class, 'workspace_id');
+        return $this->belongsTo(Chjs::$subscriberModel, 'workspace_id');
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Chjs::$userModel, 'user_id');
     }
 
     public function product(): BelongsTo
@@ -58,5 +59,10 @@ class Subscription extends Model
     public function components(): BelongsToMany
     {
         return $this->belongsToMany(SubscriptionComponent::class, Subscription::class, 'subscription_id', 'subscription_id');
+    }
+
+    protected static function newFactory()
+    {
+        return SubscriptionFactory::new();
     }
 }

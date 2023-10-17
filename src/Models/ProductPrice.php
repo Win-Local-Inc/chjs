@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use WinLocalInc\Chjs\Enums\IsActive;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
+use WinLocalInc\Chjs\Tests\Database\Factories\ProductPriceFactory;
 
 /**
  * @property SubscriptionInterval product_price_interval
@@ -35,5 +36,10 @@ class ProductPrice extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    protected static function newFactory()
+    {
+        return ProductPriceFactory::new();
     }
 }
