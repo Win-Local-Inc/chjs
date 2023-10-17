@@ -3,7 +3,9 @@
 namespace WinLocalInc\Chjs;
 
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use InvalidArgumentException;
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
 use WinLocalInc\Chjs\Chargify\PricePoints;
@@ -16,6 +18,12 @@ use WinLocalInc\Chjs\Models\SubscriptionComponent;
 
 class SubscriptionBuilder
 {
+    const DEFAULT_PAYMENT_COLLECTION_METHOD = 'automatic';
+
+    const REMITTANCE_PAYMENT_COLLECTION_METHOD = 'remittance';
+
+    const DEFAULT_TIMEZONE = 'EDT';
+
     protected ProductPrice $pricePoint;
 
     protected string $userId;
@@ -26,18 +34,63 @@ class SubscriptionBuilder
 
     protected ?string $paymentProfile = null;
 
-    protected ?array $customPrice = null;
-
     protected ?array $components = null;
 
-    protected string $paymentCollectionMethod = 'automatic';
+    protected string $paymentCollectionMethod = self::DEFAULT_PAYMENT_COLLECTION_METHOD;
 
+    /**
+     * @throws Exception
+     */
     public function __construct(protected Model $workspace, protected ProductPricing $productPricing)
     {
         $this->userId = $this->workspace->owner_id;
-        $this->pricePoint = ProductPrice::where('product_price_handle', $productPricing->value)->first();
+        $this->pricePoint = $this->getProductPriceByHandle($productPricing->value);
     }
 
+    /**
+     * @throws Exception
+     */
+    public function componentsFromArray($components): static
+    {
+        foreach ($components as $componentData) {
+            if (isset($componentData['component_price_handle'])) {
+                $componentPrice = $this->getComponentPriceByHandle($componentData['component_price_handle']);
+                $this->component($componentPrice, $componentData['quantity']);
+            } elseif (isset($componentData['component_handle'])) {
+                $component = $this->getComponentByHandle($componentData['component_handle']);
+                $this->customComponent($component, $componentData['quantity'], $componentData['customPrice']);
+            }
+        }
+
+        return $this;
+    }
+
+    private function getProductPriceByHandle($handle): ProductPrice
+    {
+        try {
+            return ProductPrice::where('product_price_handle', $handle)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            throw new Exception("Product price handle not found: {$handle}");
+        }
+    }
+
+    private function getComponentPriceByHandle($handle): ComponentPrice
+    {
+        try {
+            return ComponentPrice::where('component_price_handle', $handle)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            throw new Exception("Component price handle not found: {$handle}");
+        }
+    }
+
+    private function getComponentByHandle($handle): Component
+    {
+        try {
+            return Component::where('component_handle', $handle)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            throw new Exception("Component handle not found: {$handle}");
+        }
+    }
 
     public function component(ComponentPrice $componentPrice, int $quantity = 1): static
     {
@@ -52,7 +105,7 @@ class SubscriptionBuilder
         return $this;
     }
 
-    public function customComponent(Component $component, int $quantity = 1, int $customPrice = null): static
+    public function customComponent(Component $component, int $quantity, int $customPrice): static
     {
         $component = [
             'component_id' => $component->component_id,
@@ -89,21 +142,21 @@ class SubscriptionBuilder
 
     public function remittance(): static
     {
-        $this->paymentCollectionMethod = 'remittance';
+        $this->paymentCollectionMethod = self::REMITTANCE_PAYMENT_COLLECTION_METHOD;
 
         return $this;
     }
 
     public function trialDays(int $days): static
     {
-        $this->trialEndedAt = Carbon::now()->addDays($days)->setTimezone('EDT')->toW3cString();
+        $this->trialEndedAt = Carbon::now()->addDays($days)->setTimezone(self::DEFAULT_TIMEZONE)->toW3cString();
 
         return $this;
     }
 
     public function trialDate(string $date): static
     {
-        $this->trialEndedAt = Carbon::create($date.' '.date('H:i:s'))->setTimezone('EDT')->toW3cString();
+        $this->trialEndedAt = Carbon::create($date.' '.date('H:i:s'))->setTimezone(self::DEFAULT_TIMEZONE)->toW3cString();
 
         return $this;
     }
@@ -190,8 +243,7 @@ class SubscriptionBuilder
 
         if ($this->paymentProfile) {
             $parameters['payment_profile_id'] = $this->paymentProfile;
-        }
-        elseif ($this->token) {
+        } elseif ($this->token) {
             $parameters['credit_card_attributes'] = [
                 'chargify_token' => $this->token,
                 'payment_type' => 'credit_card',

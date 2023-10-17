@@ -11,7 +11,7 @@ enum ProductPricing: string
     case PROMO_MONTH = 'promo_month';
     case PROMO_BIANNUAL = 'promo_biannual';
     case PROMO_YEAR = 'promo_year';
-    case ENTREPRENEUR_MONTH= 'entrepreneur_month';
+    case ENTREPRENEUR_MONTH = 'entrepreneur_month';
     case ENTREPRENEUR_BIANNUAL = 'entrepreneur_biannual';
     case ENTREPRENEUR_YEAR = 'entrepreneur_year';
     case FRANCHISER_MONTH = 'franchiser_month';

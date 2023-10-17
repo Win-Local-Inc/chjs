@@ -99,8 +99,7 @@ class MaxioSync extends Command
         foreach ($productPricePoints as $productPricePoint) {
             $this->info('product price: '.$productPricePoint->name);
             $productHandle = Product::find($productPricePoint->product_id)?->product_handle;
-            if(!$productHandle)
-            {
+            if (! $productHandle) {
                 continue;
             }
 

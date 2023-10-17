@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use WinLocalInc\Chjs\Enums\IsActive;
 
 return new class extends Migration
 {
