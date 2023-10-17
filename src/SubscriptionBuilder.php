@@ -169,7 +169,7 @@ class SubscriptionBuilder
             [
                 'subscription_id' => $subscriptionMaxio->id,
                 'workspace_id' => $this->workspace->workspace_id,
-                'user_id' => $this->workspace->owner->user_id,
+                'user_id' => $this->userId,
                 'product_id' => $this->pricePoint->product_id,
                 'product_handle' => $this->pricePoint->product->product_handle,
                 'status' => $subscriptionMaxio->state,
