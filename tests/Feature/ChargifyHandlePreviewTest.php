@@ -3,6 +3,7 @@
 namespace WinLocalInc\Chjs\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
+use WinLocalInc\Chjs\Enums\Product as ProductEnum;
 use WinLocalInc\Chjs\Enums\ProductPricing;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
@@ -197,18 +198,34 @@ class ChargifyHandlePreviewTest extends TestCase
         $workspace->owner_id = $user->user_id;
         $workspace->save();
 
-        $product = Product::factory()->count(1)->has(
-            ProductPrice::factory()->count(1),
-            'productPrices'
-        )->create()
+        $product = Product::factory()->count(1)
+            ->set(
+                'product_handle',
+                ProductEnum::PROMO->value
+            )
+            ->has(
+                ProductPrice::factory()->count(1)->set(
+                    'product_handle',
+                    ProductPricing::PROMO_MONTH->value
+                ),
+                'productPrices'
+            )->create()
             ->first();
 
         $productPrice = $product->productPrices()->first();
 
-        $productNew = Product::factory()->count(1)->has(
-            ProductPrice::factory()->count(1),
-            'productPrices'
-        )->create()
+        $productNew = Product::factory()->count(1)
+            ->set(
+                'product_handle',
+                ProductEnum::SOLO->value
+            )
+            ->has(
+                ProductPrice::factory()->count(1)->set(
+                    'product_handle',
+                    ProductPricing::SOLO_MONTH->value
+                ),
+                'productPrices'
+            )->create()
             ->first();
 
         $productPriceNew = $productNew->productPrices()->first();
