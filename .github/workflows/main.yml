@@ -9,13 +9,36 @@ on:
 jobs:
     test:
         runs-on: ${{ matrix.os }}
+
+        # MySQL service setup
+        services:
+            mysql:
+                image: mysql:5.7
+                env:
+                    MYSQL_ROOT_PASSWORD: root
+                    MYSQL_DATABASE: test
+                    MYSQL_USER: user
+                    MYSQL_PASSWORD: password
+                ports:
+                    - 3306:3306
+                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+        # Environment variables for tests
+        env:
+            DB_CONNECTION: mysql
+            DB_HOST: 127.0.0.1
+            DB_PORT: 3306
+            DB_DATABASE: testing
+            DB_USERNAME: user
+            DB_PASSWORD: password
+
         strategy:
             fail-fast: true
             matrix:
                 os: [ubuntu-latest]
                 php: [8.2]
                 laravel: [10.*]
-                stability: [ prefer-stable]
+                stability: [prefer-stable]
                 include:
                     - laravel: 10.*
                       testbench: ^8.0
@@ -37,9 +60,11 @@ jobs:
               run: |
                   echo "::add-matcher::${{ runner.tool_cache }}/php.json"
                   echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
             - name: Install dependencies
               run: |
                   composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
                   composer update --${{ matrix.stability }} --prefer-dist --no-interaction
-#            - name: Execute tests
-#              run: vendor/bin/phpunit
+
+            - name: Execute tests
+              run: vendor/bin/phpunit
