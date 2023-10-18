@@ -77,10 +77,5 @@ jobs:
               run: |
                   echo "SHOW VARIABLES LIKE 'log_bin_trust_function_creators';" | mysql -h127.0.0.1 -P3306 -uuser -ppassword
 
-            - name: Grant SUPER Privilege
-              run: |
-                  echo "GRANT SUPER ON *.* TO 'user'@'%' IDENTIFIED BY 'password';" | mysql -h127.0.0.1 -P3306 -uroot -ppassword
-
-
             - name: Execute tests
               run: vendor/bin/testbench package:test --configuration=tests/phpunit.xml
