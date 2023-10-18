@@ -19,7 +19,6 @@ jobs:
                     MYSQL_DATABASE: testing
                     MYSQL_USER: user
                     MYSQL_PASSWORD: password
-                    MYSQL_LOG_BIN_TRUST_FUNCTION_CREATORS: "1"
                 ports:
                     - 3306:3306
                 options: >-
@@ -27,7 +26,7 @@ jobs:
                     --health-interval=10s
                     --health-timeout=5s
                     --health-retries=3
-                    -v ${{ github.workspace }}/my.cnf:/etc/mysql/my.cnf
+                    --command="--log_bin_trust_function_creators=1"
 
         # Environment variables for tests
         env:
