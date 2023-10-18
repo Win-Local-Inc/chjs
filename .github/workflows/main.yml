@@ -13,7 +13,7 @@ jobs:
         # MySQL service setup
         services:
             mysql:
-                image: mysql:8.0
+                image: mysql:5.7
                 env:
                     MYSQL_ROOT_PASSWORD: password
                     MYSQL_DATABASE: testing
