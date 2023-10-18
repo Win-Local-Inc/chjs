@@ -26,7 +26,7 @@ jobs:
                     --health-interval=10s
                     --health-timeout=5s
                     --health-retries=3
-                    --mount type=bind,source=${{ github.workspace }}/.github/workflows/my.cnf,destination=/etc/mysql/conf.d/my.cnf
+                    --mount type=bind,source=/home/runner/work/Win-Local-Inc/chjs/.github/workflows/my.cnf,destination=/etc/mysql/conf.d/my.cnf
 
         # Environment variables for tests
         env:
