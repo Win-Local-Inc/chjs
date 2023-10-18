@@ -72,9 +72,14 @@ jobs:
                   #composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
                   #composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
-            - name: Check MySQL Configuration
+            - name: Check dir
               run: |
                   echo "SHOW VARIABLES LIKE 'log_bin_trust_function_creators';" | mysql -h127.0.0.1 -P3306 -uuser -ppassword
+
+
+            - name: Check MySQL Configuration
+              run: |
+                  echo ${{ github.workspace }}
 
             - name: Execute tests
               run: vendor/bin/testbench package:test --configuration=tests/phpunit.xml
