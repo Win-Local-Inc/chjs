@@ -27,7 +27,7 @@ jobs:
                     --health-timeout=5s
                     --health-retries=3
                     --entrypoint mysqld
-                    -- log_bin_trust_function_creators=1
+                    --log_bin_trust_function_creators=1
                     
 
         # Environment variables for tests
