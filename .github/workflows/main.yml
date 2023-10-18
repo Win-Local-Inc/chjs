@@ -51,11 +51,11 @@ jobs:
         name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
         steps:
-            - name: Update permissions for my.cnf
-              run: chmod 644 ${{ github.workspace }}/my.cnf
-
             - name: Checkout code
               uses: actions/checkout@v2
+              
+            - name: Update permissions for my.cnf
+              run: chmod 644 ${{ github.workspace }}/my.cnf
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
