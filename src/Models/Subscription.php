@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use WinLocalInc\Chjs\Chjs;
+use WinLocalInc\Chjs\Database\Factories\SubscriptionFactory;
 use WinLocalInc\Chjs\Enums\PaymentCollectionMethod;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 use WinLocalInc\Chjs\Enums\SubscriptionStatus;
-use WinLocalInc\Chjs\Tests\Database\Factories\SubscriptionFactory;
 
 /**
  * @property Workspace workspace

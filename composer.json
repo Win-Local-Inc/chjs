@@ -30,7 +30,7 @@
     "autoload": {
         "psr-4": {
             "WinLocalInc\\Chjs\\": "src",
-            "WinLocalInc\\Chjs\\Database\\Factories\\": "Database/factories/"
+            "WinLocalInc\\Chjs\\Database\\Factories\\": "Database/Factories/"
         },
         "files": [
             "src/helpers.php"
