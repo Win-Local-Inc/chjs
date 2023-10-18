@@ -26,7 +26,6 @@ jobs:
                     --health-interval=10s
                     --health-timeout=5s
                     --health-retries=3
-                    -v my.cnf:/etc/mysql/my.cnf
         
 
         # Environment variables for tests
@@ -75,10 +74,6 @@ jobs:
                   composer install
                   #composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
                   #composer update --${{ matrix.stability }} --prefer-dist --no-interaction
-
-            - name: Check MySQL Configuration
-              run: |
-                  echo "SHOW VARIABLES LIKE 'log_bin_trust_function_creators';" | mysql -h127.0.0.1 -P3306 -uuser -ppassword
 
             - name: Execute tests
               run: vendor/bin/testbench package:test --configuration=tests/phpunit.xml
