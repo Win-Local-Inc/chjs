@@ -17,7 +17,7 @@ jobs:
                 env:
                     MYSQL_ROOT_PASSWORD: password
                     MYSQL_DATABASE: testing
-                    MYSQL_USER: user
+                    MYSQL_USER: root
                     MYSQL_PASSWORD: password
                 ports:
                     - 3306:3306
@@ -34,7 +34,7 @@ jobs:
             DB_HOST: 127.0.0.1
             DB_PORT: 3306
             DB_DATABASE: testing
-            DB_USERNAME: user
+            DB_USERNAME: root
             DB_PASSWORD: password
 
         strategy:
