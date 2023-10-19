@@ -59,6 +59,7 @@ class ChargifySubscriptionBuilderTest extends TestCase
         $nextAssessmentAt = Date::now()->toDateTimeString();
         $state = SubscriptionStatus::Active->value;
         $paymentMethod = PaymentCollectionMethod::Automatic->value;
+        $coupon = Str::random();
 
         Http::fake([
             'chargify.test/*' => Http::sequence()
@@ -163,6 +164,7 @@ class ChargifySubscriptionBuilderTest extends TestCase
         $workspace->newSubscription(ProductPricing::from($productPrice->product_price_handle))
             ->paymentProfile($paymentProfileId)
             ->component($componentPrice, 10)
+            ->coupon($coupon)
             ->create();
 
         $this->assertDatabaseHas('chjs_subscriptions', [

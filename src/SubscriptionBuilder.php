@@ -18,11 +18,11 @@ use WinLocalInc\Chjs\Models\SubscriptionComponent;
 
 class SubscriptionBuilder
 {
-    const DEFAULT_PAYMENT_COLLECTION_METHOD = 'automatic';
+    public const DEFAULT_PAYMENT_COLLECTION_METHOD = 'automatic';
 
-    const REMITTANCE_PAYMENT_COLLECTION_METHOD = 'remittance';
+    public const REMITTANCE_PAYMENT_COLLECTION_METHOD = 'remittance';
 
-    const DEFAULT_TIMEZONE = 'EDT';
+    public const DEFAULT_TIMEZONE = 'EDT';
 
     protected ProductPrice $pricePoint;
 
@@ -35,6 +35,8 @@ class SubscriptionBuilder
     protected ?string $paymentProfile = null;
 
     protected ?array $components = null;
+
+    protected array $coupons = [];
 
     protected string $paymentCollectionMethod = self::DEFAULT_PAYMENT_COLLECTION_METHOD;
 
@@ -136,6 +138,15 @@ class SubscriptionBuilder
     public function token(string $token): static
     {
         $this->token = $token;
+
+        return $this;
+    }
+
+    public function coupon(string $coupon): static
+    {
+        if (! in_array($coupon, $this->coupons)) {
+            $this->coupons[] = $coupon;
+        }
 
         return $this;
     }
@@ -252,6 +263,10 @@ class SubscriptionBuilder
 
         if ($this->trialEndedAt) {
             $parameters['next_billing_at'] = $this->trialEndedAt;
+        }
+
+        if (! empty($this->coupons)) {
+            $parameters['coupon_codes'] = $this->coupons;
         }
 
         return $parameters;
