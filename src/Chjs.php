@@ -5,6 +5,7 @@ namespace WinLocalInc\Chjs;
 use WinLocalInc\Chjs\Services\ComponentPriceService;
 use WinLocalInc\Chjs\Services\ComponentService;
 use WinLocalInc\Chjs\Services\CoreServiceFactory;
+use WinLocalInc\Chjs\Services\CouponService;
 use WinLocalInc\Chjs\Services\CustomerService;
 use WinLocalInc\Chjs\Services\PaymentProfileService;
 use WinLocalInc\Chjs\Services\ProductPriceService;
@@ -17,6 +18,7 @@ use WinLocalInc\Chjs\Services\SubscriptionStatusService;
  * Service factory class for API resources in the root namespace.
  *
  * @property CustomerService $customer
+ * @property CouponService $coupon
  * @property SubscriptionService $subscription
  * @property PaymentProfileService $paymentProfile
  * @property ProductPriceService $productPrice

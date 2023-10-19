@@ -6,6 +6,7 @@ namespace WinLocalInc\Chjs\Services;
  * Service factory class for API resources in the root namespace.
  *
  * @property CustomerService $customer
+ * @property CouponService $coupon
  * @property SubscriptionService $subscription
  * @property PaymentProfileService $paymentProfile
  * @property ProductPriceService $productPrice
@@ -21,6 +22,7 @@ class CoreServiceFactory extends AbstractServiceFactory
     private static array $classMap = [
         'subscription' => SubscriptionService::class,
         'customer' => CustomerService::class,
+        'coupon' => CouponService::class,
         'paymentProfile' => PaymentProfileService::class,
         'productPrice' => ProductPriceService::class,
         'subscriptionComponent' => SubscriptionComponentService::class,

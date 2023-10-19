@@ -50,6 +50,7 @@ class ObjectTypes
         CurrentBillingManifest::OBJECT_NAME => CurrentBillingManifest::class,
         Preview::OBJECT_NAME => Preview::class,
         AllocationPreview::OBJECT_NAME => AllocationPreview::class,
+        Coupon::OBJECT_NAME => Coupon::class,
     ];
 
     public function __construct(array $data = [])
