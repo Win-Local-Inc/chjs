@@ -16,7 +16,7 @@ class CouponService extends AbstractService
         $this->validatePayload($coupon, [
             'name' => 'required|string',
             'description' => 'required|string',
-            'code' => ['required', 'regex:/^[A-Z%@+-_.]+$/'],
+            'code' => ['required', 'regex:/^[A-Z0-9%@+\-_.]+$/'],
             'percentage' => 'required_without:amount_in_cents|prohibits:amount_in_cents|numeric',
             'amount_in_cents' => 'required_without:percentage|prohibits:percentage|integer|min:1',
         ]);
@@ -43,7 +43,7 @@ class CouponService extends AbstractService
         array $restrictedComponents = null
     ): ChargifyObject {
         $this->validatePayload($coupon, [
-            'code' => ['sometimes', 'regex:/^[A-Z%@+-_.]+$/'],
+            'code' => ['sometimes', 'regex:/^[A-Z0-9%@+\-_.]+$/'],
         ]);
 
         $parameters = [
