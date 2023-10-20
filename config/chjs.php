@@ -12,6 +12,7 @@ return [
     'private_key' => env('CHARGIFY_PRIVATE_KEY'),
     'shared_key' => env('CHARGIFY_SHARED_KEY'),
     'timeout' => env('CHARGIFY_TIMEOUT', 10),
+    'product_family_id' => env('CHARGIFY_PRODUCT_FAMILY_ID'),
 
     'ads_component' => env('ADS_COMPONENT', 'ads'),
 ];
