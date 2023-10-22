@@ -21,7 +21,6 @@ enum MainComponent
     {
         foreach (MainComponent::cases() as $mainComponent) {
             $pricingClass = self::convertEnumToClassName($mainComponent->name);
-            dd($pricingClass::values());
             if (in_array($componentHandle, $pricingClass::values(), true)) {
                 return $mainComponent;
             }
