@@ -12,9 +12,16 @@ return new class() extends Migration
             AFTER INSERT ON chjs_subscription_components
             FOR EACH ROW
             BEGIN
+                DECLARE fetchedComponentEntry VARCHAR(21);
                 IF NEW.is_main_component = 1 THEN
+                
+                    SELECT component_entry
+                    INTO fetchedComponentEntry
+                    FROM chjs_components
+                    WHERE component_id = NEW.component_id;
+        
                     UPDATE chjs_subscriptions
-                    SET component_handle = NEW.component_handle
+                    SET component = fetchedComponentEntry
                     WHERE subscription_id = NEW.subscription_id;
                 END IF;
             END;
@@ -25,9 +32,16 @@ return new class() extends Migration
             AFTER UPDATE ON chjs_subscription_components
             FOR EACH ROW
             BEGIN
+                DECLARE fetchedComponentEntry VARCHAR(21);
                 IF NEW.is_main_component = 1 THEN
+                
+                    SELECT component_entry
+                    INTO fetchedComponentEntry
+                    FROM chjs_components
+                    WHERE component_id = NEW.component_id;
+        
                     UPDATE chjs_subscriptions
-                    SET component_handle = NEW.component_handle
+                    SET component = fetchedComponentEntry
                     WHERE subscription_id = NEW.subscription_id;
                 END IF;
             END;

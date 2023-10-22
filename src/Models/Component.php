@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use WinLocalInc\Chjs\Database\Factories\ComponentFactory;
 use WinLocalInc\Chjs\Enums\IsActive;
+use WinLocalInc\Chjs\Enums\MainComponent;
 
 /**
  * @property mixed $component_id
@@ -35,8 +36,18 @@ class Component extends Model
         return $this->hasOne(ComponentPrice::class, 'component_id');
     }
 
-    protected static function newFactory()
+    protected static function newFactory(): ComponentFactory
     {
         return ComponentFactory::new();
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function ($model) {
+            try{
+                $model->component_entry = MainComponent::findComponent($model->compoent_handle)->name;
+            }
+            catch (\Exception $e){}
+        });
     }
 }

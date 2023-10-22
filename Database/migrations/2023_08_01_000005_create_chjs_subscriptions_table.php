@@ -22,11 +22,10 @@ return new class extends Migration
 
             // [PROMO, SOLO,Entrepreneur , Franchisor, Distributor]
             $table->foreignId('product_id')->constrained('chjs_products', 'product_id')->cascadeOnDelete();
-            $table->string('product_handle', 52);
+            $table->string('product_handle', 52)->index();
 
-            // the main subscribed plan [ sharecard, sharecard pro, etc..]
-            //            $table->foreignId('component_id')->nullable()->constrained('chjs_component', 'component_id');
-            $table->string('component_handle')->nullable(); // leave it for now, later maybe mysql trigger
+            //\WinLocalInc\Chjs\Enums\MainComponent::names();
+            $table->string('component')->index()->nullable();
 
             //            $table->string('product_price_handle', 52);
             $table->string('status', 18)->default(SubscriptionStatus::Active->value);
