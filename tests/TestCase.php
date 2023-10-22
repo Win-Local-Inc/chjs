@@ -15,7 +15,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
     {
         $this->loadMigrationsFrom(['--path' => [
             __DIR__.DIRECTORY_SEPARATOR.'Database'.DIRECTORY_SEPARATOR.'migrations',
-            __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'Database'.DIRECTORY_SEPARATOR.'migrations',
+            __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.'migrations',
         ],
         ]);
     }

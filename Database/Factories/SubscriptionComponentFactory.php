@@ -21,21 +21,18 @@ class SubscriptionComponentFactory extends Factory
         ];
     }
 
-    public
-    function subscription (Subscription $subscription): SubscriptionComponentFactory
+    public function subscription(Subscription $subscription): SubscriptionComponentFactory
     {
-        return $this->state( ['subscription_id' => $subscription->subscription_id] );
+        return $this->state(['subscription_id' => $subscription->subscription_id]);
     }
 
-    public
-    function component (Component $component): SubscriptionComponentFactory
+    public function component(Component $component): SubscriptionComponentFactory
     {
-        return $this->state( ['component_id' => $component->component_id, 'component_handle' =>  $component->component_handle] );
+        return $this->state(['component_id' => $component->component_id, 'component_handle' => $component->component_handle]);
     }
 
-    public
-    function componentPrice (ComponentPrice $componentPrice): SubscriptionComponentFactory
+    public function componentPrice(ComponentPrice $componentPrice): SubscriptionComponentFactory
     {
-        return $this->state( ['component_price_id' => $componentPrice->component_price_id, 'component_price_handle' =>  $componentPrice->component_price_handle] );
+        return $this->state(['component_price_id' => $componentPrice->component_price_id, 'component_price_handle' => $componentPrice->component_price_handle]);
     }
 }

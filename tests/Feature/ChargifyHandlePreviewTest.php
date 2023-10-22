@@ -37,7 +37,6 @@ class ChargifyHandlePreviewTest extends TestCase
 
         $product = Product::first();
 
-
         $productPrice = $product->productPrices->first();
 
         $component = Component::first();
@@ -156,15 +155,14 @@ class ChargifyHandlePreviewTest extends TestCase
         $workspace->owner_id = $user->user_id;
         $workspace->save();
 
+        $product = Product::where('product_handle', ProductEnum::PROMO->value)->first();
+        $productPrice = ProductPrice::where('product_price_handle', ProductPricing::PROMO_MONTH->value)->first();
 
-        $product = Product::where('product_handle',ProductEnum::PROMO->value)->first();
-        $productPrice = ProductPrice::where('product_price_handle',ProductPricing::PROMO_MONTH->value)->first();
+        $productNew = Product::where('product_handle', ProductEnum::PROMO->value)->first();
+        $productPriceNew = ProductPrice::where('product_price_handle', ProductPricing::SOLO_MONTH->value)->first();
 
-        $productNew = Product::where('product_handle',ProductEnum::PROMO->value)->first();
-        $productPriceNew = ProductPrice::where('product_price_handle',ProductPricing::SOLO_MONTH->value)->first();
-
-        $component = Component::where('component_handle', ShareCardProPricing::MONTH->value )->first();
-        $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value )->first();
+        $component = Component::where('component_handle', ShareCardProPricing::MONTH->value)->first();
+        $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value)->first();
 
         $subscription = Subscription::factory()
             ->user($user)

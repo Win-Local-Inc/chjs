@@ -23,20 +23,17 @@ class UserFactory extends Factory
             'lastname' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
             'workspace_id' => null,
-            'chargify_id' => null
+            'chargify_id' => null,
         ];
     }
 
-
-    public
-    function workspace (Workspace $workspace): UserFactory
+    public function workspace(Workspace $workspace): UserFactory
     {
-        return $this->state( ['workspace_id' => $workspace->workspace_id] );
+        return $this->state(['workspace_id' => $workspace->workspace_id]);
     }
 
-    public
-    function withChargifyId (): UserFactory
+    public function withChargifyId(): UserFactory
     {
-        return $this->state( ['chargify_id' => random_int(1000000, 9999999)] );
+        return $this->state(['chargify_id' => random_int(1000000, 9999999)]);
     }
 }

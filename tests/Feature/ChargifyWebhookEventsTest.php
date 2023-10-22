@@ -43,11 +43,11 @@ class ChargifyWebhookEventsTest extends TestCase
             ->withChargifyId()
             ->create();
 
-        $product = Product::where('product_handle',ProductEnum::PROMO->value)->first();
-        $productPrice = ProductPrice::where('product_price_handle',ProductPricing::SOLO_MONTH->value)->first();
+        $product = Product::where('product_handle', ProductEnum::PROMO->value)->first();
+        $productPrice = ProductPrice::where('product_price_handle', ProductPricing::SOLO_MONTH->value)->first();
 
-        $component = Component::where('component_handle', ShareCardProPricing::MONTH->value )->first();
-        $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value )->first();
+        $component = Component::where('component_handle', ShareCardProPricing::MONTH->value)->first();
+        $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value)->first();
 
         $subscription = Subscription::factory()
             ->user($user)
@@ -189,11 +189,11 @@ class ChargifyWebhookEventsTest extends TestCase
             ->withChargifyId()
             ->create();
 
-        $product = Product::where('product_handle',ProductEnum::PROMO->value)->first();
-        $productPrice = ProductPrice::where('product_price_handle',ProductPricing::SOLO_MONTH->value)->first();
+        $product = Product::where('product_handle', ProductEnum::PROMO->value)->first();
+        $productPrice = ProductPrice::where('product_price_handle', ProductPricing::SOLO_MONTH->value)->first();
 
-        $component = Component::where('component_handle', ShareCardProPricing::MONTH->value )->first();
-        $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value )->first();
+        $component = Component::where('component_handle', ShareCardProPricing::MONTH->value)->first();
+        $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value)->first();
 
         $subscription = Subscription::factory()
             ->user($user)

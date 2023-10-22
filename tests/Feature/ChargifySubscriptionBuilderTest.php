@@ -28,6 +28,7 @@ class ChargifySubscriptionBuilderTest extends TestCase
         $this->seed(ProductSeeder::class);
         $this->seed(ComponentSeeder::class);
     }
+
     public function testCreateSubscription()
     {
         $workspace = Workspace::factory()->create();
@@ -43,11 +44,11 @@ class ChargifySubscriptionBuilderTest extends TestCase
         $subscriptionId = random_int(1000000, 9999999);
         $paymentProfileId = random_int(1000000, 9999999);
 
-        $product = Product::where('product_handle',ProductEnum::PROMO->value)->first();
-        $productPrice = ProductPrice::where('product_price_handle',ProductPricing::SOLO_MONTH->value)->first();
+        $product = Product::where('product_handle', ProductEnum::PROMO->value)->first();
+        $productPrice = ProductPrice::where('product_price_handle', ProductPricing::SOLO_MONTH->value)->first();
 
-        $component = Component::where('component_handle', ShareCardProPricing::MONTH->value )->first();
-        $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value )->first();
+        $component = Component::where('component_handle', ShareCardProPricing::MONTH->value)->first();
+        $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value)->first();
 
         $componentQuantity = 10;
 
