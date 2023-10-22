@@ -7,18 +7,13 @@ use Exception;
 enum MainComponent
 {
     use EnumHelpers;
-//    case SHARECARD = ShareCardPricing::class;
-//    case SHARECARD_PRO = ShareCardProPricing::class;
-//    case BROKERAGE = BrokeragePricing::class;
-//    case COMPANY = CompanyPricing::class;
-//    case FRANCHISE = FranchisePricing::class;
-//    case DISTRIBUTOR = DistributorPricing::class;
-    case SHARECARD;// ShareCardPricing::class;
-    case SHARECARD_PRO;// ShareCardProPricing::class;
-    case BROKERAGE;// BrokeragePricing::class;
-    case COMPANY;// CompanyPricing::class;
-    case FRANCHISE;// FranchisePricing::class;
-    case DISTRIBUTOR;// DistributorPricing::class;
+    case SHARE_CARD; // ShareCardPricing::class;
+    case SHARE_CARD_PRO; // ShareCardProPricing::class;
+    case BROKERAGE; // BrokeragePricing::class;
+    case COMPANY; // CompanyPricing::class;
+    case FRANCHISE; // FranchisePricing::class;
+    case DISTRIBUTOR; // DistributorPricing::class;
+
     /**
      * @throws Exception
      */
@@ -39,7 +34,9 @@ enum MainComponent
         $words = explode('_', strtolower($enumValue));
         $words[] = 'pricing';
         $camelCase = array_map('ucfirst', $words);
-        return implode('', $camelCase);
+        $class = implode('', $camelCase);
+
+        return 'WinLocalInc\\Chjs\\Enums\\'.$class;
     }
 
     public static function componentNames(): array

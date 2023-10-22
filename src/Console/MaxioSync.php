@@ -4,6 +4,7 @@ namespace WinLocalInc\Chjs\Console;
 
 use Illuminate\Console\Command;
 use WinLocalInc\Chjs\Enums\IsActive;
+use WinLocalInc\Chjs\Enums\MainComponent;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
@@ -130,19 +131,24 @@ class MaxioSync extends Command
         $components = maxio()->component->list();
         foreach ($components as $component) {
             $this->info('component: '.$component->name);
+            $componentData = [
+                'component_handle' => $component->handle,
+                'component_name' => $component->name,
+                'component_unit' => $component->unit_name,
+                'component_type' => $component->kind,
+                'component_is_active' => is_null($component->archived) ? IsActive::Active : IsActive::Inactive,
+                'created_at' => $component->created_at,
+                'updated_at' => $component->updated_at,
+            ];
+
+            try {
+                $componentData['component_entry'] = MainComponent::findComponent($componentData['component_handle'])->name;
+            } catch (\Exception $e) {
+            }
+
             Component::updateOrInsert(
-                [
-                    'component_id' => $component->id,
-                ],
-                [
-                    'component_handle' => $component->handle,
-                    'component_name' => $component->name,
-                    'component_unit' => $component->unit_name,
-                    'component_type' => $component->kind,
-                    'component_is_active' => is_null($component->archived) ? IsActive::Active : IsActive::Inactive,
-                    'created_at' => $component->created_at,
-                    'updated_at' => $component->updated_at,
-                ]
+                ['component_id' => $component->id],
+                $componentData
             );
         }
 

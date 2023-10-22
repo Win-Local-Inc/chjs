@@ -44,10 +44,17 @@ class Component extends Model
     protected static function booted(): void
     {
         static::creating(function ($model) {
-            try{
+            try {
                 $model->component_entry = MainComponent::findComponent($model->compoent_handle)->name;
+            } catch (\Exception $e) {
             }
-            catch (\Exception $e){}
+        });
+
+        static::updating(function ($model) {
+            try {
+                $model->component_entry = MainComponent::findComponent($model->compoent_handle)->name;
+            } catch (\Exception $e) {
+            }
         });
     }
 }
