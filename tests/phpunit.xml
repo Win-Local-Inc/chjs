@@ -27,7 +27,7 @@
         <!--        <server name="DB_DATABASE" value=":memory:"/>-->
         <server name="DB_CONNECTION" value="mysql" />
         <server name="DB_HOST" value="127.0.0.1" />
-        <server name="DB_PORT" value="3383" />
+        <server name="DB_PORT" value="3306" />
         <server name="DB_DATABASE" value="testing" />
         <server name="DB_USERNAME" value="user" />
         <server name="DB_PASSWORD" value="password" />
