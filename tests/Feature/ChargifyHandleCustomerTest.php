@@ -16,10 +16,7 @@ class ChargifyHandleCustomerTest extends TestCase
         $workspace = Workspace::factory()->create();
 
         $user = User::factory()
-            ->set(
-                'workspace_id',
-                $workspace->workspace_id
-            )
+            ->workspace($workspace)
             ->create();
 
         $token = Str::random();

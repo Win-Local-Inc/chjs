@@ -31,7 +31,7 @@
         "psr-4": {
             "WinLocalInc\\Chjs\\": "src",
             "WinLocalInc\\Chjs\\Database\\Factories\\": "Database/Factories/",
-            "WinLocalInc\\Chjs\\Database\\Seeders\\": "Database/Seeders/"
+            "WinLocalInc\\Chjs\\Database\\Seeders\\": "database/seeders/"
         },
         "files": [
             "src/helpers.php"

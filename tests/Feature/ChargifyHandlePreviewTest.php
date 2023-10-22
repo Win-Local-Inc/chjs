@@ -3,8 +3,11 @@
 namespace WinLocalInc\Chjs\Tests\Feature;
 
 use Illuminate\Support\Facades\Http;
+use WinLocalInc\Chjs\Database\Seeders\ComponentSeeder;
+use WinLocalInc\Chjs\Database\Seeders\ProductSeeder;
 use WinLocalInc\Chjs\Enums\Product as ProductEnum;
 use WinLocalInc\Chjs\Enums\ProductPricing;
+use WinLocalInc\Chjs\Enums\ShareCardProPricing;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
 use WinLocalInc\Chjs\Models\Product;
@@ -17,80 +20,40 @@ use WinLocalInc\Chjs\Tests\TestCase;
 
 class ChargifyHandlePreviewTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(ProductSeeder::class);
+        $this->seed(ComponentSeeder::class);
+    }
+
     public function testChargifyHandleSubscriptionPreview()
     {
         $workspace = Workspace::factory()->create();
         $paymentProfileId = random_int(1000000, 9999999);
-        $user = User::factory()
-            ->set(
-                'chargify_id',
-                random_int(1000000, 9999999)
-            )
-            ->set(
-                'workspace_id',
-                $workspace->workspace_id
-            )
-            ->create();
-
+        $user = User::factory()->workspace($workspace)->create();
         $workspace->owner_id = $user->user_id;
         $workspace->save();
 
-        $product = Product::factory()->count(1)->has(
-            ProductPrice::factory()->count(1),
-            'productPrices'
-        )->create()
-            ->first();
+        $product = Product::first();
 
-        $productPrice = $product->productPrices()->first();
 
-        $component = Component::factory()->count(1)->has(
-            ComponentPrice::factory()->count(1),
-            'price'
-        )->create()
-            ->first();
+        $productPrice = $product->productPrices->first();
 
-        $componentPrice = $component->price()->first();
+        $component = Component::first();
+
+        $componentPrice = $component->price->first();
 
         $subscription = Subscription::factory()
-            ->set(
-                'user_id',
-                $user->user_id
-            )
-            ->set(
-                'workspace_id',
-                $workspace->workspace_id
-            )
-            ->set(
-                'product_id',
-                $product->product_id
-            )
-            ->set(
-                'product_handle',
-                $product->product_handle
-            )
+            ->user($user)
+            ->workspace($workspace)
+            ->product($product)
             ->create();
 
         SubscriptionComponent::factory()
-            ->set(
-                'subscription_id',
-                $subscription->subscription_id
-            )
-            ->set(
-                'component_id',
-                $component->component_id
-            )
-            ->set(
-                'component_handle',
-                $component->component_handle
-            )
-            ->set(
-                'component_price_handle',
-                $componentPrice->component_price_handle
-            )
-            ->set(
-                'component_price_id',
-                $componentPrice->component_price_id
-            )
+            ->subscription($subscription)
+            ->component($component)
+            ->componentPrice($componentPrice)
             ->create();
 
         Http::fake([
@@ -101,26 +64,26 @@ class ChargifyHandlePreviewTest extends TestCase
                             'transaction_type' => 'charge',
                             'kind' => 'baseline',
                             'amount_in_cents' => 0,
-                            'memo' => 'Engage (3 Oct 2023 - 3 Nov 2023)',
+                            'memo' => $product->product_name.' (3 Oct 2023 - 3 Nov 2023)',
                             'discount_amount_in_cents' => 0,
                             'taxable_amount_in_cents' => 0,
                             'period_range_start' => '3 Oct 2023',
                             'period_range_end' => '3 Nov 2023',
                             'product_id' => $product->product_id,
-                            'product_handle' => 'engage',
-                            'product_name' => 'Engage',
+                            'product_handle' => $product->product_handle,
+                            'product_name' => $product->product_name,
                         ], [
                             'transaction_type' => 'charge',
                             'kind' => 'component',
                             'amount_in_cents' => 10000,
-                            'memo' => 'Share Card Pro=> 10 pros',
+                            'memo' => $component->component_name.' => 10 pros',
                             'discount_amount_in_cents' => 0,
                             'taxable_amount_in_cents' => 0,
                             'period_range_start' => '3 Oct 2023',
                             'period_range_end' => '3 Nov 2023',
                             'component_id' => $component->component_id,
-                            'component_handle' => 'share-card-pro',
-                            'component_name' => 'Share Card Pro',
+                            'component_handle' => $component->component_handle,
+                            'component_name' => $component->component_name,
                         ],
                         ],
                         'total_in_cents' => 460000,
@@ -137,26 +100,26 @@ class ChargifyHandlePreviewTest extends TestCase
                             'transaction_type' => 'charge',
                             'kind' => 'baseline',
                             'amount_in_cents' => 0,
-                            'memo' => 'Engage (3 Nov2023 - 3 Dec 2023)',
+                            'memo' => $product->product_name.' (3 Oct 2023 - 3 Nov 2023)',
                             'discount_amount_in_cents' => 0,
                             'taxable_amount_in_cents' => 0,
                             'period_range_start' => '3 Nov 2023',
                             'period_range_end' => '3 Dec 2023',
                             'product_id' => $product->product_id,
-                            'product_handle' => 'engage',
-                            'product_name' => 'Engage',
+                            'product_handle' => $product->product_handle,
+                            'product_name' => $product->product_name,
                         ], [
                             'transaction_type' => 'charge',
                             'kind' => 'component',
                             'amount_in_cents' => 10000,
-                            'memo' => 'Share Card Pro=> 10 pros',
+                            'memo' => $component->component_name.' => 10 pros',
                             'discount_amount_in_cents' => 0,
                             'taxable_amount_in_cents' => 0,
                             'period_range_start' => '3 Nov 2023',
                             'period_range_end' => '3 Dec 2023',
                             'component_id' => $component->component_id,
-                            'component_handle' => 'share-card-pro',
-                            'component_name' => 'Share Card Pro',
+                            'component_handle' => $component->component_handle,
+                            'component_name' => $component->component_name,
                         ],
                         ],
                         'total_in_cents' => 460000,
@@ -182,102 +145,37 @@ class ChargifyHandlePreviewTest extends TestCase
 
     public function testChargifySwapSubscriptionPreview()
     {
+        //todo this test is not valid
         $workspace = Workspace::factory()->create();
 
         $user = User::factory()
-            ->set(
-                'chargify_id',
-                random_int(1000000, 9999999)
-            )
-            ->set(
-                'workspace_id',
-                $workspace->workspace_id
-            )
+            ->workspace($workspace)
+            ->withChargifyId()
             ->create();
 
         $workspace->owner_id = $user->user_id;
         $workspace->save();
 
-        $product = Product::factory()->count(1)
-            ->set(
-                'product_handle',
-                ProductEnum::PROMO->value
-            )
-            ->has(
-                ProductPrice::factory()->count(1)->set(
-                    'product_handle',
-                    ProductPricing::PROMO_MONTH->value
-                ),
-                'productPrices'
-            )->create()
-            ->first();
 
-        $productPrice = $product->productPrices()->first();
+        $product = Product::where('product_handle',ProductEnum::PROMO->value)->first();
+        $productPrice = ProductPrice::where('product_price_handle',ProductPricing::PROMO_MONTH->value)->first();
 
-        $productNew = Product::factory()->count(1)
-            ->set(
-                'product_handle',
-                ProductEnum::SOLO->value
-            )
-            ->has(
-                ProductPrice::factory()->count(1)->set(
-                    'product_handle',
-                    ProductPricing::SOLO_MONTH->value
-                ),
-                'productPrices'
-            )->create()
-            ->first();
+        $productNew = Product::where('product_handle',ProductEnum::PROMO->value)->first();
+        $productPriceNew = ProductPrice::where('product_price_handle',ProductPricing::SOLO_MONTH->value)->first();
 
-        $productPriceNew = $productNew->productPrices()->first();
-
-        $component = Component::factory()->count(1)->has(
-            ComponentPrice::factory()->count(1),
-            'price'
-        )->create()
-            ->first();
-
-        $componentPrice = $component->price()->first();
+        $component = Component::where('component_handle', ShareCardProPricing::MONTH->value )->first();
+        $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value )->first();
 
         $subscription = Subscription::factory()
-            ->set(
-                'user_id',
-                $user->user_id
-            )
-            ->set(
-                'workspace_id',
-                $workspace->workspace_id
-            )
-            ->set(
-                'product_id',
-                $product->product_id
-            )
-            ->set(
-                'product_handle',
-                $product->product_handle
-            )
+            ->user($user)
+            ->workspace($workspace)
+            ->product($product)
             ->create();
 
         SubscriptionComponent::factory()
-            ->set(
-                'subscription_id',
-                $subscription->subscription_id
-            )
-            ->set(
-                'component_id',
-                $component->component_id
-            )
-            ->set(
-                'component_handle',
-                $component->component_handle
-            )
-            ->set(
-                'component_price_handle',
-                $componentPrice->component_price_handle
-            )
-            ->set(
-                'component_price_id',
-                $componentPrice->component_price_id
-            )
+            ->subscription($subscription)
+            ->component($component)
+            ->componentPrice($componentPrice)
             ->create();
 
         Http::fake([

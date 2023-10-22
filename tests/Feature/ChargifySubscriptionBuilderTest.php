@@ -5,8 +5,12 @@ namespace WinLocalInc\Chjs\Tests\Feature;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use WinLocalInc\Chjs\Database\Seeders\ComponentSeeder;
+use WinLocalInc\Chjs\Database\Seeders\ProductSeeder;
 use WinLocalInc\Chjs\Enums\PaymentCollectionMethod;
+use WinLocalInc\Chjs\Enums\Product as ProductEnum;
 use WinLocalInc\Chjs\Enums\ProductPricing;
+use WinLocalInc\Chjs\Enums\ShareCardProPricing;
 use WinLocalInc\Chjs\Enums\SubscriptionStatus;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
@@ -18,20 +22,19 @@ use WinLocalInc\Chjs\Tests\TestCase;
 
 class ChargifySubscriptionBuilderTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(ProductSeeder::class);
+        $this->seed(ComponentSeeder::class);
+    }
     public function testCreateSubscription()
     {
         $workspace = Workspace::factory()->create();
-        $customerId = random_int(1000000, 9999999);
 
         $user = User::factory()
-            ->set(
-                'chargify_id',
-                $customerId
-            )
-            ->set(
-                'workspace_id',
-                $workspace->workspace_id
-            )
+            ->workspace($workspace)
+            ->withChargifyId()
             ->create();
 
         $workspace->owner_id = $user->user_id;
@@ -39,21 +42,13 @@ class ChargifySubscriptionBuilderTest extends TestCase
 
         $subscriptionId = random_int(1000000, 9999999);
         $paymentProfileId = random_int(1000000, 9999999);
-        $product = Product::factory()->count(1)->has(
-            ProductPrice::factory()->count(1),
-            'productPrices'
-        )->create()
-            ->first();
 
-        $productPrice = $product->productPrices()->first();
+        $product = Product::where('product_handle',ProductEnum::PROMO->value)->first();
+        $productPrice = ProductPrice::where('product_price_handle',ProductPricing::SOLO_MONTH->value)->first();
 
-        $component = Component::factory()->count(1)->has(
-            ComponentPrice::factory()->count(1),
-            'price'
-        )->create()
-            ->first();
+        $component = Component::where('component_handle', ShareCardProPricing::MONTH->value )->first();
+        $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value )->first();
 
-        $componentPrice = $component->price()->first();
         $componentQuantity = 10;
 
         $nextAssessmentAt = Date::now()->toDateTimeString();

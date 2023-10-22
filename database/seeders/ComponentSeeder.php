@@ -1,6 +1,6 @@
 <?php
 
-namespace WinLocalInc\Chjs\Database\Seeder;
+namespace WinLocalInc\Chjs\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use WinLocalInc\Chjs\Models\Component;

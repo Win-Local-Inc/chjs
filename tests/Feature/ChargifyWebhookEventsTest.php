@@ -5,7 +5,12 @@ namespace WinLocalInc\Chjs\Tests\Feature;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use WinLocalInc\Chjs\Database\Seeders\ComponentSeeder;
+use WinLocalInc\Chjs\Database\Seeders\ProductSeeder;
 use WinLocalInc\Chjs\Enums\PaymentCollectionMethod;
+use WinLocalInc\Chjs\Enums\Product as ProductEnum;
+use WinLocalInc\Chjs\Enums\ProductPricing;
+use WinLocalInc\Chjs\Enums\ShareCardProPricing;
 use WinLocalInc\Chjs\Enums\SubscriptionStatus;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
 use WinLocalInc\Chjs\Models\Component;
@@ -23,77 +28,37 @@ use WinLocalInc\Chjs\Webhook\Handlers\SubscriptionPaymentUpdate;
 
 class ChargifyWebhookEventsTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(ProductSeeder::class);
+        $this->seed(ComponentSeeder::class);
+    }
+
     public function testChargifyWebhookEventsSubscriptionEvent()
     {
         $workspace = Workspace::factory()->create();
-        $customerId = random_int(1000000, 9999999);
         $user = User::factory()
-            ->set(
-                'chargify_id',
-                $customerId
-            )
-            ->set(
-                'workspace_id',
-                $workspace->workspace_id
-            )
+            ->workspace($workspace)
+            ->withChargifyId()
             ->create();
 
-        $product = Product::factory()->count(1)->has(
-            ProductPrice::factory()->count(1),
-            'productPrices'
-        )->create()
-            ->first();
+        $product = Product::where('product_handle',ProductEnum::PROMO->value)->first();
+        $productPrice = ProductPrice::where('product_price_handle',ProductPricing::SOLO_MONTH->value)->first();
 
-        $productPrice = $product->productPrices()->first();
-
-        $component = Component::factory()->count(1)->has(
-            ComponentPrice::factory()->count(1),
-            'price'
-        )->create()
-            ->first();
-
-        $componentPrice = $component->price()->first();
+        $component = Component::where('component_handle', ShareCardProPricing::MONTH->value )->first();
+        $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value )->first();
 
         $subscription = Subscription::factory()
-            ->set(
-                'user_id',
-                $user->user_id
-            )
-            ->set(
-                'workspace_id',
-                $workspace->workspace_id
-            )
-            ->set(
-                'product_id',
-                $product->product_id
-            )
-            ->set(
-                'product_handle',
-                $product->product_handle
-            )
+            ->user($user)
+            ->workspace($workspace)
+            ->product($product)
             ->create();
 
-        $subscriptionComponent = SubscriptionComponent::factory()
-            ->set(
-                'subscription_id',
-                $subscription->subscription_id
-            )
-            ->set(
-                'component_id',
-                $component->component_id
-            )
-            ->set(
-                'component_handle',
-                $component->component_handle
-            )
-            ->set(
-                'component_price_handle',
-                $componentPrice->component_price_handle
-            )
-            ->set(
-                'component_price_id',
-                $componentPrice->component_price_id
-            )
+        SubscriptionComponent::factory()
+            ->subscription($subscription)
+            ->component($component)
+            ->componentPrice($componentPrice)
             ->create();
 
         $nextAssessmentAt = Date::now()->toDateTimeString();
@@ -219,74 +184,27 @@ class ChargifyWebhookEventsTest extends TestCase
     public function testChargifyWebhookComponentPriceChangeEvent()
     {
         $workspace = Workspace::factory()->create();
-        $customerId = random_int(1000000, 9999999);
         $user = User::factory()
-            ->set(
-                'chargify_id',
-                $customerId
-            )
-            ->set(
-                'workspace_id',
-                $workspace->workspace_id
-            )
+            ->workspace($workspace)
+            ->withChargifyId()
             ->create();
 
-        $product = Product::factory()->count(1)->has(
-            ProductPrice::factory()->count(1),
-            'productPrices'
-        )->create()
-            ->first();
+        $product = Product::where('product_handle',ProductEnum::PROMO->value)->first();
+        $productPrice = ProductPrice::where('product_price_handle',ProductPricing::SOLO_MONTH->value)->first();
 
-        $productPrice = $product->productPrices()->first();
-
-        $component = Component::factory()->count(1)->has(
-            ComponentPrice::factory()->count(1),
-            'price'
-        )->create()
-            ->first();
-
-        $componentPrice = $component->price()->first();
+        $component = Component::where('component_handle', ShareCardProPricing::MONTH->value )->first();
+        $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value )->first();
 
         $subscription = Subscription::factory()
-            ->set(
-                'user_id',
-                $user->user_id
-            )
-            ->set(
-                'workspace_id',
-                $workspace->workspace_id
-            )
-            ->set(
-                'product_id',
-                $product->product_id
-            )
-            ->set(
-                'product_handle',
-                $product->product_handle
-            )
+            ->user($user)
+            ->workspace($workspace)
+            ->product($product)
             ->create();
 
-        $subscriptionComponent = SubscriptionComponent::factory()
-            ->set(
-                'subscription_id',
-                $subscription->subscription_id
-            )
-            ->set(
-                'component_id',
-                $component->component_id
-            )
-            ->set(
-                'component_handle',
-                $component->component_handle
-            )
-            ->set(
-                'component_price_handle',
-                $componentPrice->component_price_handle
-            )
-            ->set(
-                'component_price_id',
-                $componentPrice->component_price_id
-            )
+        SubscriptionComponent::factory()
+            ->subscription($subscription)
+            ->component($component)
+            ->componentPrice($componentPrice)
             ->create();
 
         $quantity = 15;

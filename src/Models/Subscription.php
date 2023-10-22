@@ -19,7 +19,7 @@ use WinLocalInc\Chjs\Enums\SubscriptionStatus;
  * @property Product product
  * @property mixed $subscription_id
  * @property mixed $product_handle
- * @property mixed $component_handle
+ * @property mixed $component
  */
 class Subscription extends Model
 {
@@ -38,16 +38,12 @@ class Subscription extends Model
         'product_handle' => \WinLocalInc\Chjs\Enums\Product::class,
         'payment_collection_method' => PaymentCollectionMethod::class,
         'subscription_interval' => SubscriptionInterval::class,
+        'component' => MainComponent::class,
     ];
 
     public function getProductNameAttribute()
     {
-        return $this->product_handle.'::'.$this->component_handle;
-    }
-
-    public function getMainComponentAtrribute()
-    {
-        return MainComponent::findComponent($this->component_handle);
+        return $this->product_handle.'::'.$this->component->name;
     }
 
     public function workspace(): BelongsTo
