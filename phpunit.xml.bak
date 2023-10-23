@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.4/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true" testdox="true">
+  <testsuites>
+    <testsuite name="Test Suite">
+      <directory suffix="Test.php">./tests</directory>
+    </testsuite>
+  </testsuites>
+  <source>
+    <include>
+      <directory suffix=".php">./src</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">./src/Chargify</directory>
+    </exclude>
+  </source>
+  <coverage/>
+  <php>
+    <server name="APP_KEY" value="base64:2fl+Ktvkfl+Fuz4Qp/A75G2RTiWVA/ZoKZvp6fiiM10="/>
+    <server name="APP_ENV" value="testing" force="true"/>
+    <server name="QUEUE_CONNECTION" value="sync"/>
+    <server name="BCRYPT_ROUNDS" value="4"/>
+    <server name="CACHE_DRIVER" value="array"/>
+    <server name="MAIL_MAILER" value="array"/>
+    <server name="SESSION_DRIVER" value="array"/>
+    <server name="TELESCOPE_ENABLED" value="false"/>
+    <server name="APP_NAME" value="test"/>
+    <server name="APP_DEBUG" value="true"/>
+    <server name="APP_URL" value="http://127.0.0.1:8000"/>
+    <server name="LOG_CHANNEL" value="null"/>
+    <server name="BROADCAST_DRIVER" value="log"/>
+    <!--        <server name="DB_CONNECTION" value="sqlite"/> -->
+    <!--        <server name="DB_DATABASE" value=":memory:"/>-->
+    <server name="DB_CONNECTION" value="mysql"/>
+    <server name="DB_HOST" value="127.0.0.1"/>
+    <server name="DB_PORT" value="3383"/>
+    <server name="DB_DATABASE" value="testing"/>
+    <server name="DB_USERNAME" value="user"/>
+    <server name="DB_PASSWORD" value="password"/>
+    <server name="CHARGIFY_SHARED_KEY" value="ASDF"/>
+    <server name="CHARGIFY_API_KEY" value="ASDF"/>
+    <server name="CHARGIFY_PUBLIC_KEY" value="ASDF"/>
+    <server name="CHARGIFY_PRIVATE_KEY" value="ASDF"/>
+    <server name="CHARGIFY_HOSTNAME" value="https://chargify.test"/>
+    <server name="CHARGIFY_EVENTS_HOSTNAME" value="https://events.chargify.test"/>
+    <server name="CHARGIFY_SUBDOMAIN" value="chargify"/>
+    <server name="CHARGIFY_PRODUCT_FAMILY_ID" value="2575530"/>
+  </php>
+  <source>
+    <include>
+      <directory suffix=".php">./src</directory>
+    </include>
+  </source>
+</phpunit>

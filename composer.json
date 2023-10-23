@@ -25,6 +25,8 @@
         "laravel/pint": "^1.13",
         "nunomaduro/collision": "^7.9",
         "orchestra/testbench": "^8.0",
+        "pestphp/pest": "^2.24",
+        "pestphp/pest-plugin-type-coverage": "^2.4",
         "phpunit/phpunit": "^10.0"
     },
     "autoload": {
@@ -46,10 +48,18 @@
         "test": "vendor/bin/testbench package:test --configuration=tests/phpunit.xml",
         "lint": [
             "@php vendor/bin/pint"
+        ],
+        "ptest": "./vendor/bin/pest",
+        "pctest": "./vendor/bin/pest --type-coverge",
+        "ptctest": [
+            "@php -d memory_limit=-1 ./vendor/bin/pest --type-coverage"
         ]
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "extra": {
         "laravel": {

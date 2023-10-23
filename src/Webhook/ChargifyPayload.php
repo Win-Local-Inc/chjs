@@ -9,12 +9,12 @@ class ChargifyPayload
     /**
      * ChargifyPayload constructor.
      */
-    public function __construct(array $payload)
+    public function __construct(mixed $payload)
     {
         $this->payload = $this->cast($payload);
     }
 
-    protected function cast($payload)
+    protected function cast(mixed $payload): mixed
     {
         if (! is_array($payload)) {
             return $payload;
