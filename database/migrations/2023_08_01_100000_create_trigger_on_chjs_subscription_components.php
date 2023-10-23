@@ -13,15 +13,16 @@ return new class() extends Migration
             FOR EACH ROW
             BEGIN
                 DECLARE fetchedComponentEntry VARCHAR(21);
+                DECLARE fetchedComponentHandle VARCHAR(32);
                 IF NEW.is_main_component = 1 THEN
                 
-                    SELECT component_entry
-                    INTO fetchedComponentEntry
+                    SELECT component_entry, component_handle
+                    INTO fetchedComponentEntry, fetchedComponentHandle
                     FROM chjs_components
                     WHERE component_id = NEW.component_id;
         
                     UPDATE chjs_subscriptions
-                    SET component = fetchedComponentEntry
+                    SET component = fetchedComponentEntry, component_handle = fetchedComponentHandle
                     WHERE subscription_id = NEW.subscription_id;
                 END IF;
             END;
@@ -33,15 +34,16 @@ return new class() extends Migration
             FOR EACH ROW
             BEGIN
                 DECLARE fetchedComponentEntry VARCHAR(21);
+                DECLARE fetchedComponentHandle VARCHAR(32);
                 IF NEW.is_main_component = 1 THEN
                 
-                    SELECT component_entry
-                    INTO fetchedComponentEntry
+                    SELECT component_entry, component_handle
+                    INTO fetchedComponentEntry, fetchedComponentHandle
                     FROM chjs_components
                     WHERE component_id = NEW.component_id;
         
                     UPDATE chjs_subscriptions
-                    SET component = fetchedComponentEntry
+                    SET component = fetchedComponentEntry, component_handle = fetchedComponentHandle
                     WHERE subscription_id = NEW.subscription_id;
                 END IF;
             END;

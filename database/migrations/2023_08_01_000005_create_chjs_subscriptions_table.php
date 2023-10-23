@@ -26,6 +26,7 @@ return new class extends Migration
 
             //\WinLocalInc\Chjs\Enums\MainComponent::names();
             $table->string('component')->index()->nullable();
+            $table->string('component_handle')->index()->nullable();
 
             //            $table->string('product_price_handle', 52);
             $table->string('status', 18)->default(SubscriptionStatus::Active->value);
