@@ -20,4 +20,25 @@ enum ProductPricing: string
     case DISTRIBUTOR_MONTH = 'distributor_month';
     case DISTRIBUTOR_BIANNUAL = 'distributor_biannual';
     case DISTRIBUTOR_YEAR = 'distributor_year';
+
+
+    public static function getProductPrices(Product $product)
+    {
+        $prices = [];
+        foreach (self::cases() as $pricing) {
+            if (str_starts_with($pricing->value, $product->value)) {
+                $prices[] = $pricing->value;
+            }
+        }
+        return $prices;
+    }
+
+    public static function productPricesMapping(): array
+    {
+        $allPrices = [];
+        foreach (Product::cases() as $product) {
+            $allPrices[$product->value] = self::getProductPrices($product);
+        }
+        return $allPrices;
+    }
 }
