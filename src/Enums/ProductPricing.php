@@ -21,7 +21,6 @@ enum ProductPricing: string
     case DISTRIBUTOR_BIANNUAL = 'distributor_biannual';
     case DISTRIBUTOR_YEAR = 'distributor_year';
 
-
     public static function getProductPrices(Product $product)
     {
         $prices = [];
@@ -30,6 +29,7 @@ enum ProductPricing: string
                 $prices[] = $pricing->value;
             }
         }
+
         return $prices;
     }
 
@@ -39,6 +39,7 @@ enum ProductPricing: string
         foreach (Product::cases() as $product) {
             $allPrices[$product->value] = self::getProductPrices($product);
         }
+
         return $allPrices;
     }
 }

@@ -3,13 +3,15 @@
 namespace WinLocalInc\Chjs\Tests\Feature;
 
 use Illuminate\Testing\Fluent\AssertableJson;
+use WinLocalInc\Chjs\Http\Controllers\TokenController;
 use WinLocalInc\Chjs\Tests\TestCase;
 
 class ChargifyTokenControllerTest extends TestCase
 {
     public function testChargifyTokenSuccess()
     {
-        $response = $this->getJson(route('chargify.token'));
+        $this->withoutMiddleware('portal');
+        $response = $this->getJson(action(TokenController::class));
 
         $response->assertStatus(201)
             ->assertJson(
