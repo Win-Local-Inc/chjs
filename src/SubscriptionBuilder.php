@@ -60,7 +60,7 @@ class SubscriptionBuilder
                 $this->component($componentPrice, $componentData['quantity']);
             } elseif (isset($componentData['component_handle'])) {
                 $component = $this->getComponentByHandle($componentData['component_handle']);
-                $this->customComponent($component, $componentData['quantity'], $componentData['customPrice']);
+                $this->customComponent($component, $componentData['quantity'], $componentData['custom_price']);
             }
         }
 
