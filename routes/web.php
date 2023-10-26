@@ -10,5 +10,5 @@ Route::post('api/webhook/v2', [WebhookController::class, 'handleWebhook'])
     ->middleware(VerifyWebhookSignature::class)->name('webhook.v2');
 
 Route::get('api/chargify/token', TokenController::class)
-    ->middleware([TrustHosts::class, 'api'])
+    ->middleware(['auth:portal'])
     ->name('chargify.token');
