@@ -142,10 +142,13 @@ class SubscriptionBuilder
         return $this;
     }
 
-    public function coupon(string $coupon): static
+    public function coupon(?string $coupon): static
     {
-        if (! in_array($coupon, $this->coupons)) {
-            $this->coupons[] = $coupon;
+        if($coupon)
+        {
+            if (! in_array($coupon, $this->coupons)) {
+                $this->coupons[] = $coupon;
+            }
         }
 
         return $this;
