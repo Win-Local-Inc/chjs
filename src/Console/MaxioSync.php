@@ -143,7 +143,7 @@ class MaxioSync extends Command
 
             try {
                 $componentData['component_entry'] = MainComponent::findComponent($componentData['component_handle'])->name;
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
             }
 
             Component::updateOrInsert(

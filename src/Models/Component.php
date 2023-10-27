@@ -47,14 +47,14 @@ class Component extends Model
             try {
 
                 $model->component_entry = MainComponent::findComponent($model->compoent_handle)->name;
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
             }
         });
 
         static::updating(function ($model) {
             try {
                 $model->component_entry = MainComponent::findComponent($model->compoent_handle)->name;
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
             }
         });
     }
