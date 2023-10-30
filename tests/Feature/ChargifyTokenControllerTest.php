@@ -10,7 +10,7 @@ class ChargifyTokenControllerTest extends TestCase
 {
     public function testChargifyTokenSuccess()
     {
-        $this->withoutMiddleware('portal');
+        $this->withoutMiddleware();
         $response = $this->getJson(action(TokenController::class));
 
         $response->assertStatus(201)
