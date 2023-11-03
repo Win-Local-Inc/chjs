@@ -136,7 +136,7 @@ class MaxioSync extends Command
                 'component_name' => $component->name,
                 'component_unit' => $component->unit_name,
                 'component_type' => $component->kind,
-                'component_is_active' => is_null($component->archived) ? IsActive::Active : IsActive::Inactive,
+                'component_is_active' => is_null($component->archived_at) ? IsActive::Active : IsActive::Inactive,
                 'created_at' => $component->created_at,
                 'updated_at' => $component->updated_at,
             ];
