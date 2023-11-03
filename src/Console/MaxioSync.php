@@ -161,6 +161,7 @@ class MaxioSync extends Command
 
         foreach ($componentPricePoints as $componentPricePoint) {
             $this->info('component price: '.$componentPricePoint->name);
+
             ComponentPrice::updateOrInsert(
                 [
                     'component_price_id' => $componentPricePoint->id,

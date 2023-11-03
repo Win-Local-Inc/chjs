@@ -35,7 +35,7 @@ class ComponentPriceService extends AbstractService
             'page' => 1,
             'per_page' => 100,
             'filter' => [
-                'type' => 'catalog,default,custom',
+                'type' => 'catalog,default',//custom
             ],
         ],
             $options
