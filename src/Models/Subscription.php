@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use WinLocalInc\Chjs\Chjs;
 use WinLocalInc\Chjs\Database\Factories\SubscriptionFactory;
 use WinLocalInc\Chjs\Enums\MainComponent;
@@ -64,6 +65,11 @@ class Subscription extends Model
     public function productPrice(): BelongsTo
     {
         return $this->belongsTo(ProductPrice::class, 'product_price_id');
+    }
+
+    public function subscriptionComponents(): HasMany
+    {
+        return $this->hasMany(SubscriptionComponent::class, 'subscription_id');
     }
 
     public function components(): BelongsToMany

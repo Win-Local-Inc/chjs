@@ -275,4 +275,9 @@ trait HandleSubscription
             'updated_at' => $maxioSubscription->updated_at,
         ])->save();
     }
+
+    public function setDefaultPaymentMethods(string $paymentProfileId): ChargifyObject
+    {
+        return maxio()->paymentProfile->setDefault(paymentProfileId: $paymentProfileId, subscriptionId: $this->subscription->subscription_id);
+    }
 }

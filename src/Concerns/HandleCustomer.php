@@ -9,10 +9,6 @@ use WinLocalInc\Chjs\Models\Subscription;
 
 trait HandleCustomer
 {
-    //adding support to ads component
-    // maybe new trait and add price param in env file
-    //webhook usage_quantity - current
-    //
     public function chargifyId(): ?int
     {
         return $this->chargify_id;
@@ -112,5 +108,15 @@ trait HandleCustomer
             ->when($status, function ($q) use ($status) {
                 $q->where('status', $status);
             })->get();
+    }
+
+    public function getPaymentMethods(): \Illuminate\Support\Collection
+    {
+        return maxio()->paymentProfile->list(['customer_id' => $this->chargifyId()]);
+    }
+
+    public function addPaymentMethods(string $token): ChargifyObject
+    {
+        return maxio()->paymentProfile->create(customerId: $this->chargifyId(), chargifyToken: $token);
     }
 }

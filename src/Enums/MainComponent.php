@@ -48,4 +48,9 @@ enum MainComponent
 
         return $names;
     }
+
+    public function getComponentName(): string
+    {
+        return ucwords(strtolower(str_replace('_', ' ', $this->name)));
+    }
 }
