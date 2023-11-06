@@ -50,7 +50,7 @@ class ProductStructure
      *
      * @throws InvalidArgumentException if the product is not defined.
      */
-    public static function isMainComponent(string $product, string $component): bool
+    public static function isMainComponent(string $product, string $component): ?bool
     {
         $productPricingMap = self::getProductPricingMap();
 
@@ -58,6 +58,10 @@ class ProductStructure
             throw new InvalidArgumentException("Undefined product: {$product}");
         }
 
-        return in_array($component, $productPricingMap[$product], true);
+        if(! in_array($component, $productPricingMap[$product], true))
+        {
+            return null;
+        }
+        return true;
     }
 }
