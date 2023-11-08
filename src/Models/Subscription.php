@@ -21,6 +21,7 @@ use WinLocalInc\Chjs\Enums\SubscriptionStatus;
  * @property mixed $subscription_id
  * @property mixed $product_handle
  * @property mixed $component
+ * @property mixed subscriptionComponents
  */
 class Subscription extends Model
 {
