@@ -5,6 +5,7 @@ namespace WinLocalInc\Chjs\Webhook\Handlers;
 use WinLocalInc\Chjs\Attributes\HandleEvents;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
+use WinLocalInc\Chjs\Events\SubscriptionEvent;
 use WinLocalInc\Chjs\Models\Subscription;
 use WinLocalInc\Chjs\Webhook\ChargifyUtility;
 
@@ -41,5 +42,9 @@ class SubscriptionEvents extends AbstractHandler
             'next_billing_at' => ChargifyUtility::getFixedDateTime($data['next_assessment_at']),
             'ends_at' => ChargifyUtility::getFixedDateTime($data['scheduled_cancellation_at']),
         ]], ['subscription_id']);
+
+        $subscription = Subscription::find($data['id']);
+
+        event( new SubscriptionEvent($subscription));
     }
 }
