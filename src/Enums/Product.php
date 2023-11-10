@@ -10,4 +10,7 @@ enum Product: string
     case ENTREPRENEUR = 'entrepreneur';
     case FRANCHISER = 'franchiser';
     case DISTRIBUTOR = 'distributor';
+    case PKG_PART_TIME = 'pkg_part_time';
+    case PKG_FULL_TIME = 'pkg_full_time';
+    case PKG_OVERTIME = 'pkg_overtime';
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use WinLocalInc\Chjs\Database\Factories\ProductPriceFactory;
 use WinLocalInc\Chjs\Enums\IsActive;
+use WinLocalInc\Chjs\Enums\ProductPricing;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 
 /**
@@ -31,6 +32,7 @@ class ProductPrice extends Model
     protected $casts = [
         'product_is_active' => IsActive::class,
         'product_price_interval' => SubscriptionInterval::class,
+        'product_price_handle' => ProductPricing::class
     ];
 
     public function product(): BelongsTo

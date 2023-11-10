@@ -52,7 +52,7 @@ class ChargifyWebhookEventsTest extends TestCase
         $subscription = Subscription::factory()
             ->user($user)
             ->workspace($workspace)
-            ->product($product)
+            ->productPrice($productPrice)
             ->create();
 
         SubscriptionComponent::factory()
@@ -198,7 +198,7 @@ class ChargifyWebhookEventsTest extends TestCase
         $subscription = Subscription::factory()
             ->user($user)
             ->workspace($workspace)
-            ->product($product)
+            ->productPrice($productPrice)
             ->create();
 
         SubscriptionComponent::factory()

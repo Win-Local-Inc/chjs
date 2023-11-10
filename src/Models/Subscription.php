@@ -12,6 +12,7 @@ use WinLocalInc\Chjs\Chjs;
 use WinLocalInc\Chjs\Database\Factories\SubscriptionFactory;
 use WinLocalInc\Chjs\Enums\MainComponent;
 use WinLocalInc\Chjs\Enums\PaymentCollectionMethod;
+use WinLocalInc\Chjs\Enums\ProductPricing;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 use WinLocalInc\Chjs\Enums\SubscriptionStatus;
 
@@ -22,6 +23,7 @@ use WinLocalInc\Chjs\Enums\SubscriptionStatus;
  * @property mixed $product_handle
  * @property mixed $component
  * @property mixed subscriptionComponents
+ * @property ProductPricing product_price_handle
  */
 class Subscription extends Model
 {
@@ -38,6 +40,7 @@ class Subscription extends Model
     protected $casts = [
         'status' => SubscriptionStatus::class,
         'product_handle' => \WinLocalInc\Chjs\Enums\Product::class,
+        'product_price_handle' => ProductPricing::class,
         'payment_collection_method' => PaymentCollectionMethod::class,
         'subscription_interval' => SubscriptionInterval::class,
         'component' => MainComponent::class,
@@ -45,7 +48,7 @@ class Subscription extends Model
 
     public function getProductNameAttribute()
     {
-        return $this->product_handle.'::'.$this->component->name;
+        return $this->product_handle->value .'::'. $this->component->name;
     }
 
     public function workspace(): BelongsTo
@@ -58,14 +61,9 @@ class Subscription extends Model
         return $this->belongsTo(Chjs::$userModel, 'user_id');
     }
 
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Subscription::class, 'product_id');
-    }
-
     public function productPrice(): BelongsTo
     {
-        return $this->belongsTo(ProductPrice::class, 'product_price_id');
+        return $this->belongsTo(ProductPrice::class, 'product_price_handle');
     }
 
     public function subscriptionComponents(): HasMany

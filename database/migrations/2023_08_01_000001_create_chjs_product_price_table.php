@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('chjs_product_prices', function (Blueprint $table) {
             $table->id('product_price_id');
             $table->foreignId('product_id')->constrained('chjs_products', 'product_id')->cascadeOnDelete();
-            $table->string('product_handle', 52);
+            $table->string('product_handle', 52)->index();
             $table->string('product_price_handle', 52)->unique();
             $table->string('product_price_name', 52);
             $table->enum('product_price_interval', SubscriptionInterval::values())->default(SubscriptionInterval::Month->value);

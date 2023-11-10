@@ -20,6 +20,12 @@ enum ProductPricing: string
     case DISTRIBUTOR_MONTH = 'distributor_month';
     case DISTRIBUTOR_BIANNUAL = 'distributor_biannual';
     case DISTRIBUTOR_YEAR = 'distributor_year';
+    case PKG_PART_TIME_MONTH = 'pkg_part_time_month';
+    case PKG_PART_TIME_BIANNUAL = 'pkg_part_time_biannual';
+    case PKG_FULL_TIME_MONTH = 'pkg_full_time_month';
+    case PKG_FULL_TIME_BIANNUAL = 'pkg_full_time_biannual';
+    case PKG_OVERTIME_MONTH = 'pkg_overtime_month';
+    case PKG_OVERTIME_BIANNUAL = 'pkg_overtime_biannual';
 
     public static function getProductPrices(Product $product)
     {

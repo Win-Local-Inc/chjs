@@ -20,19 +20,16 @@ return new class extends Migration
             $table->foreignUuid('workspace_id')->constrained('workspaces', 'workspace_id');
             $table->foreignUuid('user_id')->constrained('users', 'user_id');
 
-            // [PROMO, SOLO,Entrepreneur , Franchisor, Distributor]
-            $table->foreignId('product_id')->constrained('chjs_products', 'product_id')->cascadeOnDelete();
+            $table->string('product_price_handle',52)->index();
             $table->string('product_handle', 52)->index();
 
             //\WinLocalInc\Chjs\Enums\MainComponent::names();
             $table->string('component')->index()->nullable();
             $table->string('component_handle')->index()->nullable();
 
-            //            $table->string('product_price_handle', 52);
             $table->string('status', 18)->default(SubscriptionStatus::Active->value);
             $table->string('payment_collection_method', 10)->default(PaymentCollectionMethod::Automatic->value);
             $table->enum('subscription_interval', SubscriptionInterval::values())->default(SubscriptionInterval::Month->value);
-            //            $table->unsignedMediumInteger('subscription_price_in_cents')->default(0);//total revenue
             $table->unsignedMediumInteger('total_revenue_in_cents')->default(0);
             //            $table->boolean('self_payment')->default(1);
             $table->timestamp('next_billing_at')->nullable();

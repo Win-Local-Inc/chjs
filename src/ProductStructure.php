@@ -35,6 +35,23 @@ class ProductStructure
                     ShareCardProPricing::values(),
                     ShareCardPricing::values()
                 ),
+                Product::PKG_PART_TIME->value => [
+                    CompanyPricing::MONTH,
+                    CompanyPricing::BIANNUAL,
+                    ShareCardProPricing::MONTH,
+                    ShareCardProPricing::BIANNUAL,
+                ],
+                Product::PKG_FULL_TIME->value => [
+                    CompanyPricing::MONTH,
+                    CompanyPricing::BIANNUAL,
+                    ShareCardProPricing::MONTH,
+                    ShareCardProPricing::BIANNUAL,
+                ],
+                Product::PKG_OVERTIME->value => [
+                    CompanyPricing::MONTH,
+                    CompanyPricing::BIANNUAL
+                ],
+
             ];
         }
 

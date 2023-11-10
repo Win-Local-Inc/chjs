@@ -33,7 +33,7 @@ class SubscriptionEvents extends AbstractHandler
             'subscription_id' => $data['id'],
             'user_id' => $data['customer']['reference'],
             'workspace_id' => $data['reference'],
-            'product_id' => $data['product']['id'],
+            'product_price_handle' => $data['product']['product_price_point_handle'],
             'product_handle' => $data['product']['handle'],
             'status' => $data['state'],
             'payment_collection_method' => $data['payment_collection_method'],

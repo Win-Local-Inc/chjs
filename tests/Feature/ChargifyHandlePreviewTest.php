@@ -46,7 +46,7 @@ class ChargifyHandlePreviewTest extends TestCase
         $subscription = Subscription::factory()
             ->user($user)
             ->workspace($workspace)
-            ->product($product)
+            ->productPrice($productPrice)
             ->create();
 
         SubscriptionComponent::factory()
@@ -133,7 +133,7 @@ class ChargifyHandlePreviewTest extends TestCase
                 ], 200),
         ]);
 
-        $response = $workspace->newSubscription(ProductPricing::from($productPrice->product_price_handle))
+        $response = $workspace->newSubscription($productPrice->product_price_handle)
             ->paymentProfile($paymentProfileId)
             ->component($componentPrice, 10)
             ->preview();
@@ -144,7 +144,6 @@ class ChargifyHandlePreviewTest extends TestCase
 
     public function testChargifySwapSubscriptionPreview()
     {
-        //todo this test is not valid
         $workspace = Workspace::factory()->create();
 
         $user = User::factory()
@@ -155,10 +154,8 @@ class ChargifyHandlePreviewTest extends TestCase
         $workspace->owner_id = $user->user_id;
         $workspace->save();
 
-        $product = Product::where('product_handle', ProductEnum::PROMO->value)->first();
         $productPrice = ProductPrice::where('product_price_handle', ProductPricing::PROMO_MONTH->value)->first();
 
-        $productNew = Product::where('product_handle', ProductEnum::PROMO->value)->first();
         $productPriceNew = ProductPrice::where('product_price_handle', ProductPricing::SOLO_MONTH->value)->first();
 
         $component = Component::where('component_handle', ShareCardProPricing::MONTH->value)->first();
@@ -167,7 +164,7 @@ class ChargifyHandlePreviewTest extends TestCase
         $subscription = Subscription::factory()
             ->user($user)
             ->workspace($workspace)
-            ->product($product)
+            ->productPrice($productPrice)
             ->create();
 
         SubscriptionComponent::factory()

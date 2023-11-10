@@ -183,7 +183,7 @@ class SubscriptionBuilder
                 'subscription_id' => $subscriptionMaxio->id,
                 'workspace_id' => $this->workspace->workspace_id,
                 'user_id' => $this->userId,
-                'product_id' => $this->pricePoint->product_id,
+                'product_price_handle' => $this->pricePoint->product_price_handle,
                 'product_handle' => $this->pricePoint->product->product_handle,
                 'status' => $subscriptionMaxio->state,
                 'payment_collection_method' => $subscriptionMaxio->payment_collection_method,

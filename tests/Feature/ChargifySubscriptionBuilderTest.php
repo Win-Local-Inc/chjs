@@ -157,7 +157,7 @@ class ChargifySubscriptionBuilderTest extends TestCase
                 ], 200),
         ]);
 
-        $workspace->newSubscription(ProductPricing::from($productPrice->product_price_handle))
+        $workspace->newSubscription($productPrice->product_price_handle)
             ->paymentProfile($paymentProfileId)
             ->component($componentPrice, 10)
             ->coupon($coupon)
