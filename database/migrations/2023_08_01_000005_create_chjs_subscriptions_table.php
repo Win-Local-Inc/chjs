@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignUuid('user_id')->constrained('users', 'user_id');
             $table->unsignedBigInteger('subscription_id')->index();
 
-            $table->string('product_price_handle',52)->index();
+            $table->string('product_price_handle', 52)->index();
             $table->string('product_handle', 52)->index();
 
             //\WinLocalInc\Chjs\Enums\MainComponent::names();

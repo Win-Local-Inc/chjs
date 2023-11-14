@@ -5,7 +5,6 @@ namespace WinLocalInc\Chjs\Tests\Feature;
 use Illuminate\Support\Facades\Http;
 use WinLocalInc\Chjs\Database\Seeders\ComponentSeeder;
 use WinLocalInc\Chjs\Database\Seeders\ProductSeeder;
-use WinLocalInc\Chjs\Enums\Product as ProductEnum;
 use WinLocalInc\Chjs\Enums\ProductPricing;
 use WinLocalInc\Chjs\Enums\ShareCardProPricing;
 use WinLocalInc\Chjs\Models\Component;

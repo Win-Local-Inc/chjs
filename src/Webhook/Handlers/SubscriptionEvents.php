@@ -7,6 +7,7 @@ use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
 use WinLocalInc\Chjs\Events\SubscriptionEvent;
 use WinLocalInc\Chjs\Models\Subscription;
+use WinLocalInc\Chjs\Models\SubscriptionHistory;
 use WinLocalInc\Chjs\Webhook\ChargifyUtility;
 
 #[HandleEvents(
@@ -29,6 +30,8 @@ class SubscriptionEvents extends AbstractHandler
     {
         $data = $payload['subscription'];
 
+        SubscriptionHistory::createSubscriptionHistory($data['id'], $event);
+
         Subscription::upsert([[
             'subscription_id' => $data['id'],
             'user_id' => $data['customer']['reference'],
@@ -43,8 +46,8 @@ class SubscriptionEvents extends AbstractHandler
             'ends_at' => ChargifyUtility::getFixedDateTime($data['scheduled_cancellation_at']),
         ]], ['workspace_id']);
 
-        $subscription = Subscription::where('subscription_id',$data['id'])->first();
+        $subscription = Subscription::where('subscription_id', $data['id'])->first();
 
-        event( new SubscriptionEvent($subscription));
+        event(new SubscriptionEvent($subscription));
     }
 }

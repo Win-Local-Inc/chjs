@@ -49,7 +49,7 @@ class ProductStructure
                 ],
                 Product::PKG_OVERTIME->value => [
                     CompanyPricing::MONTH,
-                    CompanyPricing::BIANNUAL
+                    CompanyPricing::BIANNUAL,
                 ],
 
             ];
@@ -75,10 +75,10 @@ class ProductStructure
             throw new InvalidArgumentException("Undefined product: {$product}");
         }
 
-        if(! in_array($component, $productPricingMap[$product], true))
-        {
+        if (! in_array($component, $productPricingMap[$product], true)) {
             return null;
         }
+
         return true;
     }
 }

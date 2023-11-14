@@ -7,6 +7,7 @@ use WinLocalInc\Chjs\Enums\WebhookEvents;
 use WinLocalInc\Chjs\Events\SubscriptionEvent;
 use WinLocalInc\Chjs\Models\Subscription;
 use WinLocalInc\Chjs\Models\SubscriptionComponent;
+use WinLocalInc\Chjs\Models\SubscriptionHistory;
 
 #[HandleEvents(
     WebhookEvents::ItemPricePointChanged
@@ -24,6 +25,8 @@ class ComponentPriceChange extends AbstractHandler
 
         $newPrice = (int) $pricePoint->prices[0]->unit_price * (int) $component->allocated_quantity;
 
+        SubscriptionHistory::createSubscriptionHistory($subscriptionId, $event);
+
         SubscriptionComponent::upsert(
             [[
                 'subscription_id' => $subscriptionId,
@@ -37,7 +40,7 @@ class ComponentPriceChange extends AbstractHandler
             ['subscription_id', 'component_id']
         );
 
-        $subscription = Subscription::where('subscription_id',$subscriptionId)->first();
-        event( new SubscriptionEvent($subscription));
+        $subscription = Subscription::where('subscription_id', $subscriptionId)->first();
+        event(new SubscriptionEvent($subscription));
     }
 }

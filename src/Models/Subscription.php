@@ -48,7 +48,7 @@ class Subscription extends Model
 
     public function getProductNameAttribute()
     {
-        return $this->product_handle->value .'::'. $this->component->name;
+        return $this->product_handle->value.'::'.$this->component->name;
     }
 
     public function workspace(): BelongsTo
@@ -68,7 +68,7 @@ class Subscription extends Model
 
     public function subscriptionComponents(): HasMany
     {
-        return $this->hasMany(SubscriptionComponent::class, 'subscription_id');
+        return $this->hasMany(SubscriptionComponent::class, 'subscription_id', 'subscription_id');
     }
 
     public function components(): BelongsToMany

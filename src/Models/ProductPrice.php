@@ -32,7 +32,7 @@ class ProductPrice extends Model
     protected $casts = [
         'product_is_active' => IsActive::class,
         'product_price_interval' => SubscriptionInterval::class,
-        'product_price_handle' => ProductPricing::class
+        'product_price_handle' => ProductPricing::class,
     ];
 
     public function product(): BelongsTo

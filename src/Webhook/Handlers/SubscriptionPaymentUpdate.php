@@ -5,6 +5,8 @@ namespace WinLocalInc\Chjs\Webhook\Handlers;
 use WinLocalInc\Chjs\Attributes\HandleEvents;
 use WinLocalInc\Chjs\Enums\PaymentCollectionMethod;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
+use WinLocalInc\Chjs\Models\Subscription;
+use WinLocalInc\Chjs\Models\SubscriptionHistory;
 
 #[HandleEvents(
     WebhookEvents::PaymentSuccess
@@ -37,6 +39,11 @@ class SubscriptionPaymentUpdate extends AbstractHandler
         maxio()->subscription->update($subscription['id'], [
             'payment_collection_method' => PaymentCollectionMethod::Automatic->value,
         ]);
+
+        SubscriptionHistory::createSubscriptionHistory($subscription['id'], $this->event);
+
+        Subscription::where(['subscription_id' => $subscription['id']])
+            ->update(['payment_collection_method' => PaymentCollectionMethod::Automatic->value]);
     }
 
     protected function isPaymentProfileSetUp(array &$subscription): bool

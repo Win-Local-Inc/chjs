@@ -4,7 +4,6 @@ namespace WinLocalInc\Chjs\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use WinLocalInc\Chjs\Models\Product;
 use WinLocalInc\Chjs\Models\ProductPrice;
 use WinLocalInc\Chjs\Models\Subscription;
 use WinLocalInc\Chjs\Tests\Database\Models\User;
@@ -35,6 +34,6 @@ class SubscriptionFactory extends Factory
 
     public function productPrice(ProductPrice $productPrice): SubscriptionFactory
     {
-        return $this->state([ 'product_price_handle' => $productPrice->product_price_handle, 'product_handle' => $productPrice->product->product_handle]);
+        return $this->state(['product_price_handle' => $productPrice->product_price_handle, 'product_handle' => $productPrice->product->product_handle]);
     }
 }

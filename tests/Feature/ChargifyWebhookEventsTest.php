@@ -135,6 +135,11 @@ class ChargifyWebhookEventsTest extends TestCase
             'status' => $state,
             'payment_collection_method' => $paymentMethod,
         ]);
+
+        $this->assertDatabaseHas('chjs_subscription_histories', [
+            'subscription_id' => $subscription->subscription_id,
+            'workspace_id' => $workspace->workspace_id,
+        ]);
     }
 
     public function testChargifyWebhookSubscriptionPaymentUpdateEvent()
@@ -278,6 +283,11 @@ class ChargifyWebhookEventsTest extends TestCase
             'component_id' => $component->component_id,
             'subscription_component_quantity' => $quantity,
             'subscription_component_price' => $finalPrice,
+        ]);
+
+        $this->assertDatabaseHas('chjs_subscription_histories', [
+            'subscription_id' => $subscription->subscription_id,
+            'workspace_id' => $workspace->workspace_id,
         ]);
     }
 }

@@ -5,6 +5,7 @@ namespace WinLocalInc\Chjs\Webhook\Handlers;
 use WinLocalInc\Chjs\Attributes\HandleEvents;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
 use WinLocalInc\Chjs\Models\SubscriptionComponent;
+use WinLocalInc\Chjs\Models\SubscriptionHistory;
 
 #[HandleEvents(
     WebhookEvents::ComponentAllocationChange
@@ -17,6 +18,8 @@ class ComponentAllocation extends AbstractHandler
         $pricePoint = maxio()->componentPrice->find($payload['price_point_id'])->price_point;
         // all prices will be per_unit so only 1 element in array
         $newPrice = (int) $pricePoint->prices[0]->unit_price * (int) $payload['allocated_quantity'];
+
+        SubscriptionHistory::createSubscriptionHistory($payload['subscription']['id'], $event);
 
         SubscriptionComponent::upsert(
             [[
