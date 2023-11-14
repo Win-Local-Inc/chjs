@@ -18,7 +18,7 @@ class ChjsServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'chjs');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'chjs');
 
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../Database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         if ($this->app->runningInConsole()) {
@@ -27,7 +27,7 @@ class ChjsServiceProvider extends ServiceProvider
             ], 'config');
 
             $this->publishes([
-                __DIR__.'/../database/migrations' => $this->app->databasePath('migrations'),
+                __DIR__.'/../Database/migrations' => $this->app->databasePath('migrations'),
             ], 'chjs-migrations');
 
             // Publishing the views.

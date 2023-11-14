@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Thiagoprz\CompositeKey\HasCompositeKey;
-use WinLocalInc\Chjs\Database\Factories\SubscriptionComponentFactory;
+use WinLocalInc\Chjs\Database\Factoriess\SubscriptionComponentFactory;
 
 /**
  * @property mixed $component_id

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use WinLocalInc\Chjs\Chjs;
-use WinLocalInc\Chjs\Database\Factories\SubscriptionFactory;
+use WinLocalInc\Chjs\Database\Factoriess\SubscriptionFactory;
 use WinLocalInc\Chjs\Enums\MainComponent;
 use WinLocalInc\Chjs\Enums\PaymentCollectionMethod;
 use WinLocalInc\Chjs\Enums\ProductPricing;
