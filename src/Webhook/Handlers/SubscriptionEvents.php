@@ -41,9 +41,9 @@ class SubscriptionEvents extends AbstractHandler
             'total_revenue_in_cents' => $data['total_revenue_in_cents'],
             'next_billing_at' => ChargifyUtility::getFixedDateTime($data['next_assessment_at']),
             'ends_at' => ChargifyUtility::getFixedDateTime($data['scheduled_cancellation_at']),
-        ]], ['subscription_id']);
+        ]], ['workspace_id']);
 
-        $subscription = Subscription::find($data['id']);
+        $subscription = Subscription::where('subscription_id',$data['id'])->first();
 
         event( new SubscriptionEvent($subscription));
     }

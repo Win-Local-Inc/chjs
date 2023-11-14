@@ -13,7 +13,8 @@ return new class() extends Migration
     {
         Schema::create('chjs_subscription_components', function (Blueprint $table) {
             $table->primary(['subscription_id', 'component_id']);
-            $table->foreignId('subscription_id')->constrained('chjs_subscriptions', 'subscription_id')->cascadeOnDelete();
+            $table->foreignId('subscription_id')->constrained('chjs_subscriptions', 'subscription_id')
+                ->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('component_id')->constrained('chjs_components', 'component_id')->cascadeOnDelete();
             $table->string('component_handle', 52)->index();
             $table->string('component_price_handle', 52)->index();

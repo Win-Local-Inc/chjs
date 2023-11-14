@@ -50,8 +50,8 @@ class ChargifyWebhookEventsTest extends TestCase
         $componentPrice = ComponentPrice::where('component_price_handle', ShareCardProPricing::MONTH->value)->first();
 
         $subscription = Subscription::factory()
-            ->user($user)
             ->workspace($workspace)
+            ->user($user)
             ->productPrice($productPrice)
             ->create();
 

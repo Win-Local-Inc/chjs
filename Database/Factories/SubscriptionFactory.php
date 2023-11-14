@@ -17,6 +17,7 @@ class SubscriptionFactory extends Factory
     public function definition(): array
     {
         return [
+            'workspace_id' => Workspace::factory()->create(),
             'subscription_id' => random_int(1000000, 9999999),
             'product_handle' => Str::random(),
         ];

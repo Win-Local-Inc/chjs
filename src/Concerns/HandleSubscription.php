@@ -186,6 +186,7 @@ trait HandleSubscription
 
         $component->update([
             'subscription_component_quantity' => $maxioSubscriptionComponent->quantity,
+            'is_main_component' => 0,
             'updated_at' => $maxioSubscriptionComponent->created_at,
         ]);
 

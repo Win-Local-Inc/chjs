@@ -16,9 +16,9 @@ return new class extends Migration
     {
 
         Schema::create('chjs_subscriptions', function (Blueprint $table) {
-            $table->id('subscription_id');
-            $table->foreignUuid('workspace_id')->constrained('workspaces', 'workspace_id');
+            $table->uuid('workspace_id')->primary();
             $table->foreignUuid('user_id')->constrained('users', 'user_id');
+            $table->unsignedBigInteger('subscription_id')->index();
 
             $table->string('product_price_handle',52)->index();
             $table->string('product_handle', 52)->index();

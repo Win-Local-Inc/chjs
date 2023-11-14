@@ -37,7 +37,7 @@ class ComponentPriceChange extends AbstractHandler
             ['subscription_id', 'component_id']
         );
 
-        $subscription = Subscription::find($subscriptionId);
+        $subscription = Subscription::where('subscription_id',$subscriptionId)->first();
         event( new SubscriptionEvent($subscription));
     }
 }

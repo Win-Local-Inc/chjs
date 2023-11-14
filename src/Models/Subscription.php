@@ -31,7 +31,7 @@ class Subscription extends Model
 
     public $incrementing = false;
 
-    protected $primaryKey = 'subscription_id';
+    protected $primaryKey = 'workspace_id';
 
     protected $table = 'chjs_subscriptions';
 
