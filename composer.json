@@ -32,7 +32,7 @@
     "autoload": {
         "psr-4": {
             "WinLocalInc\\Chjs\\": "src",
-            "WinLocalInc\\Chjs\\Database\\Factories\\": "Database/Factories/",
+            "WinLocalInc\\Chjs\\Database\\Factories\\": "database/factories/",
             "WinLocalInc\\Chjs\\Database\\Seeders\\": "database/seeders/"
         },
         "files": [
