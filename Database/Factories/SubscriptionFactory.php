@@ -1,6 +1,6 @@
 <?php
 
-namespace WinLocalInc\Chjs\Database\Factoriess;
+namespace WinLocalInc\Chjs\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;

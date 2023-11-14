@@ -5,7 +5,7 @@ namespace WinLocalInc\Chjs\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use WinLocalInc\Chjs\Database\Factoriess\ComponentPriceFactory;
+use WinLocalInc\Chjs\Database\Factories\ComponentPriceFactory;
 use WinLocalInc\Chjs\Enums\IsActive;
 
 /**

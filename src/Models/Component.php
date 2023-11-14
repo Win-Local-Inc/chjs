@@ -5,7 +5,7 @@ namespace WinLocalInc\Chjs\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use WinLocalInc\Chjs\Database\Factoriess\ComponentFactory;
+use WinLocalInc\Chjs\Database\Factories\ComponentFactory;
 use WinLocalInc\Chjs\Enums\IsActive;
 use WinLocalInc\Chjs\Enums\MainComponent;
 

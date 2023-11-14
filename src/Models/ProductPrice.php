@@ -5,7 +5,7 @@ namespace WinLocalInc\Chjs\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use WinLocalInc\Chjs\Database\Factoriess\ProductPriceFactory;
+use WinLocalInc\Chjs\Database\Factories\ProductPriceFactory;
 use WinLocalInc\Chjs\Enums\IsActive;
 use WinLocalInc\Chjs\Enums\ProductPricing;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
