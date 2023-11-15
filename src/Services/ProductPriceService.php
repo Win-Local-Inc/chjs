@@ -61,7 +61,7 @@ class ProductPriceService extends AbstractService
             'filter' => 'sometimes|array',
         ]);
 
-        $parameters = array_merge([
+        $parameters = array_replace_recursive([
             'page' => 1,
             'per_page' => 100,
             'filter' => [

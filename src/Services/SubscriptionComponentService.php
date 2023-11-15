@@ -31,6 +31,25 @@ class SubscriptionComponentService extends AbstractService
         return $this->get('subscriptions/'.$subscriptionId.'/components', $parameters);
     }
 
+    public function listForSite(array $options = []): Collection
+    {
+        $this->validatePayload($options, [
+            'page' => 'sometimes|integer|min:1',
+            'per_page' => 'sometimes|integer|min:1|max:200',
+            'date_field' => 'sometimes|string|in:updated_at',
+            'start_date' => 'sometimes|date_format:Y-m-d',
+            'end_date' => 'sometimes|date_format:Y-m-d',
+            'start_datetime' => 'sometimes|date_format:Y-m-d H:i:s',
+            'end_datetime' => 'sometimes|date_format:Y-m-d H:i:s',
+        ]);
+
+        $parameters = array_merge([
+            'price_point_ids' => 'not_null',
+        ], $options);
+
+        return $this->get('subscriptions_components', $parameters);
+    }
+
     //dont use
     public function reset(string $subscriptionId): ChargifyObject
     {

@@ -51,6 +51,7 @@ class ObjectTypes
         Preview::OBJECT_NAME => Preview::class,
         AllocationPreview::OBJECT_NAME => AllocationPreview::class,
         Coupon::OBJECT_NAME => Coupon::class,
+        SubscriptionsComponents::OBJECT_NAME => SubscriptionsComponents::class,
     ];
 
     public function __construct(array $data = [])
