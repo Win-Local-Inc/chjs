@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use WinLocalInc\Chjs\Database\Seeders\ComponentSeeder;
 use WinLocalInc\Chjs\Database\Seeders\ProductSeeder;
+use WinLocalInc\Chjs\Enums\MainComponent;
 use WinLocalInc\Chjs\Enums\PaymentCollectionMethod;
 use WinLocalInc\Chjs\Enums\Product as ProductEnum;
 use WinLocalInc\Chjs\Enums\ProductPricing;
@@ -43,7 +44,7 @@ class ChargifyWebhookEventsTest extends TestCase
             ->withChargifyId()
             ->create();
 
-        $product = Product::where('product_handle', ProductEnum::PROMO->value)->first();
+        $product = Product::where('product_handle', ProductEnum::SOLO->value)->first();
         $productPrice = ProductPrice::where('product_price_handle', ProductPricing::SOLO_MONTH->value)->first();
 
         $component = Component::where('component_handle', ShareCardProPricing::MONTH->value)->first();
@@ -65,9 +66,51 @@ class ChargifyWebhookEventsTest extends TestCase
         $state = SubscriptionStatus::OnHold->value;
         $paymentMethod = PaymentCollectionMethod::Remittance->value;
 
+        Http::fake([
+            'chargify.test/*' => Http::sequence()
+                ->push([[
+                    'component' => [
+                        'component_id' => $component->component_id,
+                        'component_handle' => $component->component_handle,
+                        'price_point_handle' => $componentPrice->component_price_handle,
+                        'price_point_id' => $componentPrice->component_price_id,
+                        'subscription_id' => $subscription->subscription_id,
+                        'allocated_quantity' => 1,
+                        'pricing_scheme' => 'per_unit',
+                        'name' => 'Users',
+                        'kind' => 'quantity_based_component',
+                        'created_at' => '2023-08-05 08:06:32 -0400',
+                        'updated_at' => '2023-08-05 08:06:32 -0400',
+                    ],
+                ]], 200)
+                ->push([
+                    'price_points' => [
+                        [
+                            'id' => $componentPrice->component_price_id,
+                            'component_id' => $component->component_id,
+                            'name' => 'Auto-created',
+                            'type' => 'default',
+                            'handle' => 'auto-created',
+                            'prices' => [
+                                [
+                                    'id' => 1,
+                                    'component_id' => $component->component_id,
+                                    'starting_quantity' => 0,
+                                    'ending_quantity' => null,
+                                    'unit_price' => '1.00',
+                                    'price_point_id' => 1,
+                                    'formatted_unit_price' => '$1.00',
+                                    'segment_id' => null,
+                                ],
+                            ],
+                        ],
+                    ],
+                ], 200),
+        ]);
+
         SubscriptionEvents::dispatch(
             random_int(1000000, 9999999),
-            WebhookEvents::RenewalSuccess->value,
+            WebhookEvents::SignupSuccess->value,
             [
                 'subscription' => [
                     'id' => $subscription->subscription_id,
@@ -134,6 +177,14 @@ class ChargifyWebhookEventsTest extends TestCase
             'user_id' => $user->user_id,
             'status' => $state,
             'payment_collection_method' => $paymentMethod,
+            'component' => MainComponent::SHARE_CARD_PRO->name,
+            'component_handle' => ShareCardProPricing::MONTH->value,
+        ]);
+
+        $this->assertDatabaseHas('chjs_subscription_components', [
+            'subscription_id' => $subscription->subscription_id,
+            'is_main_component' => 1,
+            'component_handle' => ShareCardProPricing::MONTH->value,
         ]);
 
         $this->assertDatabaseHas('chjs_subscription_histories', [

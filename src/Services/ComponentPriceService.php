@@ -31,7 +31,7 @@ class ComponentPriceService extends AbstractService
             'per_page' => 'sometimes|integer|min:1|max:200',
         ]);
 
-        $parameters = array_merge_recursive([
+        $parameters = array_replace_recursive([
             'page' => 1,
             'per_page' => 100,
             'filter' => [

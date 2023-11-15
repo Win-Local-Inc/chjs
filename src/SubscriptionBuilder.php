@@ -199,7 +199,10 @@ class SubscriptionBuilder
             $components = maxio()->subscriptionComponent->list($subscriptionMaxio->id);
             $pricePoints = $components->pluck('price_point_id')->toArray();
 
-            $componentPrices = maxio()->componentPrice->list(['filter' => ['ids' => implode(',', $pricePoints)]]);
+            $componentPrices = maxio()->componentPrice->list(['filter' => [
+                'ids' => implode(',', $pricePoints),
+                'type' => 'catalog,default,custom',
+            ]]);
 
             $pricesMap = $componentPrices->reduce(function (array $carry, PricePoints $item) {
                 $carry[$item->component_id] = $item->prices->first()->unit_price;

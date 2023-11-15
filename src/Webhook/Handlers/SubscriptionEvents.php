@@ -3,11 +3,14 @@
 namespace WinLocalInc\Chjs\Webhook\Handlers;
 
 use WinLocalInc\Chjs\Attributes\HandleEvents;
+use WinLocalInc\Chjs\Chargify\PricePoints;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
 use WinLocalInc\Chjs\Events\SubscriptionEvent;
 use WinLocalInc\Chjs\Models\Subscription;
+use WinLocalInc\Chjs\Models\SubscriptionComponent;
 use WinLocalInc\Chjs\Models\SubscriptionHistory;
+use WinLocalInc\Chjs\ProductStructure;
 use WinLocalInc\Chjs\Webhook\ChargifyUtility;
 
 #[HandleEvents(
@@ -46,8 +49,51 @@ class SubscriptionEvents extends AbstractHandler
             'ends_at' => ChargifyUtility::getFixedDateTime($data['scheduled_cancellation_at']),
         ]], ['workspace_id']);
 
+        $this->updateComponents($data['id'], $data['product']['handle']);
+
         $subscription = Subscription::where('subscription_id', $data['id'])->first();
 
         event(new SubscriptionEvent($subscription));
+    }
+
+    protected function updateComponents(string $subscriptionId, string $productHandle)
+    {
+        if (! in_array($this->event, [
+            WebhookEvents::SignupSuccess->value,
+            WebhookEvents::DelayedSubscriptionCreationSuccess->value,
+        ])) {
+            return;
+        }
+
+        $componentsResponse = maxio()->subscriptionComponent->list($subscriptionId);
+
+        $componentPrices = maxio()->componentPrice->list(['filter' => [
+            'ids' => implode(',', $componentsResponse->pluck('price_point_id')->toArray()),
+            'type' => 'catalog,default,custom',
+        ]]);
+
+        $pricesMap = $componentPrices->reduce(function (array $carry, PricePoints $item) {
+            $carry[$item->component_id] = $item->prices->first()->unit_price;
+
+            return $carry;
+        }, []);
+
+        $upsertComponents = $componentsResponse->map(function ($component) use (&$pricesMap, $subscriptionId, $productHandle) {
+            return [
+                'subscription_id' => $subscriptionId,
+                'component_id' => $component->component_id,
+                'component_handle' => $component->component_handle,
+                'component_price_handle' => $component->price_point_handle,
+                'component_price_id' => $component->price_point_id,
+                'subscription_component_price' => $pricesMap[$component->component_id],
+                'subscription_component_quantity' => $component->allocated_quantity,
+                'is_main_component' => ProductStructure::isMainComponent(product: $productHandle, component: $component->component_handle),
+                'created_at' => ChargifyUtility::getFixedDateTime($component->created_at),
+                'updated_at' => ChargifyUtility::getFixedDateTime($component->updated_at),
+            ];
+        })
+            ->toArray();
+
+        SubscriptionComponent::upsert($upsertComponents, ['subscription_id', 'component_id']);
     }
 }

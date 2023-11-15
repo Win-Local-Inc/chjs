@@ -82,7 +82,10 @@ trait HandleSubscription
             ->list(subscriptionId: $this->subscription->subscription_id)
             ->where('component_id', $component->component_id)->first();
 
-        $componentPrice = maxio()->componentPrice->list(['filter' => ['ids' => $maxioComponent->price_point_id]]);
+        $componentPrice = maxio()->componentPrice->list(['filter' => [
+            'ids' => $maxioComponent->price_point_id,
+            'type' => 'catalog,default,custom',
+        ]]);
 
         SubscriptionComponent::updateOrCreate(
             [
@@ -136,7 +139,10 @@ trait HandleSubscription
             ->list(subscriptionId: $this->subscription->subscription_id)
             ->where('component_id', $component->component_id)->first();
 
-        $componentPrice = maxio()->componentPrice->list(['filter' => ['ids' => $maxioComponent->price_point_id]]);
+        $componentPrice = maxio()->componentPrice->list(['filter' => [
+            'ids' => $maxioComponent->price_point_id,
+            'type' => 'catalog,default,custom',
+        ]]);
 
         SubscriptionComponent::updateOrCreate(
             [

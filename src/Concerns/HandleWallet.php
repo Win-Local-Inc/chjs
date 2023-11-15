@@ -28,7 +28,10 @@ trait HandleWallet
             ->list(subscriptionId: $this->subscription->subscription_id)
             ->where('component_id', $adComponentPrice->component_id)->first();
 
-        $componentPrice = maxio()->componentPrice->list(['filter' => ['ids' => $maxioComponent->price_point_id]]);
+        $componentPrice = maxio()->componentPrice->list(['filter' => [
+            'ids' => $maxioComponent->price_point_id,
+            'type' => 'catalog,default,custom',
+        ]]);
 
         SubscriptionComponent::updateOrCreate(
             ['subscription_id' => $this->subscription->subscription_id,
@@ -71,7 +74,10 @@ trait HandleWallet
             ->list(subscriptionId: $this->subscription->subscription_id)
             ->where('component_id', $adComponentPrice->component_id)->first();
 
-        $componentPrice = maxio()->componentPrice->list(['filter' => ['ids' => $maxioComponent->price_point_id]]);
+        $componentPrice = maxio()->componentPrice->list(['filter' => [
+            'ids' => $maxioComponent->price_point_id,
+            'type' => 'catalog,default,custom',
+        ]]);
 
         SubscriptionComponent::updateOrCreate(
             ['subscription_id' => $this->subscription->subscription_id,
