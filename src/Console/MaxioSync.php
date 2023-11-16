@@ -56,7 +56,7 @@ class MaxioSync extends Command
         );
 
         foreach ($sources as $source) {
-            $this->info('updating: ' . $source);
+            $this->info('updating: '.$source);
             match ($source) {
                 'Products' => $this->productSync(),
                 'Subscription' => $this->subscriptionSync(),
@@ -86,13 +86,13 @@ class MaxioSync extends Command
 
         do {
 
-            $this->info('subscriptionSync: per page - ' . $parameters['per_page'] . ' page number - ' . $parameters['page']);
+            $this->info('subscriptionSync: per page - '.$parameters['per_page'].' page number - '.$parameters['page']);
 
             $subscriptions = maxio()
                 ->subscription
                 ->list($parameters)
                 ->filter(function ($subscription) use (&$uniqueWorkspace) {
-                    if (!$subscription->reference || in_array($subscription->reference, $uniqueWorkspace)) {
+                    if (! $subscription->reference || in_array($subscription->reference, $uniqueWorkspace)) {
                         return false;
                     }
 
@@ -166,7 +166,7 @@ class MaxioSync extends Command
         }
 
         $pricesMap = $componentPrices->reduce(function (array $carry, PricePoints $item) {
-            $carry[$item->component_id] = $item->prices->first()->unit_price;
+            $carry[$item->id] = $item->prices->first()->unit_price;
 
             return $carry;
         }, []);
@@ -178,7 +178,7 @@ class MaxioSync extends Command
                 'component_handle' => $component->component_handle,
                 'component_price_handle' => $component->price_point_handle,
                 'component_price_id' => $component->price_point_id,
-                'subscription_component_price' => $pricesMap[$component->component_id],
+                'subscription_component_price' => $pricesMap[$component->price_point_id],
                 'subscription_component_quantity' => $component->allocated_quantity,
                 'is_main_component' => ProductStructure::isMainComponent(product: $subscriptionMap[$component->subscription_id], component: $component->component_handle),
                 'created_at' => ChargifyUtility::getFixedDateTime($component->created_at),
@@ -200,7 +200,7 @@ class MaxioSync extends Command
             $products = maxio()->product->list($parameters);
 
             foreach ($products as $product) {
-                $this->info('product: ' . $product->name);
+                $this->info('product: '.$product->name);
                 Product::updateOrInsert(
                     [
                         'product_id' => $product->id,
@@ -232,9 +232,9 @@ class MaxioSync extends Command
             $productPricePoints = maxio()->productPrice->list($parameters);
 
             foreach ($productPricePoints as $productPricePoint) {
-                $this->info('product price: ' . $productPricePoint->name);
+                $this->info('product price: '.$productPricePoint->name);
                 $productHandle = Product::find($productPricePoint->product_id)?->product_handle;
-                if (!$productHandle) {
+                if (! $productHandle) {
                     continue;
                 }
 
@@ -273,7 +273,7 @@ class MaxioSync extends Command
         do {
             $components = maxio()->component->list($parameters);
             foreach ($components as $component) {
-                $this->info('component: ' . $component->name);
+                $this->info('component: '.$component->name);
                 $componentData = [
                     'component_handle' => $component->handle,
                     'component_name' => $component->name,
@@ -313,7 +313,7 @@ class MaxioSync extends Command
             $componentPricePoints = maxio()->componentPrice->list($parameters);
 
             foreach ($componentPricePoints as $componentPricePoint) {
-                $this->info('component price: ' . $componentPricePoint->name);
+                $this->info('component price: '.$componentPricePoint->name);
 
                 ComponentPrice::updateOrInsert(
                     [

@@ -73,7 +73,7 @@ class SubscriptionEvents extends AbstractHandler
         ]]);
 
         $pricesMap = $componentPrices->reduce(function (array $carry, PricePoints $item) {
-            $carry[$item->component_id] = $item->prices->first()->unit_price;
+            $carry[$item->id] = $item->prices->first()->unit_price;
 
             return $carry;
         }, []);
@@ -85,7 +85,7 @@ class SubscriptionEvents extends AbstractHandler
                 'component_handle' => $component->component_handle,
                 'component_price_handle' => $component->price_point_handle,
                 'component_price_id' => $component->price_point_id,
-                'subscription_component_price' => $pricesMap[$component->component_id],
+                'subscription_component_price' => $pricesMap[$component->price_point_id],
                 'subscription_component_quantity' => $component->allocated_quantity,
                 'is_main_component' => ProductStructure::isMainComponent(product: $productHandle, component: $component->component_handle),
                 'created_at' => ChargifyUtility::getFixedDateTime($component->created_at),
