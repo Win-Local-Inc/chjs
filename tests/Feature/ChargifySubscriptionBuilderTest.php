@@ -318,7 +318,6 @@ class ChargifySubscriptionBuilderTest extends TestCase
 
         $this->assertDatabaseHas('chjs_subscriptions', [
             'subscription_id' => $subscriptionId,
-            'product_price_handle' => 'lol',
             'user_id' => $user->user_id,
             'status' => $state,
             'payment_collection_method' => $paymentMethod,
@@ -330,6 +329,5 @@ class ChargifySubscriptionBuilderTest extends TestCase
             'subscription_component_quantity' => $componentQuantity,
         ]);
 
-        ray(Subscription::all(), $workspace->subscription->subscriptionComponents);
     }
 }

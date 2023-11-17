@@ -14,7 +14,7 @@ use WinLocalInc\Chjs\SubscriptionBuilder;
 
 trait HandleSubscription
 {
-    public function newSubscription(ProductPricing $productPricing, ?int $productCustomPrice): SubscriptionBuilder
+    public function newSubscription(ProductPricing $productPricing, ?int $productCustomPrice = null): SubscriptionBuilder
     {
         return new SubscriptionBuilder(
             workspace: $this,
