@@ -162,14 +162,14 @@ class SubscriptionBuilder
         return $this;
     }
 
-    public function trialDays(int $days): static
+    public function trialDays(?int $days): static
     {
         $this->trialDays = $days;
 
         return $this;
     }
 
-    public function customPrice(int $customPrice): static
+    public function customPrice(?int $customPrice): static
     {
         $this->customPrice = $customPrice;
 
