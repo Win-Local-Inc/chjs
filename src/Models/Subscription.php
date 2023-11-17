@@ -3,6 +3,7 @@
 namespace WinLocalInc\Chjs\Models;
 
 use App\Models\Workspace\Workspace;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,6 +25,7 @@ use WinLocalInc\Chjs\Enums\SubscriptionStatus;
  * @property mixed $component
  * @property mixed subscriptionComponents
  * @property ProductPricing product_price_handle
+ * @property SubscriptionInterval $subscription_interval
  */
 class Subscription extends Model
 {
@@ -40,11 +42,19 @@ class Subscription extends Model
     protected $casts = [
         'status' => SubscriptionStatus::class,
         'product_handle' => \WinLocalInc\Chjs\Enums\Product::class,
-        'product_price_handle' => ProductPricing::class,
+//        'product_price_handle' => ProductPricing::class,
         'payment_collection_method' => PaymentCollectionMethod::class,
         'subscription_interval' => SubscriptionInterval::class,
         'component' => MainComponent::class,
     ];
+
+    protected function productPriceHandle(): Attribute
+    {
+
+        return Attribute::make(
+            get: fn($value) => ProductPricing::tryFrom($this->product_handle->value.'_'. $this->subscription_interval->value)
+        );
+    }
 
     public function getProductNameAttribute()
     {

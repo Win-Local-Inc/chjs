@@ -26,6 +26,8 @@ enum ProductPricing: string
     case PKG_FULL_TIME_BIANNUAL = 'pkg_full_time_biannual';
     case PKG_OVERTIME_MONTH = 'pkg_overtime_month';
     case PKG_OVERTIME_BIANNUAL = 'pkg_overtime_biannual';
+//
+//    case default  = 'custom_product';
 
     public static function getProductPrices(Product $product)
     {

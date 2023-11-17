@@ -14,9 +14,13 @@ use WinLocalInc\Chjs\SubscriptionBuilder;
 
 trait HandleSubscription
 {
-    public function newSubscription(ProductPricing $productPricing): SubscriptionBuilder
+    public function newSubscription(ProductPricing $productPricing, ?int $productCustomPrice): SubscriptionBuilder
     {
-        return new SubscriptionBuilder($this, $productPricing);
+        return new SubscriptionBuilder(
+            workspace: $this,
+            productPricing: $productPricing,
+            productCustomPrice: $productCustomPrice
+        );
     }
 
     //adding status check

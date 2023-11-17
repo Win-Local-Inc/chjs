@@ -30,8 +30,6 @@ class SubscriptionBuilder
 
     protected ?int $trialDays = null;
 
-    protected ?int $customPrice = null;
-
     protected ?string $token = null;
 
     protected ?string $paymentProfile = null;
@@ -45,10 +43,11 @@ class SubscriptionBuilder
     /**
      * @throws Exception
      */
-    public function __construct(protected Model $workspace, protected ProductPricing $productPricing)
+    public function __construct(protected Model $workspace, protected ProductPricing $productPricing, protected ?int $productCustomPrice)
     {
         $this->userId = $this->workspace->owner_id;
         $this->pricePoint = $this->getProductPriceByHandle($productPricing->value);
+
     }
 
     /**
@@ -169,13 +168,6 @@ class SubscriptionBuilder
         return $this;
     }
 
-    public function customPrice(?int $customPrice): static
-    {
-        $this->customPrice = $customPrice;
-
-        return $this;
-    }
-
     public function create()
     {
         $subscriptionMaxio = maxio()->subscription->create($this->formulateSubscriptionParameters());
@@ -252,8 +244,8 @@ class SubscriptionBuilder
 
         $parameters['product_handle'] = $this->pricePoint->product_handle;
 
-        if ($this->customPrice || $this->trialDays) {
-            $parameters['custom_price'] = $this->prepareCustomPrice();
+        if ($this->productCustomPrice || $this->trialDays) {
+            $parameters['custom_price'] = $this->prepareProductCustomPrice();
         } else {
             $parameters['product_price_point_handle'] = $this->pricePoint->product_price_handle;
         }       
@@ -279,22 +271,22 @@ class SubscriptionBuilder
         return $parameters;
     }
 
-    protected function prepareCustomPrice(): array
+    protected function prepareProductCustomPrice(): array
     {
-        $customPrice = [
-            'price_in_cents' => $this->customPrice ?? $this->pricePoint->product_price_in_cents,
+        $productCustomPrice = [
+            'price_in_cents' => $this->productCustomPrice ?? $this->pricePoint->product_price_in_cents,
             'interval' => $this->pricePoint->product_price_interval->getInterval(),
             'interval_unit' => 'month',
         ];
 
         if ($this->trialDays) {
-            $customPrice = array_merge($customPrice, [
+            $productCustomPrice = array_merge($productCustomPrice, [
                 'trial_price_in_cents' => 0,
                 'trial_interval' => $this->trialDays,
                 'trial_interval_unit' => 'day',
             ]);
         }
 
-        return $customPrice;
+        return $productCustomPrice;
     }
 }
