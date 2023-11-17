@@ -28,7 +28,9 @@ class SubscriptionBuilder
 
     protected string $userId;
 
-    protected ?string $trialEndedAt = null;
+    protected ?int $trialDays = null;
+
+    protected ?int $customPrice = null;
 
     protected ?string $token = null;
 
@@ -162,14 +164,14 @@ class SubscriptionBuilder
 
     public function trialDays(int $days): static
     {
-        $this->trialEndedAt = Carbon::now()->addDays($days)->setTimezone(self::DEFAULT_TIMEZONE)->toW3cString();
+        $this->trialDays = $days;
 
         return $this;
     }
 
-    public function trialDate(string $date): static
+    public function customPrice(int $customPrice): static
     {
-        $this->trialEndedAt = Carbon::create($date.' '.date('H:i:s'))->setTimezone(self::DEFAULT_TIMEZONE)->toW3cString();
+        $this->customPrice = $customPrice;
 
         return $this;
     }
@@ -248,12 +250,16 @@ class SubscriptionBuilder
             throw new InvalidArgumentException("can't create subscription without components");
         }
 
-        $parameters['product_price_point_handle'] = $this->pricePoint->product_price_handle;
+        $parameters['product_handle'] = $this->pricePoint->product_handle;
+
+        if ($this->customPrice || $this->trialDays) {
+            $parameters['custom_price'] = $this->prepareCustomPrice();
+        } else {
+            $parameters['product_price_point_handle'] = $this->pricePoint->product_price_handle;
+        }       
 
         $parameters['components'] = $this->components;
-
         $parameters['payment_collection_method'] = $this->paymentCollectionMethod;
-        $parameters['product_handle'] = $this->pricePoint->product_handle;
         $parameters['customer_reference'] = $this->userId;
         $parameters['reference'] = $this->workspace->workspace_id;
 
@@ -266,14 +272,29 @@ class SubscriptionBuilder
             ];
         }
 
-        if ($this->trialEndedAt) {
-            $parameters['next_billing_at'] = $this->trialEndedAt;
-        }
-
         if (! empty($this->coupons)) {
             $parameters['coupon_codes'] = $this->coupons;
         }
 
         return $parameters;
+    }
+
+    protected function prepareCustomPrice(): array
+    {
+        $customPrice = [
+            'price_in_cents' => $this->customPrice ?? $this->pricePoint->product_price_in_cents,
+            'interval' => $this->pricePoint->product_price_interval->getInterval(),
+            'interval_unit' => 'month',
+        ];
+
+        if ($this->trialDays) {
+            $customPrice = array_merge($customPrice, [
+                'trial_price_in_cents' => 0,
+                'trial_interval' => $this->trialDays,
+                'trial_interval_unit' => 'day',
+            ]);
+        }
+
+        return $customPrice;
     }
 }
