@@ -4,6 +4,7 @@ namespace WinLocalInc\Chjs\Concerns;
 
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
 use WinLocalInc\Chjs\Models\ProductPrice;
+use WinLocalInc\Chjs\Models\SubscriptionComponent;
 
 trait HandlePreview
 {
@@ -26,38 +27,15 @@ trait HandlePreview
             );
     }
 
-    public function componentsAllocationPreview(array $components): ChargifyObject
+    public function componentsAllocationPreview(SubscriptionComponent $component, int $qty): ChargifyObject
     {
-        /**
-         * array $components
-         *  [
-         *       [
-         *          "component_id" => 2341717,
-         *          "quantity" => 40,
-         *          "price_point_id" => 2985214
-         *          "upgrade_charge" => "full",
-         *          "downgrade_credit" => "full",
-         *          "accrue_charge" => false,
-         *       ],
-         *       [
-         *          "component_id" => 2341719,
-         *          "quantity" => 10,
-         *          "custom_price" => [
-         *               'pricing_scheme' => 'per_unit',
-         *               'prices' => [
-         *                   [
-         *                   "starting_quantity" => 1,
-         *                   "unit_price" => 250,
-         *                   ],
-         *               ]
-         *           ]
-         *       ]
-         */
 
         return maxio()->subscriptionComponent
             ->allocateComponentsPreview(
                 subscriptionId: $this->subscription->subscription_id,
-                parameters: ['allocations' => $components]
+                componentId: $component->component_id,
+                pricePoint: $component->component_price_handle,
+                qty: $component->subscription_component_quantity + $qty
             );
     }
 }

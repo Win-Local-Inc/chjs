@@ -10,6 +10,8 @@ use WinLocalInc\Chjs\Database\Factories\SubscriptionComponentFactory;
 
 /**
  * @property mixed $component_id
+ * @property mixed $subscription_component_quantity
+ * @property mixed $component_price_handle
  */
 class SubscriptionComponent extends Model
 {

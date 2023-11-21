@@ -81,19 +81,19 @@ class SubscriptionComponentService extends AbstractService
         return $this->post('subscriptions/'.$subscriptionId.'/allocations', $parameters);
     }
 
-    public function allocateComponentsPreview(string $subscriptionId, array $parameters): ChargifyObject
+    public function allocateComponentsPreview(string $subscriptionId, string $componentId, string $pricePoint, int $qty): ChargifyObject
     {
-        $this->validatePayload($parameters, [
-            'allocations' => 'required|array',
-            'allocations.*.quantity' => 'required|numeric',
-            'allocations.*.memo' => 'sometimes|string',
-            'allocations.*.upgrade_charge' => 'sometimes|string|in:full,prorated,none',
-            'allocations.*.downgrade_credit' => 'sometimes|string|in:full,prorated,none',
-            'allocations.*.accrue_charge' => 'sometimes|boolean',
-        ]);
+        $allocation = ['allocations' => [
+            'component_id' => $componentId,
+            'quantity' => $qty,
+            'upgrade_charge' => 'full',
+            'downgrade_credit' => 'full',
+            'accrue_charge' => false,
+            'price_point_id' => 'handle:'.$pricePoint,
+        ]];
 
         return $this
-            ->post('subscriptions/'.$subscriptionId.'/allocations/preview', $parameters);
+            ->post('subscriptions/'.$subscriptionId.'/allocations/preview', $allocation);
     }
 
     public function listAllocations(string $subscriptionId, string $componentId, array $parameters = []): Collection
