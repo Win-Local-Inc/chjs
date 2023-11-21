@@ -37,17 +37,16 @@ class SubscriptionBuilder
     protected ?array $components = null;
 
     protected array $coupons = [];
+    protected array $customerAttribute = [];
 
     protected string $paymentCollectionMethod = self::DEFAULT_PAYMENT_COLLECTION_METHOD;
 
     /**
      * @throws Exception
      */
-    public function __construct(protected Model $workspace, protected ProductPricing $productPricing, protected ?int $productCustomPrice)
+    public function __construct( protected ProductPricing $productPricing, protected ?int $productCustomPrice ,protected ?Model $workspace = null)
     {
-        $this->userId = $this->workspace->owner_id;
         $this->pricePoint = $this->getProductPriceByHandle($productPricing->value);
-
     }
 
     /**
@@ -154,6 +153,18 @@ class SubscriptionBuilder
         return $this;
     }
 
+    public function customerAttribut(?string $country, ?string $state, ?string $city, ?string $zip): static
+    {
+        $this->customerAttribute = [
+            'country' => $country,
+            'state' => $state,
+            'city' => $city,
+            'zip' => $zip,
+        ];
+
+        return $this;
+    }
+
     public function remittance(): static
     {
         $this->paymentCollectionMethod = self::REMITTANCE_PAYMENT_COLLECTION_METHOD;
@@ -248,12 +259,20 @@ class SubscriptionBuilder
             $parameters['custom_price'] = $this->prepareProductCustomPrice();
         } else {
             $parameters['product_price_point_handle'] = $this->pricePoint->product_price_handle;
-        }       
+        }
 
         $parameters['components'] = $this->components;
         $parameters['payment_collection_method'] = $this->paymentCollectionMethod;
-        $parameters['customer_reference'] = $this->userId;
-        $parameters['reference'] = $this->workspace->workspace_id;
+        if ($this->workspace) {
+            $this->userId = $this->workspace->owner_id;
+            $parameters['customer_reference'] = $this->userId;
+            $parameters['reference'] = $this->workspace->workspace_id;
+        }
+
+        if (!empty($this->customerAttribute))
+        {
+            $parameters['customer_attributes'] = $this->customerAttribute;
+        }
 
         if ($this->paymentProfile) {
             $parameters['payment_profile_id'] = $this->paymentProfile;

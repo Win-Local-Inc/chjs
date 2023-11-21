@@ -14,12 +14,15 @@ use WinLocalInc\Chjs\SubscriptionBuilder;
 
 trait HandleSubscription
 {
+    /**
+     * @throws \Exception
+     */
     public function newSubscription(ProductPricing $productPricing, ?int $productCustomPrice = null): SubscriptionBuilder
     {
         return new SubscriptionBuilder(
-            workspace: $this,
             productPricing: $productPricing,
-            productCustomPrice: $productCustomPrice
+            productCustomPrice: $productCustomPrice,
+            workspace: $this
         );
     }
 
