@@ -284,7 +284,7 @@ class MaxioSync extends Command
                     'component_handle' => $component->handle,
                     'component_name' => $component->name,
                     'component_unit' => $component->unit_name,
-                    'component_type' => $component->kind,
+                    'component_type' => $component->recurring ? 'recurring' : 'one_time',
                     'component_is_active' => IsActive::Active,
                     'created_at' => $component->created_at,
                     'updated_at' => $component->updated_at,
