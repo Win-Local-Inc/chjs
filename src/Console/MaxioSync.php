@@ -273,13 +273,19 @@ class MaxioSync extends Command
         do {
             $components = maxio()->component->list($parameters);
             foreach ($components as $component) {
+
+                if($component->archived_at)
+                {
+                    $this->error('archived component ignore: '.$component->name);
+                    continue;
+                }
                 $this->info('component: '.$component->name);
                 $componentData = [
                     'component_handle' => $component->handle,
                     'component_name' => $component->name,
                     'component_unit' => $component->unit_name,
                     'component_type' => $component->kind,
-                    'component_is_active' => is_null($component->archived_at) ? IsActive::Active : IsActive::Inactive,
+                    'component_is_active' => IsActive::Active,
                     'created_at' => $component->created_at,
                     'updated_at' => $component->updated_at,
                 ];
@@ -313,6 +319,13 @@ class MaxioSync extends Command
             $componentPricePoints = maxio()->componentPrice->list($parameters);
 
             foreach ($componentPricePoints as $componentPricePoint) {
+
+                if($componentPricePoint->archived_at)
+                {
+                    $this->error('archived component price ignore: '.$componentPricePoint->name);
+                    continue;
+                }
+
                 $this->info('component price: '.$componentPricePoint->name);
 
                 ComponentPrice::updateOrInsert(
@@ -327,7 +340,7 @@ class MaxioSync extends Command
                         'component_price_scheme' => $componentPricePoint->pricing_scheme,
                         'component_price_type' => $componentPricePoint->type,
                         'component_price_in_cents' => $componentPricePoint->prices->first()->unit_price,
-                        'component_price_is_active' => is_null($componentPricePoint->archived_at) ? IsActive::Active : IsActive::Inactive,
+                        'component_price_is_active' => IsActive::Active,
                         'created_at' => $componentPricePoint->created_at,
                         'updated_at' => $componentPricePoint->updated_at,
                     ]
