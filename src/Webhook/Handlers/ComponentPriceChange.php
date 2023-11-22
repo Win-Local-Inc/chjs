@@ -21,7 +21,7 @@ class ComponentPriceChange extends AbstractHandler
         $pricePointId = $payload['current_price_point']['id'];
 
         $component = maxio()->subscriptionComponent->find($subscriptionId, $componentId);
-        $pricePoint = maxio()->componentPrice->find($pricePointId)->price_point;
+        $pricePoint = maxio()->componentPrice->find($pricePointId);
 
         $newPrice = (int) $pricePoint->prices[0]->unit_price * (int) $component->allocated_quantity;
 

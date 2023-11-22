@@ -282,23 +282,21 @@ class ChargifyWebhookEventsTest extends TestCase
                 ->push([
                     'price_points' => [
                         [
-                            'price_point' => [
-                                'id' => $componentPrice->component_price_id,
-                                'name' => 'Auto-created',
-                                'type' => 'default',
-                                'component_id' => $component->component_id,
-                                'handle' => 'auto-created',
-                                'prices' => [
-                                    [
-                                        'id' => 1,
-                                        'component_id' => $component->component_id,
-                                        'starting_quantity' => 0,
-                                        'ending_quantity' => null,
-                                        'unit_price' => $unitPrice,
-                                        'price_point_id' => 1,
-                                        'formatted_unit_price' => '$1.00',
-                                        'segment_id' => null,
-                                    ],
+                            'id' => $componentPrice->component_price_id,
+                            'name' => 'Auto-created',
+                            'type' => 'default',
+                            'component_id' => $component->component_id,
+                            'handle' => 'auto-created',
+                            'prices' => [
+                                [
+                                    'id' => 1,
+                                    'component_id' => $component->component_id,
+                                    'starting_quantity' => 0,
+                                    'ending_quantity' => null,
+                                    'unit_price' => $unitPrice,
+                                    'price_point_id' => 1,
+                                    'formatted_unit_price' => '$1.00',
+                                    'segment_id' => null,
                                 ],
                             ],
                         ],
