@@ -153,7 +153,7 @@ class SubscriptionBuilder
         return $this;
     }
 
-    public function customerAttribut(?string $country, ?string $state, ?string $city, ?string $zip): static
+    public function customerAttribute(?string $country, ?string $state, ?string $city, ?string $zip): static
     {
         $this->customerAttribute = [
             'country' => $country,
