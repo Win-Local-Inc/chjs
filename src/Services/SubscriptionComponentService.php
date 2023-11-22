@@ -156,7 +156,7 @@ class SubscriptionComponentService extends AbstractService
 
     public function eventIngestion(string $apiHandle, array $parameters): void
     {
-        $this->post(config('chjs.subdomain').$this->getConfig()->getSubdomain().'/events/'.$apiHandle, $parameters);
+        $this->post(config('chjs.subdomain').config('chjs.subdomain').'/events/'.$apiHandle, $parameters);
     }
 
     public function eventIngestionBulk(string $apiHandle, array $parameters): void

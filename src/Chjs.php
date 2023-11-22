@@ -27,6 +27,7 @@ use WinLocalInc\Chjs\Services\SubscriptionStatusService;
  * @property ComponentService $component
  * @property ComponentPriceService $componentPrice
  * @property SubscriptionStatusService $subscriptionStatus
+ * @property CustomFieldsService $customFields
  **/
 class Chjs extends ChjsBase
 {
