@@ -240,9 +240,16 @@ class SubscriptionBuilder
 
     }
 
-    public function preview(): ChargifyObject
+    public function preview(?string $usedId = null): ChargifyObject
     {
-        return maxio()->subscription->preview($this->formulateSubscriptionParameters());
+        $previewData = $this->formulateSubscriptionParameters();
+
+        if($usedId)
+        {
+            $previewData['customer_reference'] = $usedId;
+        }
+
+        return maxio()->subscription->preview($previewData);
     }
 
     protected function formulateSubscriptionParameters(): array
