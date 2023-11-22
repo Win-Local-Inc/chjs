@@ -15,7 +15,7 @@ class ComponentAllocation extends AbstractHandler
     protected function handleEvent(string $event, array $payload)
     {
         // need to get unit_price and handle
-        $pricePoint = maxio()->componentPrice->find($payload['price_point_id'])->price_point;
+        $pricePoint = maxio()->componentPrice->find($payload['price_point_id']);
         // all prices will be per_unit so only 1 element in array
         $newPrice = (int) $pricePoint->prices[0]->unit_price * (int) $payload['allocated_quantity'];
 
