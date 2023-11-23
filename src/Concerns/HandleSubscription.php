@@ -255,9 +255,7 @@ trait HandleSubscription
 
     public function cancelSubscription(): static
     {
-        $maxioSubscription = maxio()->subscriptionStatus->cancel(subscriptionId: $this->subscription->subscription_id);
-
-        $this->updateSubscription($maxioSubscription);
+        maxio()->subscriptionStatus->cancel(subscriptionId: $this->subscription->subscription_id);
 
         return $this;
     }

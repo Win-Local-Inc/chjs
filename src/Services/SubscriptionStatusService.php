@@ -42,9 +42,9 @@ class SubscriptionStatusService extends AbstractService
         return $this->put('subscriptions/'.$subscriptionId.'/reactivate', $parameters);
     }
 
-    public function cancel(string $subscriptionId): ChargifyObject
+    public function cancel(string $subscriptionId): array
     {
-        return $this->post('subscriptions/'.$subscriptionId.'/delayed_cancel');
+        return $this->post(path: 'subscriptions/'.$subscriptionId.'/delayed_cancel', asArray: true);
     }
 
     public function resume(string $subscriptionId): ChargifyObject
