@@ -180,13 +180,19 @@ class MaxioSync extends Command
                 'component_price_id' => $component->price_point_id,
                 'subscription_component_price' => $pricesMap[$component->price_point_id],
                 'subscription_component_quantity' => $component->allocated_quantity,
-                'is_main_component' => ProductStructure::isMainComponent(product: $subscriptionMap[$component->subscription_id], component: $component->component_handle),
                 'created_at' => ChargifyUtility::getFixedDateTime($component->created_at),
                 'updated_at' => ChargifyUtility::getFixedDateTime($component->updated_at),
             ];
         })->toArray();
 
         SubscriptionComponent::upsert($upsertComponents, ['subscription_id', 'component_id']);
+
+        foreach (array_keys($subscriptionMap) as $subscriptionId)
+        {
+            $subscription = Subscription::where('subscription_id', $subscriptionId)->first();
+
+            ProductStructure::setMainComponent(subscription: $subscription);
+        }
     }
 
     protected function updateProducts()

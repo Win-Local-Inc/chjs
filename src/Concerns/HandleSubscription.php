@@ -106,11 +106,12 @@ trait HandleSubscription
                 'component_price_id' => $maxioComponent->price_point_id,
                 'subscription_component_price' => $componentPrice->first()->prices->first()->unit_price,
                 'subscription_component_quantity' => $maxioComponent->allocated_quantity,
-                'is_main_component' => ProductStructure::isMainComponent(product: $this->subscription->product_handle->value, component: $maxioComponent->component_handle),
                 'created_at' => $component->created_at,
                 'updated_at' => $component->updated_at,
             ]
         );
+
+        ProductStructure::setMainComponent(subscription: $this->subscription);
 
         return $this;
     }

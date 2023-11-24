@@ -2,7 +2,9 @@
 
 namespace WinLocalInc\Chjs;
 
+use Illuminate\Database\Eloquent\Collection;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Deprecated;
 use WinLocalInc\Chjs\Enums\BrokeragePricing;
 use WinLocalInc\Chjs\Enums\CompanyPricing;
 use WinLocalInc\Chjs\Enums\DistributorPricing;
@@ -10,6 +12,8 @@ use WinLocalInc\Chjs\Enums\FranchisePricing;
 use WinLocalInc\Chjs\Enums\Product;
 use WinLocalInc\Chjs\Enums\ShareCardPricing;
 use WinLocalInc\Chjs\Enums\ShareCardProPricing;
+use WinLocalInc\Chjs\Models\Subscription;
+use WinLocalInc\Chjs\Models\SubscriptionComponent;
 
 class ProductStructure
 {
@@ -53,27 +57,31 @@ class ProductStructure
         return self::$productPricingMap;
     }
 
-    /**
-     * Checks whether a component is a main component of a product.
-     *
-     * @param  string  $product The product handle.
-     * @param  string  $component The component handle.
-     * @return bool True if it is a main component, false otherwise.
-     *
-     * @throws InvalidArgumentException if the product is not defined.
-     */
-    public static function isMainComponent(string $product, string $component): ?bool
+
+    public static function setMainComponent(Subscription $subscription): void
     {
+        $subscriptionComponents = $subscription->subscriptionComponents;
+        $product = $subscription->product_handle->value;
+
+        $subscriptionComponents->each(function ($component) {
+            $component->update(['is_main_component' => null]);
+        });
+
         $productPricingMap = self::getProductPricingMap();
 
-        if (! array_key_exists($product, $productPricingMap)) {
-            throw new InvalidArgumentException("Undefined product: {$product}");
-        }
+        foreach ($subscriptionComponents as $component) {
+            $componentHandle = $component->component_handle;
+            if (isset($productPricingMap[$product]) && in_array($componentHandle, $productPricingMap[$product])) {
 
-        if (! in_array($component, $productPricingMap[$product], true)) {
-            return null;
+                if(in_array($product, [Product::PKG_PART_TIME->value, Product::PKG_FULL_TIME->value ]))
+                {
+                    if($subscriptionComponents->contains('component_handle', CompanyPricing::ZERO->value) && $componentHandle != CompanyPricing::ZERO->value)
+                    {
+                        continue;
+                    }
+                }
+                $component->update(['is_main_component' => true]);
+            }
         }
-
-        return true;
     }
 }

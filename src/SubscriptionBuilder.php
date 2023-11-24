@@ -200,41 +200,41 @@ class SubscriptionBuilder
             ]
         );
 
-        if ($this->components) {
-            $components = maxio()->subscriptionComponent->list($subscriptionMaxio->id);
-            $pricePoints = $components->pluck('price_point_id')->toArray();
 
-            $componentPrices = maxio()->componentPrice->list(['filter' => [
-                'ids' => implode(',', $pricePoints),
-                'type' => 'catalog,default,custom',
-            ]]);
+        $components = maxio()->subscriptionComponent->list($subscriptionMaxio->id);
+        $pricePoints = $components->pluck('price_point_id')->toArray();
 
-            $pricesMap = $componentPrices->reduce(function (array $carry, PricePoints $item) {
-                $carry[$item->id] = $item->prices->first()->unit_price;
+        $componentPrices = maxio()->componentPrice->list(['filter' => [
+            'ids' => implode(',', $pricePoints),
+            'type' => 'catalog,default,custom',
+        ]]);
 
-                return $carry;
-            }, []);
+        $pricesMap = $componentPrices->reduce(function (array $carry, PricePoints $item) {
+            $carry[$item->id] = $item->prices->first()->unit_price;
 
-            foreach ($components as $component) {
-                SubscriptionComponent::updateOrCreate(
-                    [
-                        'subscription_id' => $subscription->subscription_id,
-                        'component_id' => $component->component_id,
-                    ],
-                    [
-                        'component_handle' => $component->component_handle,
-                        'component_price_handle' => $component->price_point_handle,
-                        'component_price_id' => $component->price_point_id,
-                        'subscription_component_price' => $pricesMap[$component->price_point_id],
-                        'subscription_component_quantity' => $component->allocated_quantity,
-                        'is_main_component' => ProductStructure::isMainComponent(product: $this->pricePoint->product->product_handle, component: $component->component_handle),
-                        'created_at' => $component->created_at,
-                        'updated_at' => $component->updated_at,
-                    ]
-                );
-            }
+            return $carry;
+        }, []);
 
+        foreach ($components as $component) {
+            SubscriptionComponent::updateOrCreate(
+                [
+                    'subscription_id' => $subscription->subscription_id,
+                    'component_id' => $component->component_id,
+                ],
+                [
+                    'component_handle' => $component->component_handle,
+                    'component_price_handle' => $component->price_point_handle,
+                    'component_price_id' => $component->price_point_id,
+                    'subscription_component_price' => $pricesMap[$component->price_point_id],
+                    'subscription_component_quantity' => $component->allocated_quantity,
+                    //'is_main_component' => ProductStructure::isMainComponent(product: $this->pricePoint->product->product_handle, component: $component->component_handle),
+                    'created_at' => $component->created_at,
+                    'updated_at' => $component->updated_at,
+                ]
+            );
         }
+
+        ProductStructure::setMainComponent(subscription: $subscription);
 
         return $subscription;
 
