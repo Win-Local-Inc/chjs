@@ -11,5 +11,7 @@ enum SubscriptionStatus: string
     case OnHold = 'on_hold';
     case PastDue = 'past_due';
     case Unpaid = 'unpaid';
+    case Trial = 'trial';
+    case OnGracePeriod = 'on_grace_period';
 
 }
