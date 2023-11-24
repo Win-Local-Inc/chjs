@@ -274,9 +274,9 @@ class MaxioSync extends Command
             $components = maxio()->component->list($parameters);
             foreach ($components as $component) {
 
-                if($component->archived_at)
-                {
+                if ($component->archived_at) {
                     $this->error('archived component ignore: '.$component->name);
+
                     continue;
                 }
                 $this->info('component: '.$component->name);
@@ -320,10 +320,10 @@ class MaxioSync extends Command
 
             foreach ($componentPricePoints as $componentPricePoint) {
 
-                $component =  Component::find($componentPricePoint->component_id);
-                if($componentPricePoint->archived_at || !$component)
-                {
+                $component = Component::find($componentPricePoint->component_id);
+                if ($componentPricePoint->archived_at || ! $component) {
                     $this->error('archived component price ignore: '.$componentPricePoint->name);
+
                     continue;
                 }
 

@@ -16,7 +16,6 @@ use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
 use WinLocalInc\Chjs\Models\Product;
 use WinLocalInc\Chjs\Models\ProductPrice;
-use WinLocalInc\Chjs\Models\Subscription;
 use WinLocalInc\Chjs\Tests\Database\Models\User;
 use WinLocalInc\Chjs\Tests\Database\Models\Workspace;
 use WinLocalInc\Chjs\Tests\TestCase;

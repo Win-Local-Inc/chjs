@@ -17,7 +17,7 @@ trait HandleSubscription
     /**
      * @throws \Exception
      */
-    public function newSubscription(ProductPricing $productPricing, ?int $productCustomPrice = null): SubscriptionBuilder
+    public function newSubscription(ProductPricing $productPricing, int $productCustomPrice = null): SubscriptionBuilder
     {
         return new SubscriptionBuilder(
             productPricing: $productPricing,

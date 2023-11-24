@@ -42,7 +42,7 @@ class Subscription extends Model
     protected $casts = [
         'status' => SubscriptionStatus::class,
         'product_handle' => \WinLocalInc\Chjs\Enums\Product::class,
-//        'product_price_handle' => ProductPricing::class,
+        //        'product_price_handle' => ProductPricing::class,
         'payment_collection_method' => PaymentCollectionMethod::class,
         'subscription_interval' => SubscriptionInterval::class,
         'component' => MainComponent::class,
@@ -52,7 +52,7 @@ class Subscription extends Model
     {
 
         return Attribute::make(
-            get: fn($value) => ProductPricing::tryFrom($this->product_handle->value.'_'. $this->subscription_interval->value)
+            get: fn ($value) => ProductPricing::tryFrom($this->product_handle->value.'_'.$this->subscription_interval->value)
         );
     }
 

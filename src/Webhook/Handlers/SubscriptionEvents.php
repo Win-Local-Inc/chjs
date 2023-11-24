@@ -2,17 +2,17 @@
 
 namespace WinLocalInc\Chjs\Webhook\Handlers;
 
-use WinLocalInc\Chjs\ProductStructure;
-use WinLocalInc\Chjs\Enums\WebhookEvents;
-use WinLocalInc\Chjs\Models\Subscription;
-use WinLocalInc\Chjs\Chargify\PricePoints;
 use WinLocalInc\Chjs\Attributes\HandleEvents;
-use WinLocalInc\Chjs\Webhook\ChargifyUtility;
-use WinLocalInc\Chjs\Enums\SubscriptionStatus;
-use WinLocalInc\Chjs\Events\SubscriptionEvent;
+use WinLocalInc\Chjs\Chargify\PricePoints;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
-use WinLocalInc\Chjs\Models\SubscriptionHistory;
+use WinLocalInc\Chjs\Enums\SubscriptionStatus;
+use WinLocalInc\Chjs\Enums\WebhookEvents;
+use WinLocalInc\Chjs\Events\SubscriptionEvent;
+use WinLocalInc\Chjs\Models\Subscription;
 use WinLocalInc\Chjs\Models\SubscriptionComponent;
+use WinLocalInc\Chjs\Models\SubscriptionHistory;
+use WinLocalInc\Chjs\ProductStructure;
+use WinLocalInc\Chjs\Webhook\ChargifyUtility;
 
 #[HandleEvents(
     WebhookEvents::PaymentSuccess,
@@ -60,7 +60,7 @@ class SubscriptionEvents extends AbstractHandler
 
     protected function getEndsAt(array $data)
     {
-        if($data['state'] === SubscriptionStatus::Canceled->value) {
+        if ($data['state'] === SubscriptionStatus::Canceled->value) {
             return ChargifyUtility::getFixedDateTime($data['canceled_at']);
         }
 
@@ -69,15 +69,16 @@ class SubscriptionEvents extends AbstractHandler
 
     protected function getStatus(array $data)
     {
-        if($data['state'] === SubscriptionStatus::Active->value && $data['scheduled_cancellation_at'] !== null) {
+        if ($data['state'] === SubscriptionStatus::Active->value && $data['scheduled_cancellation_at'] !== null) {
             return SubscriptionStatus::OnGracePeriod->value;
         }
+
         return $data['state'];
     }
 
     protected function updateComponents(string $subscriptionId, string $productHandle)
     {
-        if (!in_array($this->event, [
+        if (! in_array($this->event, [
             WebhookEvents::SignupSuccess->value,
             WebhookEvents::DelayedSubscriptionCreationSuccess->value,
         ])) {

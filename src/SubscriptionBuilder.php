@@ -2,7 +2,6 @@
 
 namespace WinLocalInc\Chjs;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -37,6 +36,7 @@ class SubscriptionBuilder
     protected ?array $components = null;
 
     protected array $coupons = [];
+
     protected array $customerAttribute = [];
 
     protected string $paymentCollectionMethod = self::DEFAULT_PAYMENT_COLLECTION_METHOD;
@@ -44,7 +44,7 @@ class SubscriptionBuilder
     /**
      * @throws Exception
      */
-    public function __construct( protected ProductPricing $productPricing, protected ?int $productCustomPrice ,protected ?Model $workspace = null)
+    public function __construct(protected ProductPricing $productPricing, protected ?int $productCustomPrice, protected ?Model $workspace = null)
     {
         $this->pricePoint = $this->getProductPriceByHandle($productPricing->value);
     }
@@ -240,12 +240,11 @@ class SubscriptionBuilder
 
     }
 
-    public function preview(?string $userId = null): ChargifyObject
+    public function preview(string $userId = null): ChargifyObject
     {
         $previewData = $this->formulateSubscriptionParameters();
 
-        if($userId)
-        {
+        if ($userId) {
             $previewData['customer_reference'] = $userId;
         }
 
@@ -276,8 +275,7 @@ class SubscriptionBuilder
             $parameters['reference'] = $this->workspace->workspace_id;
         }
 
-        if (!empty($this->customerAttribute))
-        {
+        if (! empty($this->customerAttribute)) {
             $parameters['customer_attributes'] = $this->customerAttribute;
         }
 
