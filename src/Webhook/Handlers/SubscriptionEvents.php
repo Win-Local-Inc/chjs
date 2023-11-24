@@ -27,6 +27,7 @@ use WinLocalInc\Chjs\Models\SubscriptionComponent;
     WebhookEvents::DelayedSubscriptionCreationSuccess,
     WebhookEvents::UpgradeDowngradeSuccess,
     WebhookEvents::UpgradeDowngradeFailure,
+    WebhookEvents::PendingCancellationChange,
 )]
 class SubscriptionEvents extends AbstractHandler
 {
@@ -47,7 +48,7 @@ class SubscriptionEvents extends AbstractHandler
             'subscription_interval' => SubscriptionInterval::getIntervalUnit((int) $data['product']['interval'])->value,
             'total_revenue_in_cents' => $data['total_revenue_in_cents'],
             'next_billing_at' => ChargifyUtility::getFixedDateTime($data['next_assessment_at']),
-            'ends_at' => ChargifyUtility::getFixedDateTime($data['scheduled_cancellation_at']),
+            'ends_at' => $this->getEndsAt($data),
         ]], ['workspace_id']);
 
         $this->updateComponents($data['id'], $data['product']['handle']);
@@ -55,6 +56,15 @@ class SubscriptionEvents extends AbstractHandler
         $subscription = Subscription::where('subscription_id', $data['id'])->first();
 
         event(new SubscriptionEvent($subscription));
+    }
+
+    protected function getEndsAt(array $data)
+    {
+        if($data['state'] === SubscriptionStatus::Canceled->value) {
+            return ChargifyUtility::getFixedDateTime($data['canceled_at']);
+        }
+
+        return ChargifyUtility::getFixedDateTime($data['scheduled_cancellation_at']);
     }
 
     protected function getStatus(array $data)
