@@ -36,15 +36,15 @@ class ProductStructure
                     ShareCardPricing::values()
                 ),
                 Product::PKG_PART_TIME->value => [
-                    CompanyPricing::ZERO,
-                    ShareCardProPricing::ZERO,
+                    CompanyPricing::ZERO->value,
+                    ShareCardProPricing::ZERO->value,
                 ],
                 Product::PKG_FULL_TIME->value => [
-                    CompanyPricing::ZERO,
-                    ShareCardProPricing::ZERO,
+                    CompanyPricing::ZERO->value,
+                    ShareCardProPricing::ZERO->value,
                 ],
                 Product::PKG_OVERTIME->value => [
-                    CompanyPricing::ZERO,
+                    CompanyPricing::ZERO->value,
                 ],
 
             ];
