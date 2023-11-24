@@ -262,9 +262,7 @@ trait HandleSubscription
 
     public function resumeSubscription(): static
     {
-        $maxioSubscription = maxio()->subscriptionStatus->resume(subscriptionId: $this->subscription->subscription_id);
-
-        $this->updateSubscription($maxioSubscription);
+        maxio()->subscriptionStatus->resume(subscriptionId: $this->subscription->subscription_id);
 
         return $this;
     }

@@ -26,6 +26,7 @@ use WinLocalInc\Chjs\Enums\SubscriptionStatus;
  * @property mixed subscriptionComponents
  * @property ProductPricing product_price_handle
  * @property SubscriptionInterval $subscription_interval
+ * @property SubscriptionStatus $status
  */
 class Subscription extends Model
 {

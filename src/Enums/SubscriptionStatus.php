@@ -22,4 +22,16 @@ enum SubscriptionStatus: string
     case Pending = 'pending';
     case OnGracePeriod = 'on_grace_period';
 
+
+    public function resumable(): bool
+    {
+        $resumableStatuses = [
+            self::Canceled,
+            self::OnGracePeriod
+        ];
+
+        return in_array($this, $resumableStatuses);
+
+    }
+
 }
