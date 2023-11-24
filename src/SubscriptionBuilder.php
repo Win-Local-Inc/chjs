@@ -128,7 +128,7 @@ class SubscriptionBuilder
         return $this;
     }
 
-    public function paymentProfile($id): static
+    public function paymentProfile(?string $id = null): static
     {
         $this->paymentProfile = $id;
 
