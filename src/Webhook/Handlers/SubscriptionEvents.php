@@ -2,16 +2,17 @@
 
 namespace WinLocalInc\Chjs\Webhook\Handlers;
 
-use WinLocalInc\Chjs\Attributes\HandleEvents;
-use WinLocalInc\Chjs\Chargify\PricePoints;
-use WinLocalInc\Chjs\Enums\SubscriptionInterval;
-use WinLocalInc\Chjs\Enums\WebhookEvents;
-use WinLocalInc\Chjs\Events\SubscriptionEvent;
-use WinLocalInc\Chjs\Models\Subscription;
-use WinLocalInc\Chjs\Models\SubscriptionComponent;
-use WinLocalInc\Chjs\Models\SubscriptionHistory;
 use WinLocalInc\Chjs\ProductStructure;
+use WinLocalInc\Chjs\Enums\WebhookEvents;
+use WinLocalInc\Chjs\Models\Subscription;
+use WinLocalInc\Chjs\Chargify\PricePoints;
+use WinLocalInc\Chjs\Attributes\HandleEvents;
 use WinLocalInc\Chjs\Webhook\ChargifyUtility;
+use WinLocalInc\Chjs\Enums\SubscriptionStatus;
+use WinLocalInc\Chjs\Events\SubscriptionEvent;
+use WinLocalInc\Chjs\Enums\SubscriptionInterval;
+use WinLocalInc\Chjs\Models\SubscriptionHistory;
+use WinLocalInc\Chjs\Models\SubscriptionComponent;
 
 #[HandleEvents(
     WebhookEvents::PaymentSuccess,
@@ -41,7 +42,7 @@ class SubscriptionEvents extends AbstractHandler
             'workspace_id' => $data['reference'],
             'product_price_handle' => $data['product']['product_price_point_handle'],
             'product_handle' => $data['product']['handle'],
-            'status' => $data['state'],
+            'status' => $this->getStatus($data),
             'payment_collection_method' => $data['payment_collection_method'],
             'subscription_interval' => SubscriptionInterval::getIntervalUnit((int) $data['product']['interval'])->value,
             'total_revenue_in_cents' => $data['total_revenue_in_cents'],
@@ -56,9 +57,17 @@ class SubscriptionEvents extends AbstractHandler
         event(new SubscriptionEvent($subscription));
     }
 
+    protected function getStatus(array $data)
+    {
+        if($data['state'] === SubscriptionStatus::Active->value && $data['scheduled_cancellation_at'] !== null) {
+            return SubscriptionStatus::OnGracePeriod->value;
+        }
+        return $data['state'];
+    }
+
     protected function updateComponents(string $subscriptionId, string $productHandle)
     {
-        if (! in_array($this->event, [
+        if (!in_array($this->event, [
             WebhookEvents::SignupSuccess->value,
             WebhookEvents::DelayedSubscriptionCreationSuccess->value,
         ])) {
