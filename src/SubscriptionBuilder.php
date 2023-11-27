@@ -128,7 +128,7 @@ class SubscriptionBuilder
         return $this;
     }
 
-    public function paymentProfile(?string $id = null): static
+    public function paymentProfile(string $id = null): static
     {
         $this->paymentProfile = $id;
 
@@ -199,7 +199,6 @@ class SubscriptionBuilder
                 'updated_at' => $subscriptionMaxio->updated_at,
             ]
         );
-
 
         $components = maxio()->subscriptionComponent->list($subscriptionMaxio->id);
         $pricePoints = $components->pluck('price_point_id')->toArray();

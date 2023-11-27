@@ -187,8 +187,7 @@ class MaxioSync extends Command
 
         SubscriptionComponent::upsert($upsertComponents, ['subscription_id', 'component_id']);
 
-        foreach (array_keys($subscriptionMap) as $subscriptionId)
-        {
+        foreach (array_keys($subscriptionMap) as $subscriptionId) {
             $subscription = Subscription::where('subscription_id', $subscriptionId)->first();
 
             ProductStructure::setMainComponent(subscription: $subscription);

@@ -46,14 +46,14 @@ class Component extends Model
         static::creating(function ($model) {
             try {
 
-                $model->component_entry = MainComponent::findComponent($model->compoent_handle)->name;
+                $model->component_entry = MainComponent::findComponent($model->component_handle)->name;
             } catch (\Throwable $e) {
             }
         });
 
         static::updating(function ($model) {
             try {
-                $model->component_entry = MainComponent::findComponent($model->compoent_handle)->name;
+                $model->component_entry = MainComponent::findComponent($model->component_handle)->name;
             } catch (\Throwable $e) {
             }
         });

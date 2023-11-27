@@ -2,9 +2,6 @@
 
 namespace WinLocalInc\Chjs;
 
-use Illuminate\Database\Eloquent\Collection;
-use InvalidArgumentException;
-use JetBrains\PhpStorm\Deprecated;
 use WinLocalInc\Chjs\Enums\BrokeragePricing;
 use WinLocalInc\Chjs\Enums\CompanyPricing;
 use WinLocalInc\Chjs\Enums\DistributorPricing;
@@ -13,7 +10,6 @@ use WinLocalInc\Chjs\Enums\Product;
 use WinLocalInc\Chjs\Enums\ShareCardPricing;
 use WinLocalInc\Chjs\Enums\ShareCardProPricing;
 use WinLocalInc\Chjs\Models\Subscription;
-use WinLocalInc\Chjs\Models\SubscriptionComponent;
 
 class ProductStructure
 {
@@ -57,7 +53,6 @@ class ProductStructure
         return self::$productPricingMap;
     }
 
-
     public static function setMainComponent(Subscription $subscription): void
     {
         $subscriptionComponents = $subscription->subscriptionComponents;
@@ -73,10 +68,8 @@ class ProductStructure
             $componentHandle = $component->component_handle;
             if (isset($productPricingMap[$product]) && in_array($componentHandle, $productPricingMap[$product])) {
 
-                if(in_array($product, [Product::PKG_PART_TIME->value, Product::PKG_FULL_TIME->value ]))
-                {
-                    if($subscriptionComponents->contains('component_handle', CompanyPricing::ZERO->value) && $componentHandle != CompanyPricing::ZERO->value)
-                    {
+                if (in_array($product, [Product::PKG_PART_TIME->value, Product::PKG_FULL_TIME->value])) {
+                    if ($subscriptionComponents->contains('component_handle', CompanyPricing::ZERO->value) && $componentHandle != CompanyPricing::ZERO->value) {
                         continue;
                     }
                 }

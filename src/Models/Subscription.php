@@ -87,6 +87,11 @@ class Subscription extends Model
         return $this->belongsToMany(SubscriptionComponent::class, Subscription::class, 'subscription_id', 'subscription_id');
     }
 
+    public function metafields(): BelongsToMany
+    {
+        return $this->belongsToMany(Metafield::class, 'chjs_metafield_subscription', 'workspace_id', 'metafield_id');
+    }
+
     protected static function newFactory()
     {
         return SubscriptionFactory::new();

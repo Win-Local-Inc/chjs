@@ -98,7 +98,7 @@ class SubscriptionEvents extends AbstractHandler
             return $carry;
         }, []);
 
-        $upsertComponents = $componentsResponse->map(function ($component) use (&$pricesMap, $subscriptionId, $productHandle) {
+        $upsertComponents = $componentsResponse->map(function ($component) use (&$pricesMap, $subscriptionId) {
             return [
                 'subscription_id' => $subscriptionId,
                 'component_id' => $component->component_id,
