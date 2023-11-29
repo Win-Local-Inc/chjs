@@ -112,6 +112,7 @@ class MaxioSync extends Command
                     'payment_collection_method' => $subscription->payment_collection_method,
                     'subscription_interval' => SubscriptionInterval::getIntervalUnit((int) $subscription->product->interval)->value,
                     'total_revenue_in_cents' => $subscription->total_revenue_in_cents,
+                    'product_price_in_cents' => $subscription->product_price_in_cents,
                     'next_billing_at' => $subscription->next_assessment_at,
                     'created_at' => $subscription->created_at,
                     'updated_at' => $subscription->updated_at,

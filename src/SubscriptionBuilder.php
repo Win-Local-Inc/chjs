@@ -194,6 +194,7 @@ class SubscriptionBuilder
                 'payment_collection_method' => $subscriptionMaxio->payment_collection_method,
                 'subscription_interval' => $this->pricePoint->product_price_interval,
                 'total_revenue_in_cents' => $subscriptionMaxio->total_revenue_in_cents,
+                'product_price_in_cents' => $subscriptionMaxio->product_price_in_cents,
                 'next_billing_at' => $subscriptionMaxio->next_assessment_at,
                 'created_at' => $subscriptionMaxio->created_at,
                 'updated_at' => $subscriptionMaxio->updated_at,

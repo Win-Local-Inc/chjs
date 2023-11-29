@@ -47,6 +47,7 @@ class SubscriptionEvents extends AbstractHandler
             'payment_collection_method' => $data['payment_collection_method'],
             'subscription_interval' => SubscriptionInterval::getIntervalUnit((int) $data['product']['interval'])->value,
             'total_revenue_in_cents' => $data['total_revenue_in_cents'],
+            'product_price_in_cents' => $data['product_price_in_cents'],
             'next_billing_at' => ChargifyUtility::getFixedDateTime($data['next_assessment_at']),
             'ends_at' => $this->getEndsAt($data),
         ]], ['workspace_id']);
