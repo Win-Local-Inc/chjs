@@ -14,17 +14,10 @@ return new class() extends Migration
 
         Schema::create('chjs_subscription_histories', function (Blueprint $table) {
             $table->id('id');
-
-            $table->foreignUuid('workspace_id')
-                ->constrained('workspaces', 'workspace_id')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-
+            $table->uuid('workspace_id');
             $table->unsignedBigInteger('subscription_id');
-
             $table->string('action', 100);
             $table->string('status', 100);
-
             $table->json('data');
             $table->timestamps();
         });
