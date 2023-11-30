@@ -73,8 +73,11 @@ class ProductStructure
                         continue;
                     }
                 }
-                $component->update(['is_main_component' => true]);
-                break;
+                if($component->subscription_component_quantity > 0)
+                {
+                    $component->update(['is_main_component' => true]);
+                    break;
+                }
             }
         }
     }

@@ -23,7 +23,7 @@ use WinLocalInc\Chjs\Enums\SubscriptionStatus;
  * @property mixed $subscription_id
  * @property mixed $product_handle
  * @property mixed $component
- * @property mixed subscriptionComponents
+ * @property SubscriptionComponent subscriptionComponents
  * @property ProductPricing product_price_handle
  * @property SubscriptionInterval $subscription_interval
  * @property SubscriptionStatus $status
