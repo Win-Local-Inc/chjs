@@ -74,6 +74,7 @@ class ProductStructure
                     }
                 }
                 $component->update(['is_main_component' => true]);
+                break;
             }
         }
     }
