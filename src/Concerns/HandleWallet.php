@@ -2,6 +2,7 @@
 
 namespace WinLocalInc\Chjs\Concerns;
 
+use WinLocalInc\Chjs\Chargify\ChargifyObject;
 use WinLocalInc\Chjs\Exceptions\InvalidCustomer;
 use WinLocalInc\Chjs\Models\ComponentPrice;
 use WinLocalInc\Chjs\Models\Subscription;
@@ -12,7 +13,7 @@ trait HandleWallet
     /**
      * @throws InvalidCustomer
      */
-    public function addBalanceToWallet($qty)
+    public function addBalanceToWallet($qty): ChargifyObject
     {
         $adComponentPrice = ComponentPrice::where('component_handle', 'ad_credit_one_time')->first();
 

@@ -280,6 +280,17 @@ trait HandleSubscription
         return $this->subscription->status;
     }
 
+    public function findMaxioSubscription()
+    {
+        return maxio()->subscription->find(subscriptionId: $this->subscription->subscription_id);
+    }
+
+
+    public function subscriptionPaymentMethod()
+    {
+        return $this->findMaxioSubscription()?->credit_card?->id;
+    }
+
     protected function updateSubscription(ChargifyObject $maxioSubscription)
     {
         $this->subscription->forceFill([
