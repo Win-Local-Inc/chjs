@@ -311,6 +311,7 @@ class ChargifySubscriptionBuilderTest extends TestCase
         $workspace->newSubscription($productPrice->product_price_handle, 100)
             ->paymentProfile($paymentProfileId)
             ->component($componentPrice, 10)
+            ->setMetafields([['partner' => 'misio']])
             ->trialDays(10)
             ->coupon($coupon)
             ->create();

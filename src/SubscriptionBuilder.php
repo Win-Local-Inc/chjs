@@ -35,6 +35,8 @@ class SubscriptionBuilder
 
     protected ?array $components = null;
 
+    protected ?array $metafields = null;
+
     protected array $coupons = [];
 
     protected array $customerAttribute = [];
@@ -166,6 +168,13 @@ class SubscriptionBuilder
         return $this;
     }
 
+    public function setMetafields(array $metafields = null): static
+    {
+        $this->metafields = $metafields;
+
+        return $this;
+    }
+
     public function remittance(): static
     {
         $this->paymentCollectionMethod = self::REMITTANCE_PAYMENT_COLLECTION_METHOD;
@@ -278,6 +287,10 @@ class SubscriptionBuilder
 
         if (! empty($this->customerAttribute)) {
             $parameters['customer_attributes'] = $this->customerAttribute;
+        }
+
+        if (is_array($this->metafields) && ! empty($this->metafields)) {
+            $parameters['metafields'] = $this->metafields;
         }
 
         if ($this->paymentProfile) {
