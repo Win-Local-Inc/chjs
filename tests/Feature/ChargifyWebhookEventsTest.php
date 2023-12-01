@@ -16,6 +16,7 @@ use WinLocalInc\Chjs\Enums\SubscriptionStatus;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
+use WinLocalInc\Chjs\Models\Metafield;
 use WinLocalInc\Chjs\Models\Product;
 use WinLocalInc\Chjs\Models\ProductPrice;
 use WinLocalInc\Chjs\Models\Subscription;
@@ -24,6 +25,7 @@ use WinLocalInc\Chjs\Tests\Database\Models\User;
 use WinLocalInc\Chjs\Tests\Database\Models\Workspace;
 use WinLocalInc\Chjs\Tests\TestCase;
 use WinLocalInc\Chjs\Webhook\Handlers\ComponentPriceChange;
+use WinLocalInc\Chjs\Webhook\Handlers\MetafieldUpdate;
 use WinLocalInc\Chjs\Webhook\Handlers\SubscriptionEvents;
 use WinLocalInc\Chjs\Webhook\Handlers\SubscriptionPaymentUpdate;
 
@@ -338,5 +340,51 @@ class ChargifyWebhookEventsTest extends TestCase
             'subscription_id' => $subscription->subscription_id,
             'workspace_id' => $workspace->workspace_id,
         ]);
+    }
+
+    public function testChargifyWebhookEventsMetafieldUpdateEvent()
+    {
+        $workspace = Workspace::factory()->create();
+        $user = User::factory()
+            ->workspace($workspace)
+            ->withChargifyId()
+            ->create();
+
+        $productPrice = ProductPrice::where('product_price_handle', ProductPricing::SOLO_MONTH->value)->first();
+
+        $subscription = Subscription::factory()
+            ->workspace($workspace)
+            ->user($user)
+            ->productPrice($productPrice)
+            ->create();
+
+        $metafield = Metafield::factory()->create();
+
+        MetafieldUpdate::dispatch(
+            random_int(1000000, 9999999),
+            WebhookEvents::CustomFieldValueChange->value,
+            [
+                'site' => [
+                    'id' => random_int(1000, 9999),
+                    'subdomain' => 'win-local',
+                ],
+                'metafield' => [
+                    'event_type' => 'created',
+                    'metafield_name' => $metafield->key,
+                    'metafield_id' => $metafield->id,
+                    'old_value' => 'nil',
+                    'new_value' => $metafield->value,
+                    'resource_type' => 'Subscription',
+                    'resource_id' => $subscription->subscription_id,
+                ],
+                'event_id' => random_int(1000, 9999),
+            ]
+        );
+
+        $this->assertDatabaseHas('chjs_metafield_subscription', [
+            'metafield_id' => $metafield->id,
+            'workspace_id' => $workspace->workspace_id,
+        ]);
+
     }
 }
