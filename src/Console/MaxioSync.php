@@ -76,7 +76,7 @@ class MaxioSync extends Command
 
     protected function subscriptionSync()
     {
-        $uniqueWorkspace = [];
+        $uniqueWorkspaces = [];
 
         $parameters = [
             'page' => 1,
@@ -91,12 +91,12 @@ class MaxioSync extends Command
             $subscriptions = maxio()
                 ->subscription
                 ->list($parameters)
-                ->filter(function ($subscription) use (&$uniqueWorkspace) {
-                    if (! $subscription->reference || in_array($subscription->reference, $uniqueWorkspace)) {
+                ->filter(function ($subscription) use (&$uniqueWorkspaces) {
+                    if (! $subscription->reference || in_array($subscription->reference, $uniqueWorkspaces)) {
                         return false;
                     }
 
-                    $uniqueWorkspace[] = $subscription->reference;
+                    $uniqueWorkspaces[] = $subscription->reference;
 
                     return true;
                 });
@@ -133,7 +133,41 @@ class MaxioSync extends Command
             $parameters['page'] += 1;
         } while ($subscriptions->count() >= $parameters['per_page']);
 
+        $this->removeNotExistingSubscriptions($uniqueWorkspaces);
+
         $this->info("subscriptions sync done!\n");
+    }
+
+    protected function removeNotExistingSubscriptions(array &$uniqueWorkspaces)
+    {
+        $subscriptionWorkspaces = collect($uniqueWorkspaces);
+
+        if ($subscriptionWorkspaces->isEmpty()) {
+            return;
+        }
+
+        $limit = 100;
+        $lastWorkspaceId = '0';
+
+        do {
+            $workspaces = Subscription::query()
+                ->select('workspace_id')
+                ->where('workspace_id', '>', $lastWorkspaceId)
+                ->orderBy('workspace_id')
+                ->limit($limit)
+                ->pluck('workspace_id');
+
+            $lastWorkspaceId = $workspaces->last();
+
+            $difference = $workspaces->diff($subscriptionWorkspaces);
+
+            if ($difference->isNotEmpty()) {
+                Subscription::query()
+                    ->whereIn('workspace_id', $difference->toArray())
+                    ->delete();
+            }
+
+        } while (count($workspaces) >= $limit);
     }
 
     protected function updateSubscriptionComponents(array &$subscriptionMap)
