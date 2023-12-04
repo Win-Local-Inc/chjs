@@ -4,8 +4,6 @@ namespace WinLocalInc\Chjs\Concerns;
 
 use WinLocalInc\Chjs\Exceptions\InvalidCustomer;
 use WinLocalInc\Chjs\Models\ComponentPrice;
-use WinLocalInc\Chjs\Models\Subscription;
-use WinLocalInc\Chjs\Models\SubscriptionComponent;
 
 trait HandleWallet
 {
@@ -25,6 +23,4 @@ trait HandleWallet
         );
 
     }
-
-
 }

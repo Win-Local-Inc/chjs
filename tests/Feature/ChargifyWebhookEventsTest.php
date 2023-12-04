@@ -342,7 +342,7 @@ class ChargifyWebhookEventsTest extends TestCase
         ]);
     }
 
-    public function testChargifyWebhookEventsMetafieldUpdateEvent()
+    public function testChargifyWebhookEventsMetafieldCreateEvent()
     {
         $workspace = Workspace::factory()->create();
         $user = User::factory()
@@ -382,6 +382,54 @@ class ChargifyWebhookEventsTest extends TestCase
         );
 
         $this->assertDatabaseHas('chjs_metafield_subscription', [
+            'metafield_id' => $metafield->id,
+            'workspace_id' => $workspace->workspace_id,
+        ]);
+
+    }
+
+    public function testChargifyWebhookEventsMetafieldDeleteEvent()
+    {
+        $workspace = Workspace::factory()->create();
+        $user = User::factory()
+            ->workspace($workspace)
+            ->withChargifyId()
+            ->create();
+
+        $productPrice = ProductPrice::where('product_price_handle', ProductPricing::SOLO_MONTH->value)->first();
+
+        $subscription = Subscription::factory()
+            ->workspace($workspace)
+            ->user($user)
+            ->productPrice($productPrice)
+            ->create();
+
+        $metafield = Metafield::factory()->create();
+
+        $subscription->metafields()->attach($metafield);
+
+        MetafieldUpdate::dispatch(
+            random_int(1000000, 9999999),
+            WebhookEvents::CustomFieldValueChange->value,
+            [
+                'site' => [
+                    'id' => random_int(1000, 9999),
+                    'subdomain' => 'win-local',
+                ],
+                'metafield' => [
+                    'event_type' => 'deleted',
+                    'metafield_name' => $metafield->key,
+                    'metafield_id' => $metafield->id,
+                    'old_value' => $metafield->value,
+                    'new_value' => 'nil',
+                    'resource_type' => 'Subscription',
+                    'resource_id' => $subscription->subscription_id,
+                ],
+                'event_id' => random_int(1000, 9999),
+            ]
+        );
+
+        $this->assertDatabaseMissing('chjs_metafield_subscription', [
             'metafield_id' => $metafield->id,
             'workspace_id' => $workspace->workspace_id,
         ]);

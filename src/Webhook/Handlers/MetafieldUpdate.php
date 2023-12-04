@@ -12,6 +12,10 @@ use WinLocalInc\Chjs\Models\Subscription;
 )]
 class MetafieldUpdate extends AbstractHandler
 {
+    public const Created = 'created';
+
+    public const Deleted = 'deleted';
+
     protected function handleEvent(string $event, array $payload)
     {
         $metafieldData = $payload['metafield'];
@@ -20,9 +24,11 @@ class MetafieldUpdate extends AbstractHandler
             return;
         }
 
+        $eventType = $metafieldData['event_type'];
         $subscriptionId = $metafieldData['resource_id'];
         $metaKey = $metafieldData['metafield_name'];
-        $metaValue = $metafieldData['new_value'];
+        $metaValue = $eventType === self::Created ?
+            $metafieldData['new_value'] : $metafieldData['old_value'];
 
         $subscription = Subscription::where('subscription_id', $subscriptionId)->first();
         if (! $subscription) {
@@ -32,9 +38,17 @@ class MetafieldUpdate extends AbstractHandler
         $sha1 = sha1($metaKey.mb_strtolower($metaValue));
         $metafield = Metafield::where('sha1_hash', $sha1)->first();
         if (! $metafield) {
-            return;
+            $metafield = Metafield::create([
+                'key' => $metaKey,
+                'value' => $metaValue,
+                'sha1_hash' => $sha1,
+            ]);
         }
 
-        $subscription->metafields()->attach($metafield);
+        if ($eventType === self::Created) {
+            $subscription->metafields()->attach($metafield);
+        } else {
+            $subscription->metafields()->detach($metafield);
+        }
     }
 }
