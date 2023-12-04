@@ -2,6 +2,8 @@
 
 namespace WinLocalInc\Chjs\Concerns;
 
+use Chargify\Customer;
+use Illuminate\Support\Collection;
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
 use WinLocalInc\Chjs\Exceptions\CustomerAlreadyCreated;
 use WinLocalInc\Chjs\Exceptions\InvalidCustomer;
@@ -74,7 +76,7 @@ trait HandleCustomer
     /**
      * Get the Chargify customer for the model.
      *
-     * @return \Chargify\Customer
+     * @return Customer
      */
     public function asChargifyCustomer(): ChargifyObject
     {
@@ -110,7 +112,7 @@ trait HandleCustomer
             })->get();
     }
 
-    public function getPaymentMethods(): \Illuminate\Support\Collection
+    public function getPaymentMethods(): Collection
     {
         return maxio()->paymentProfile->list(['customer_id' => $this->chargifyId()]);
     }

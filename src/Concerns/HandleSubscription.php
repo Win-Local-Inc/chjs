@@ -287,7 +287,14 @@ trait HandleSubscription
 
     public function subscriptionPaymentMethod()
     {
-        return $this->findMaxioSubscription()?->credit_card?->id;
+        $sub = $this->findMaxioSubscription();
+
+        if(isset($sub->credit_card))
+        {
+            return $sub->credit_card->id;
+        }
+
+        return null;
     }
 
     protected function updateSubscription(ChargifyObject $maxioSubscription)

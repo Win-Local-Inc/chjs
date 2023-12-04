@@ -47,6 +47,11 @@ abstract class AbstractService
                 }
             }
 
+            if (empty($jsonResponse))
+            {
+                return collect();
+            }
+
             return $response;
         }
 
