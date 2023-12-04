@@ -408,14 +408,14 @@ class ChargifyWebhookEventsTest extends TestCase
 
         $metafieldNew = Metafield::factory()->state(['key' => $key])
             ->afterCreating(function (Metafield $meta) {
-                $meta->sha1_hash = sha1($meta->key.mb_strtolower($meta->value));
+                $meta->sha1_hash = sha1(mb_strtolower($meta->key.$meta->value));
                 $meta->save();
             })
             ->create();
 
         $metafieldOld = Metafield::factory()->state(['key' => $key])
             ->afterCreating(function (Metafield $meta) {
-                $meta->sha1_hash = sha1($meta->key.mb_strtolower($meta->value));
+                $meta->sha1_hash = sha1(mb_strtolower($meta->key.$meta->value));
                 $meta->save();
             })
             ->create();

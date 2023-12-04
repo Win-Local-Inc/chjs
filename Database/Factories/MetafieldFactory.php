@@ -18,7 +18,7 @@ class MetafieldFactory extends Factory
         return [
             'key' => $key,
             'value' => $value,
-            'sha1_hash' => sha1($key.mb_strtolower($value)),
+            'sha1_hash' => sha1(mb_strtolower($key.$value)),
         ];
     }
 }

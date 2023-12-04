@@ -41,7 +41,7 @@ class MetafieldUpdate extends AbstractHandler
 
     protected function getMetafield(string $metaKey, string $metaValue): Metafield
     {
-        $sha1 = sha1($metaKey.mb_strtolower($metaValue));
+        $sha1 = sha1(mb_strtolower($metaKey.$metaValue));
         $metafield = Metafield::where('sha1_hash', $sha1)->first();
         if (! $metafield) {
             $metafield = Metafield::create([
