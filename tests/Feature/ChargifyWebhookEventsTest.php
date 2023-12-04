@@ -388,6 +388,73 @@ class ChargifyWebhookEventsTest extends TestCase
 
     }
 
+    public function testChargifyWebhookEventsMetafieldUpdateEvent()
+    {
+        $workspace = Workspace::factory()->create();
+        $user = User::factory()
+            ->workspace($workspace)
+            ->withChargifyId()
+            ->create();
+
+        $productPrice = ProductPrice::where('product_price_handle', ProductPricing::SOLO_MONTH->value)->first();
+
+        $subscription = Subscription::factory()
+            ->workspace($workspace)
+            ->user($user)
+            ->productPrice($productPrice)
+            ->create();
+
+        $key = Str::random();
+
+        $metafieldNew = Metafield::factory()->state(['key' => $key])
+            ->afterCreating(function (Metafield $meta) {
+                $meta->sha1_hash = sha1($meta->key.mb_strtolower($meta->value));
+                $meta->save();
+            })
+            ->create();
+
+        $metafieldOld = Metafield::factory()->state(['key' => $key])
+            ->afterCreating(function (Metafield $meta) {
+                $meta->sha1_hash = sha1($meta->key.mb_strtolower($meta->value));
+                $meta->save();
+            })
+            ->create();
+
+        $subscription->metafields()->attach($metafieldOld);
+
+        MetafieldUpdate::dispatch(
+            random_int(1000000, 9999999),
+            WebhookEvents::CustomFieldValueChange->value,
+            [
+                'site' => [
+                    'id' => random_int(1000, 9999),
+                    'subdomain' => 'win-local',
+                ],
+                'metafield' => [
+                    'event_type' => 'updated',
+                    'metafield_name' => $key,
+                    'metafield_id' => $metafieldNew->id,
+                    'old_value' => $metafieldOld->value,
+                    'new_value' => $metafieldNew->value,
+                    'resource_type' => 'Subscription',
+                    'resource_id' => $subscription->subscription_id,
+                ],
+                'event_id' => random_int(1000, 9999),
+            ]
+        );
+
+        $this->assertDatabaseMissing('chjs_metafield_subscription', [
+            'metafield_id' => $metafieldOld->id,
+            'workspace_id' => $workspace->workspace_id,
+        ]);
+
+        $this->assertDatabaseHas('chjs_metafield_subscription', [
+            'metafield_id' => $metafieldNew->id,
+            'workspace_id' => $workspace->workspace_id,
+        ]);
+
+    }
+
     public function testChargifyWebhookEventsMetafieldDeleteEvent()
     {
         $workspace = Workspace::factory()->create();

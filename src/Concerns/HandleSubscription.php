@@ -285,7 +285,6 @@ trait HandleSubscription
         return maxio()->subscription->find(subscriptionId: $this->subscription->subscription_id);
     }
 
-
     public function subscriptionPaymentMethod()
     {
         return $this->findMaxioSubscription()?->credit_card?->id;
