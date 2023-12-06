@@ -2,13 +2,11 @@
 
 namespace WinLocalInc\Chjs\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Workspace\Workspace;
+use Illuminate\Database\Eloquent\Model;
 
 class MetafieldSubscription extends Model
 {
-
-
     protected $primaryKey = 'workspace_id';
 
     protected $table = 'chjs_metafield_subscription';
@@ -22,5 +20,4 @@ class MetafieldSubscription extends Model
     {
         return $this->belongsTo(Workspace::class, 'workspace_id');
     }
-
 }

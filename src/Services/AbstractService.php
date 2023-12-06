@@ -35,6 +35,10 @@ abstract class AbstractService
         if ($response->successful()) {
             $jsonResponse = $response->json();
 
+            if (is_bool($jsonResponse)) {
+                return ['status' => $jsonResponse];
+            }
+
             if ($asArray) {
                 return $jsonResponse;
             }
@@ -47,8 +51,7 @@ abstract class AbstractService
                 }
             }
 
-            if (empty($jsonResponse))
-            {
+            if (empty($jsonResponse)) {
                 return collect();
             }
 

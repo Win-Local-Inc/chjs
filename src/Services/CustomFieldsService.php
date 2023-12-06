@@ -27,7 +27,7 @@ class CustomFieldsService extends AbstractService
         ]);
 
         $this->validatePayload(['metadata' => $metadata], [
-            'metadata.*.current_name' => 'required|string',
+            'metadata.*.current_name' => 'string',
             'metadata.*.name' => 'required|string',
             'metadata.*.value' => 'required|string',
         ]);
@@ -41,7 +41,7 @@ class CustomFieldsService extends AbstractService
             'resourceType' => 'required|in:customers,subscriptions',
         ]);
 
-        $this->delete($resourceType.'/'.$resourceId.'/metadata', ['names' => $names]);
+        $this->delete($resourceType.'/'.$resourceId.'/metadata', ['names' => $names], true);
     }
 
     public function listMetadata(string $resourceId, string $resourceType = 'subscriptions', array $parameters = []): Collection

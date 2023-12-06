@@ -289,8 +289,7 @@ trait HandleSubscription
     {
         $sub = $this->findMaxioSubscription();
 
-        if(isset($sub->credit_card))
-        {
+        if (isset($sub->credit_card)) {
             return $sub->credit_card->id;
         }
 
