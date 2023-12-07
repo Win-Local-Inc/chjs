@@ -121,13 +121,16 @@ class MaxioSync extends Command
                 ];
             })->toArray();
 
-            Subscription::upsert($upsertSubscriptions, ['workspace_id']);
-
-            $subscriptionMap = array_reduce($upsertSubscriptions, function ($carry, $item) {
-                $carry[$item['subscription_id']] = $item['product_handle'];
-
-                return $carry;
-            }, []);
+            $subscriptionMap = [];
+            foreach ($upsertSubscriptions as $item) {
+                try {
+                    Subscription::upsert([$item], ['workspace_id']);
+                    $subscriptionMap[$item['subscription_id']] = $item['product_handle'];
+                } catch (\Throwable $th) {
+                    $this->info('Upsert Error For subscription_id: '.$item['subscription_id']);
+                    $this->error($th->getMessage());
+                }
+            }
 
             $this->updateSubscriptionComponents($subscriptionMap);
 
