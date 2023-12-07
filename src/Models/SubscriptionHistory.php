@@ -26,13 +26,16 @@ class SubscriptionHistory extends Model
         return $this->belongsTo(Chjs::$subscriberModel, 'workspace_id');
     }
 
-    public static function createSubscriptionHistory(string $subscriptionId, string $action): void
+    public static function createSubscriptionHistory(string $subscriptionOrWorkspaceId, string $action): void
     {
-        if (! $subscriptionId) {
+        if (! $subscriptionOrWorkspaceId) {
             return;
         }
 
-        $subscription = Subscription::where(['subscription_id' => $subscriptionId])->with('subscriptionComponents')->first();
+        $subscription = Subscription::where(['subscription_id' => $subscriptionOrWorkspaceId])
+            ->orWhere(['workspace_id' => $subscriptionOrWorkspaceId])
+            ->with('subscriptionComponents')
+            ->first();
 
         if (! $subscription) {
             return;

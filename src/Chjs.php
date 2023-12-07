@@ -7,13 +7,13 @@ use WinLocalInc\Chjs\Services\ComponentService;
 use WinLocalInc\Chjs\Services\CoreServiceFactory;
 use WinLocalInc\Chjs\Services\CouponService;
 use WinLocalInc\Chjs\Services\CustomerService;
+use WinLocalInc\Chjs\Services\CustomFieldsService;
 use WinLocalInc\Chjs\Services\PaymentProfileService;
 use WinLocalInc\Chjs\Services\ProductPriceService;
 use WinLocalInc\Chjs\Services\ProductService;
 use WinLocalInc\Chjs\Services\SubscriptionComponentService;
 use WinLocalInc\Chjs\Services\SubscriptionService;
 use WinLocalInc\Chjs\Services\SubscriptionStatusService;
-use WinLocalInc\Chjs\Services\CustomFieldsService;
 
 /**
  * Service factory class for API resources in the root namespace.

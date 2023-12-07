@@ -13,6 +13,7 @@ use WinLocalInc\Chjs\Models\Product;
 use WinLocalInc\Chjs\Models\ProductPrice;
 use WinLocalInc\Chjs\Models\Subscription;
 use WinLocalInc\Chjs\Models\SubscriptionComponent;
+use WinLocalInc\Chjs\Models\SubscriptionHistory;
 use WinLocalInc\Chjs\ProductStructure;
 use WinLocalInc\Chjs\Webhook\ChargifyUtility;
 
@@ -162,6 +163,9 @@ class MaxioSync extends Command
             $difference = $workspaces->diff($subscriptionWorkspaces);
 
             if ($difference->isNotEmpty()) {
+                foreach ($difference as $workspaceId) {
+                    SubscriptionHistory::createSubscriptionHistory($workspaceId, 'not_exist_in_maxio');
+                }
                 Subscription::query()
                     ->whereIn('workspace_id', $difference->toArray())
                     ->delete();
