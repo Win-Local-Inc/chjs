@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('component_handle', 52)->unique();
             $table->string('component_name', 52);
             $table->string('component_entry', 21)->index()->nullable();
-            $table->string('component_unit', 12);
+            $table->string('component_unit', 21);
             $table->string('component_type', 32);
             $table->boolean('component_is_active')->default(IsActive::Active->value);
             $table->timestamps();
