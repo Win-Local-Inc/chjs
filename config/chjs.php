@@ -13,6 +13,7 @@ return [
     'shared_key' => env('CHARGIFY_SHARED_KEY'),
     'timeout' => env('CHARGIFY_TIMEOUT', 10),
     'product_family_id' => env('CHARGIFY_PRODUCT_FAMILY_ID'),
+    'webhook_queue' => env('CHARGIFY_WEBHOOK_QUEUE', 'redis'),
 
     'ads_component' => env('ADS_COMPONENT', 'ads'),
 ];

@@ -14,15 +14,13 @@ class ChargifyWebhook
 
     protected array $payload;
 
-    public function __construct(protected WebhookResolver $webhookResolver)
-    {
-    }
+    public function __construct(protected WebhookResolver $webhookResolver) {}
 
     public function handle(array $data)
     {
         $this->validateAndUnpackArray($data);
 
-        Cache::lock('chargify_event_id_'.$this->id, 60)->get(function () {
+        Cache::lock('chargify_event_id_' . $this->id, 60)->get(function () {
 
             $eventEnum = WebhookEvents::tryFrom($this->event);
             if ($eventEnum) {
@@ -49,7 +47,8 @@ class ChargifyWebhook
     {
         $classes = $this->webhookResolver->getHandlersByEvent($event);
         foreach ($classes as $class) {
-            $class::dispatch($this->id, $this->event, $this->payload);
+            $class::dispatch($this->id, $this->event, $this->payload)
+                ->onConnection(config('chjs.webhook_queue'));
         }
     }
 }

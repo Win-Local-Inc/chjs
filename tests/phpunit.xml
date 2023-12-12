@@ -39,5 +39,6 @@
         <server name="CHARGIFY_EVENTS_HOSTNAME" value="https://events.chargify.test" />
         <server name="CHARGIFY_SUBDOMAIN" value="chargify" />
         <server name="CHARGIFY_PRODUCT_FAMILY_ID" value="2575530" />
+        <server name="CHARGIFY_WEBHOOK_QUEUE" value="sync" />
     </php>
 </phpunit>
