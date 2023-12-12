@@ -48,13 +48,13 @@ trait HandleSubscription
 
         $this->subscription->forceFill(
             [
-                'product_id' => $maxioSubscription->product->id,
-                'product_handle' => $maxioSubscription->product->handle,
                 'product_price_handle' => $maxioSubscription->product->product_price_point_handle,
+                'product_handle' => $maxioSubscription->product->handle,
                 'status' => $maxioSubscription->state,
                 'payment_collection_method' => $maxioSubscription->payment_collection_method,
                 'subscription_interval' => SubscriptionInterval::getIntervalUnit($maxioSubscription->product->interval),
-                'subscription_price_in_cents' => $maxioSubscription->product->price_in_cents,
+                'total_revenue_in_cents' => $maxioSubscription->total_revenue_in_cents,
+                'product_price_in_cents' => $maxioSubscription->product_price_in_cents,
                 'next_billing_at' => $maxioSubscription->next_assessment_at,
                 'updated_at' => $maxioSubscription->updated_at,
             ]
