@@ -19,7 +19,6 @@ use WinLocalInc\Chjs\Webhook\ChargifyUtility;
     WebhookEvents::SignupSuccess,
     WebhookEvents::RenewalSuccess,
     WebhookEvents::PaymentFailure,
-    WebhookEvents::SignupFailure,
     WebhookEvents::RenewalFailure,
     WebhookEvents::DunningStepReached,
     WebhookEvents::BillingDateChange,
