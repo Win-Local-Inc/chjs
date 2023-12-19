@@ -16,6 +16,13 @@ class ComponentPriceChange extends AbstractHandler
 {
     protected function handleEvent(string $event, array $payload)
     {
+        $itemType = $payload['item_type'];
+
+        // Only Component For Now
+        if (stripos($itemType, 'component') === false) {
+            return;
+        }
+
         $componentId = $payload['item_id'];
         $subscriptionId = $payload['subscription_id'];
         $pricePointId = $payload['current_price_point']['id'];

@@ -3,7 +3,6 @@
 namespace WinLocalInc\Chjs\Concerns;
 
 use WinLocalInc\Chjs\Chargify\ChargifyObject;
-use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
 use WinLocalInc\Chjs\Models\ProductPrice;
 use WinLocalInc\Chjs\Models\SubscriptionComponent;
@@ -29,7 +28,7 @@ trait HandlePreview
             );
     }
 
-    public function componentsAllocationPreview(SubscriptionComponent | ComponentPrice $component, int $qty): ChargifyObject
+    public function componentsAllocationPreview(SubscriptionComponent|ComponentPrice $component, int $qty): ChargifyObject
     {
         return maxio()->subscriptionComponent
             ->allocateComponentsPreview(
