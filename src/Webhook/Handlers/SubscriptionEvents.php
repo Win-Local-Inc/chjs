@@ -27,6 +27,7 @@ use WinLocalInc\Chjs\Webhook\ChargifyUtility;
     WebhookEvents::UpgradeDowngradeSuccess,
     WebhookEvents::UpgradeDowngradeFailure,
     WebhookEvents::PendingCancellationChange,
+    WebhookEvents::SubscriptionProductChange
 )]
 class SubscriptionEvents extends AbstractHandler
 {
@@ -113,6 +114,7 @@ class SubscriptionEvents extends AbstractHandler
         })
             ->toArray();
 
+        SubscriptionComponent::where('subscription_id', $subscriptionId)->delete();
         SubscriptionComponent::upsert($upsertComponents, ['subscription_id', 'component_id']);
 
         $subscription = Subscription::where('subscription_id', $subscriptionId)->first();
