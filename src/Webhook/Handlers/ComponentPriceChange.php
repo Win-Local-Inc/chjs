@@ -2,12 +2,13 @@
 
 namespace WinLocalInc\Chjs\Webhook\Handlers;
 
-use WinLocalInc\Chjs\Attributes\HandleEvents;
+use WinLocalInc\Chjs\ProductStructure;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
-use WinLocalInc\Chjs\Events\SubscriptionEvent;
 use WinLocalInc\Chjs\Models\Subscription;
-use WinLocalInc\Chjs\Models\SubscriptionComponent;
+use WinLocalInc\Chjs\Attributes\HandleEvents;
+use WinLocalInc\Chjs\Events\SubscriptionEvent;
 use WinLocalInc\Chjs\Models\SubscriptionHistory;
+use WinLocalInc\Chjs\Models\SubscriptionComponent;
 
 #[HandleEvents(
     WebhookEvents::ItemPricePointChanged
@@ -48,6 +49,8 @@ class ComponentPriceChange extends AbstractHandler
         );
 
         $subscription = Subscription::where('subscription_id', $subscriptionId)->first();
+        ProductStructure::setMainComponent(subscription: $subscription);
+        
         event(new SubscriptionEvent($subscription));
     }
 }
