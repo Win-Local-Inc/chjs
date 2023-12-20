@@ -2,10 +2,12 @@
 
 namespace WinLocalInc\Chjs\Webhook\Handlers;
 
-use WinLocalInc\Chjs\Attributes\HandleEvents;
+use WinLocalInc\Chjs\ProductStructure;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
-use WinLocalInc\Chjs\Models\SubscriptionComponent;
+use WinLocalInc\Chjs\Models\Subscription;
+use WinLocalInc\Chjs\Attributes\HandleEvents;
 use WinLocalInc\Chjs\Models\SubscriptionHistory;
+use WinLocalInc\Chjs\Models\SubscriptionComponent;
 
 #[HandleEvents(
     WebhookEvents::ComponentAllocationChange
@@ -19,11 +21,13 @@ class ComponentAllocation extends AbstractHandler
         // all prices will be per_unit so only 1 element in array
         $newPrice = (int) $pricePoint->prices[0]->unit_price * (int) $payload['new_allocation'];
 
-        SubscriptionHistory::createSubscriptionHistory($payload['subscription']['id'], $event);
+        $subscriptionId = $payload['subscription']['id'];
+
+        SubscriptionHistory::createSubscriptionHistory($subscriptionId, $event);
 
         SubscriptionComponent::upsert(
             [[
-                'subscription_id' => $payload['subscription']['id'],
+                'subscription_id' => $subscriptionId,
                 'component_id' => $payload['component']['id'],
                 'component_handle' => $payload['component']['handle'],
                 'component_price_handle' => $pricePoint->handle,
@@ -33,5 +37,8 @@ class ComponentAllocation extends AbstractHandler
             ]],
             ['subscription_id', 'component_id']
         );
+
+        $subscription = Subscription::where('subscription_id', $subscriptionId)->first();
+        ProductStructure::setMainComponent(subscription: $subscription);
     }
 }
