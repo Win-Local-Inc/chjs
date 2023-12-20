@@ -81,6 +81,7 @@ class SubscriptionEvents extends AbstractHandler
     {
         if (! in_array($this->event, [
             WebhookEvents::SignupSuccess->value,
+            WebhookEvents::SubscriptionProductChange->value,
             WebhookEvents::DelayedSubscriptionCreationSuccess->value,
         ])) {
             return;
