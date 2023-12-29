@@ -56,7 +56,7 @@ class SubscriptionEvents extends AbstractHandler
 
         $subscription = Subscription::where('subscription_id', $data['id'])->first();
 
-        event(new SubscriptionEvent($subscription));
+        event(new SubscriptionEvent($subscription, WebhookEvents::from($event)));
     }
 
     protected function getEndsAt(array $data)
@@ -79,7 +79,7 @@ class SubscriptionEvents extends AbstractHandler
 
     protected function updateComponents(string $subscriptionId, string $productHandle)
     {
-        if (! in_array($this->event, [
+        if (!in_array($this->event, [
             WebhookEvents::SignupSuccess->value,
             WebhookEvents::SubscriptionProductChange->value,
             WebhookEvents::DelayedSubscriptionCreationSuccess->value,

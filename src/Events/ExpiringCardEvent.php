@@ -2,12 +2,11 @@
 
 namespace WinLocalInc\Chjs\Events;
 
-use Illuminate\Queue\SerializesModels;
-use WinLocalInc\Chjs\Enums\WebhookEvents;
-use WinLocalInc\Chjs\Models\Subscription;
 use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+use WinLocalInc\Chjs\Models\Subscription;
 
-class SubscriptionEvent
+class ExpiringCardEvent
 {
     use Dispatchable;
     use SerializesModels;
@@ -15,5 +14,5 @@ class SubscriptionEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(public Subscription $subscription, public ?WebhookEvents $event = null) {}
+    public function __construct(public Subscription $subscription, public ?array $payload = null) {}
 }
