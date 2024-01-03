@@ -2,10 +2,10 @@
 
 namespace WinLocalInc\Chjs\Webhook\Handlers;
 
-use WinLocalInc\Chjs\Enums\WebhookEvents;
-use WinLocalInc\Chjs\Models\Subscription;
 use WinLocalInc\Chjs\Attributes\HandleEvents;
+use WinLocalInc\Chjs\Enums\WebhookEvents;
 use WinLocalInc\Chjs\Events\ExpiringCardEvent;
+use WinLocalInc\Chjs\Models\Subscription;
 
 #[HandleEvents(
     WebhookEvents::ExpiringCard

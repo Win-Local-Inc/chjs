@@ -14,5 +14,7 @@ class ExpiringCardEvent
     /**
      * Create a new event instance.
      */
-    public function __construct(public Subscription $subscription, public ?array $payload = null) {}
+    public function __construct(public Subscription $subscription, public ?array $payload = null)
+    {
+    }
 }
