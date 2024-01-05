@@ -27,4 +27,14 @@ enum Product: string
             self::PKG_OVERTIME,
         ]);
     }
+
+    public function isEntrepreneurial(): bool
+    {
+        return in_array($this, [
+            self::ENTREPRENEUR,
+            self::PKG_PART_TIME,
+            self::PKG_FULL_TIME,
+            self::PKG_OVERTIME,
+        ]);
+    }
 }
