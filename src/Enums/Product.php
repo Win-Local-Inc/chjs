@@ -14,4 +14,17 @@ enum Product: string
     case PKG_FULL_TIME = 'pkg_full_time';
     case PKG_OVERTIME = 'pkg_overtime';
     case ONCE_OFF = 'once_off';
+
+
+    public function isParentable(): bool
+    {
+        return in_array($this, [
+            self::ENTREPRENEUR,
+            self::FRANCHISER,
+            self::ENTREPRENEUR,
+            self::PKG_PART_TIME,
+            self::PKG_FULL_TIME,
+            self::PKG_OVERTIME,
+        ]);
+    }
 }
