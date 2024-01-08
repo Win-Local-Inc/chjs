@@ -2,6 +2,7 @@
 
 namespace WinLocalInc\Chjs\Webhook\Handlers;
 
+use Illuminate\Support\Facades\DB;
 use WinLocalInc\Chjs\Attributes\HandleEvents;
 use WinLocalInc\Chjs\Chargify\PricePoints;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
@@ -81,6 +82,7 @@ class SubscriptionEvents extends AbstractHandler
     {
         if (! in_array($this->event, [
             WebhookEvents::SignupSuccess->value,
+            WebhookEvents::SubscriptionStateChange->value,
             WebhookEvents::SubscriptionProductChange->value,
             WebhookEvents::DelayedSubscriptionCreationSuccess->value,
         ])) {
@@ -115,8 +117,10 @@ class SubscriptionEvents extends AbstractHandler
         })
             ->toArray();
 
-        SubscriptionComponent::where('subscription_id', $subscriptionId)->delete();
-        SubscriptionComponent::upsert($upsertComponents, ['subscription_id', 'component_id']);
+        DB::transaction(function () use ($subscriptionId, $upsertComponents) {
+            SubscriptionComponent::where('subscription_id', $subscriptionId)->delete();
+            SubscriptionComponent::upsert($upsertComponents, ['subscription_id', 'component_id']);
+        });
 
         $subscription = Subscription::where('subscription_id', $subscriptionId)->first();
         ProductStructure::setMainComponent(subscription: $subscription);

@@ -15,7 +15,6 @@ enum Product: string
     case PKG_OVERTIME = 'pkg_overtime';
     case ONCE_OFF = 'once_off';
 
-
     public function isParentable(): bool
     {
         return in_array($this, [
