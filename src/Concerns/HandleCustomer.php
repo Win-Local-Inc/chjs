@@ -34,7 +34,7 @@ trait HandleCustomer
     /**
      * @throws CustomerAlreadyCreated
      */
-    public function createAsChargifyCustomer(string $token = null): object
+    public function createAsChargifyCustomer(string $token = null, array $billingAddress = []): object
     {
         if ($this->hasChargifyId()) {
             throw CustomerAlreadyCreated::exists($this);
@@ -44,11 +44,19 @@ trait HandleCustomer
 
         if ($token) {
             $paymentProfile = maxio()->paymentProfile->create(customerId: $customer->id, chargifyToken: $token);
+
+            try {
+                maxio()->paymentProfile->update(paymentProfileId: $paymentProfile->id,parameters: $billingAddress);
+            }catch (\Exception $e) {
+                logger($e->getMessage());
+            }
         }
 
         $this->chargify_id = $customer->id;
 
         $this->saveQuietly();
+
+
 
         return (object) ['chargifyId' => $customer->id, 'paymentProfile' => $paymentProfile];
     }
