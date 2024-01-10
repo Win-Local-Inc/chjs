@@ -46,8 +46,8 @@ trait HandleCustomer
             $paymentProfile = maxio()->paymentProfile->create(customerId: $customer->id, chargifyToken: $token);
 
             try {
-                maxio()->paymentProfile->update(paymentProfileId: $paymentProfile->id,parameters: $billingAddress);
-            }catch (\Exception $e) {
+                maxio()->paymentProfile->update(paymentProfileId: $paymentProfile->id, parameters: $billingAddress);
+            } catch (\Exception $e) {
                 logger($e->getMessage());
             }
         }
@@ -55,8 +55,6 @@ trait HandleCustomer
         $this->chargify_id = $customer->id;
 
         $this->saveQuietly();
-
-
 
         return (object) ['chargifyId' => $customer->id, 'paymentProfile' => $paymentProfile];
     }

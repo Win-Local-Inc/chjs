@@ -8,6 +8,7 @@ use WinLocalInc\Chjs\Services\CoreServiceFactory;
 use WinLocalInc\Chjs\Services\CouponService;
 use WinLocalInc\Chjs\Services\CustomerService;
 use WinLocalInc\Chjs\Services\CustomFieldsService;
+use WinLocalInc\Chjs\Services\InvoiceService;
 use WinLocalInc\Chjs\Services\PaymentProfileService;
 use WinLocalInc\Chjs\Services\ProductPriceService;
 use WinLocalInc\Chjs\Services\ProductService;
@@ -29,6 +30,7 @@ use WinLocalInc\Chjs\Services\SubscriptionStatusService;
  * @property ComponentPriceService $componentPrice
  * @property SubscriptionStatusService $subscriptionStatus
  * @property CustomFieldsService $customFields
+ * @property InvoiceService $invoice
  **/
 class Chjs extends ChjsBase
 {

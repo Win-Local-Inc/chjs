@@ -16,6 +16,7 @@ namespace WinLocalInc\Chjs\Services;
  * @property ComponentPriceService $componentPrice
  * @property SubscriptionStatusService $subscriptionStatus
  * @property CustomFieldsService $customFields
+ * @property InvoiceService $invoice
  *
  **/
 class CoreServiceFactory extends AbstractServiceFactory
@@ -32,6 +33,7 @@ class CoreServiceFactory extends AbstractServiceFactory
         'componentPrice' => ComponentPriceService::class,
         'subscriptionStatus' => SubscriptionStatusService::class,
         'customFields' => CustomFieldsService::class,
+        'invoice' => InvoiceService::class,
     ];
 
     protected function getServiceClass(string $name): ?string
