@@ -38,20 +38,25 @@ class SubscriptionEvents extends AbstractHandler
 
         SubscriptionHistory::createSubscriptionHistory($data['id'], $event);
 
-        Subscription::upsert([[
+        $subscriptionData = [
             'subscription_id' => $data['id'],
             'user_id' => $data['customer']['reference'],
             'workspace_id' => $data['reference'],
             'product_price_handle' => $data['product']['product_price_point_handle'],
             'product_handle' => $data['product']['handle'],
-            'status' => $this->getStatus($data),
             'payment_collection_method' => $data['payment_collection_method'],
             'subscription_interval' => SubscriptionInterval::getIntervalUnit((int) $data['product']['interval'])->value,
             'total_revenue_in_cents' => $data['total_revenue_in_cents'],
             'product_price_in_cents' => $data['product_price_in_cents'],
             'next_billing_at' => ChargifyUtility::getFixedDateTime($data['next_assessment_at']),
             'ends_at' => $this->getEndsAt($data),
-        ]], ['workspace_id']);
+        ];
+
+        if ($event === WebhookEvents::SubscriptionStateChange->value) {
+            $subscriptionData['status'] = $this->getStatus($data);
+        }
+
+        Subscription::upsert([$subscriptionData], ['workspace_id']);
 
         $this->updateComponents($data['id'], $data['product']['handle']);
 

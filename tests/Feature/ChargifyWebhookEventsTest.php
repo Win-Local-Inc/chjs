@@ -112,7 +112,7 @@ class ChargifyWebhookEventsTest extends TestCase
 
         SubscriptionEvents::dispatch(
             random_int(1000000, 9999999),
-            WebhookEvents::SignupSuccess->value,
+            WebhookEvents::SubscriptionStateChange->value,
             [
                 'subscription' => [
                     'id' => $subscription->subscription_id,
