@@ -57,7 +57,7 @@ class MaxioSync extends Command
         );
 
         foreach ($sources as $source) {
-            $this->info('updating: '.$source);
+            $this->info('updating: ' . $source);
             match ($source) {
                 'Products' => $this->productSync(),
                 'Subscription' => $this->subscriptionSync(),
@@ -87,7 +87,7 @@ class MaxioSync extends Command
 
         do {
 
-            $this->info('subscriptionSync: per page - '.$parameters['per_page'].' page number - '.$parameters['page']);
+            $this->info('subscriptionSync: per page - ' . $parameters['per_page'] . ' page number - ' . $parameters['page']);
 
             $subscriptions = maxio()
                 ->subscription
@@ -130,7 +130,7 @@ class MaxioSync extends Command
                     Subscription::upsert([$item], ['workspace_id']);
                     $subscriptionMap[$item['subscription_id']] = $item['product_handle'];
                 } catch (\Throwable $th) {
-                    $this->info('Upsert Error For subscription_id: '.$item['subscription_id']);
+                    $this->info('Upsert Error For subscription_id: ' . $item['subscription_id']);
                     $this->error($th->getMessage());
                 }
             }
@@ -157,6 +157,7 @@ class MaxioSync extends Command
     protected function removeNotExistingSubscriptions(array &$uniqueWorkspaces)
     {
         if ($this->subscriptionCountDifference($uniqueWorkspaces)) {
+            $this->warn('Too much difference between DB and Maxio Api count, not removing subscriptions');
             return;
         }
 
@@ -263,7 +264,7 @@ class MaxioSync extends Command
             $products = maxio()->product->list($parameters);
 
             foreach ($products as $product) {
-                $this->info('product: '.$product->name);
+                $this->info('product: ' . $product->name);
                 Product::updateOrInsert(
                     [
                         'product_id' => $product->id,
@@ -295,7 +296,7 @@ class MaxioSync extends Command
             $productPricePoints = maxio()->productPrice->list($parameters);
 
             foreach ($productPricePoints as $productPricePoint) {
-                $this->info('product price: '.$productPricePoint->name);
+                $this->info('product price: ' . $productPricePoint->name);
                 $productHandle = Product::find($productPricePoint->product_id)?->product_handle;
                 if (! $productHandle) {
                     continue;
@@ -338,11 +339,11 @@ class MaxioSync extends Command
             foreach ($components as $component) {
 
                 if ($component->archived_at) {
-                    $this->error('archived component ignore: '.$component->name);
+                    $this->error('archived component ignore: ' . $component->name);
 
                     continue;
                 }
-                $this->info('component: '.$component->name);
+                $this->info('component: ' . $component->name);
                 $componentData = [
                     'component_handle' => $component->handle,
                     'component_name' => $component->name,
@@ -385,12 +386,12 @@ class MaxioSync extends Command
 
                 $component = Component::find($componentPricePoint->component_id);
                 if ($componentPricePoint->archived_at || ! $component) {
-                    $this->error('archived component price ignore: '.$componentPricePoint->name);
+                    $this->error('archived component price ignore: ' . $componentPricePoint->name);
 
                     continue;
                 }
 
-                $this->info('component price: '.$componentPricePoint->name);
+                $this->info('component price: ' . $componentPricePoint->name);
 
                 ComponentPrice::updateOrInsert(
                     [
