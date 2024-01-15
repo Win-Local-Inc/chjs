@@ -78,7 +78,7 @@ class MaxioSync extends Command
     protected function subscriptionSync()
     {
         $uniqueWorkspaces = [];
-
+        $lastCount = 0;
         $parameters = [
             'page' => 1,
             'per_page' => 50,
@@ -91,16 +91,19 @@ class MaxioSync extends Command
 
             $subscriptions = maxio()
                 ->subscription
-                ->list($parameters)
-                ->filter(function ($subscription) use (&$uniqueWorkspaces) {
-                    if (! $subscription->reference || in_array($subscription->reference, $uniqueWorkspaces)) {
-                        return false;
-                    }
+                ->list($parameters);
 
-                    $uniqueWorkspaces[] = $subscription->reference;
+            $lastCount = $subscriptions->count();
 
-                    return true;
-                });
+            $subscriptions = $subscriptions->filter(function ($subscription) use (&$uniqueWorkspaces) {
+                if (! $subscription->reference || in_array($subscription->reference, $uniqueWorkspaces)) {
+                    return false;
+                }
+
+                $uniqueWorkspaces[] = $subscription->reference;
+
+                return true;
+            });
 
             $upsertSubscriptions = $subscriptions->map(function ($subscription) {
                 return [
@@ -135,15 +138,28 @@ class MaxioSync extends Command
             $this->updateSubscriptionComponents($subscriptionMap);
 
             $parameters['page'] += 1;
-        } while ($subscriptions->count() >= $parameters['per_page']);
+        } while ($lastCount >= $parameters['per_page']);
 
         $this->removeNotExistingSubscriptions($uniqueWorkspaces);
 
         $this->info("subscriptions sync done!\n");
     }
 
+    protected function subscriptionCountDifference(array &$uniqueWorkspaces): bool
+    {
+        //if 95% of subscriptions in DB is more than unique workspaces form Maxio Api then do not erase DB
+        $currentCount = Subscription::count() * 0.95;
+        $workspaceCount = count($uniqueWorkspaces);
+
+        return $currentCount > $workspaceCount;
+    }
+
     protected function removeNotExistingSubscriptions(array &$uniqueWorkspaces)
     {
+        if ($this->subscriptionCountDifference($uniqueWorkspaces)) {
+            return;
+        }
+
         $subscriptionWorkspaces = collect($uniqueWorkspaces);
 
         if ($subscriptionWorkspaces->isEmpty()) {
