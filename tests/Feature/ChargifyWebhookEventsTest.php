@@ -16,6 +16,7 @@ use WinLocalInc\Chjs\Enums\ShareCardProPricing;
 use WinLocalInc\Chjs\Enums\SubscriptionStatus;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
 use WinLocalInc\Chjs\Events\TopUpWalletEvent;
+use WinLocalInc\Chjs\Events\UpcomingRenewalEvent;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
 use WinLocalInc\Chjs\Models\Metafield;
@@ -31,6 +32,7 @@ use WinLocalInc\Chjs\Webhook\Handlers\ComponentPriceChange;
 use WinLocalInc\Chjs\Webhook\Handlers\MetafieldUpdate;
 use WinLocalInc\Chjs\Webhook\Handlers\SubscriptionEvents;
 use WinLocalInc\Chjs\Webhook\Handlers\SubscriptionPaymentUpdate;
+use WinLocalInc\Chjs\Webhook\Handlers\UpcomingRenewal;
 
 class ChargifyWebhookEventsTest extends TestCase
 {
@@ -457,6 +459,51 @@ class ChargifyWebhookEventsTest extends TestCase
             'subscription_id' => $subscription->subscription_id,
             'workspace_id' => $workspace->workspace_id,
         ]);
+    }
+
+    public function testChargifyWebhookUpcomingRenewalEvent()
+    {
+        Event::fake([
+            UpcomingRenewalEvent::class,
+        ]);
+
+        $workspace = Workspace::factory()->create();
+        $user = User::factory()
+            ->workspace($workspace)
+            ->withChargifyId()
+            ->create();
+
+        $product = Product::where('product_handle', ProductEnum::PROMO->value)->first();
+        $productPrice = ProductPrice::where('product_price_handle', ProductPricing::SOLO_MONTH->value)->first();
+
+        $component = Component::where('component_handle', 'ad_credit_one_time')->first();
+        $componentPrice = ComponentPrice::where('component_price_handle', 'ad_credit_one_time')->first();
+
+        $subscription = Subscription::factory()
+            ->user($user)
+            ->workspace($workspace)
+            ->productPrice($productPrice)
+            ->create();
+
+        SubscriptionComponent::factory()
+            ->subscription($subscription)
+            ->component($component)
+            ->componentPrice($componentPrice)
+            ->create();
+
+        UpcomingRenewal::dispatch(
+            random_int(1000000, 9999999),
+            WebhookEvents::UpcomingRenewalNotice->value,
+            [
+                'subscription' => [
+                    'id' => $subscription->subscription_id,
+                    'state' => 'active',
+                    'current_period_ends_at' => 'Thu, 18 Jan 2024 21:09:55.000000000 EST -05:00',
+                ],
+            ]
+        );
+
+        Event::assertDispatched(UpcomingRenewalEvent::class);
     }
 
     public function testChargifyWebhookEventsMetafieldCreateEvent()

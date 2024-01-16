@@ -48,6 +48,11 @@ class ComponentAllocation extends AbstractHandler
     protected function topUpWallet(Subscription $subscription, array &$payload): void
     {
         if (in_array($payload['component']['handle'], ['ad_credit', 'ad_credit_one_time'])) {
+
+            if (! array_key_exists('payment', $payload) || ! is_array($payload['payment']) || ! $payload['payment']['success']) {
+                return;
+            }
+
             event(new TopUpWalletEvent($subscription, $payload['payment']['amount_in_cents'], $payload['payment']['id']));
         }
     }
