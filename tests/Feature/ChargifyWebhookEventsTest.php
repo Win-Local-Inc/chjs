@@ -3,6 +3,7 @@
 namespace WinLocalInc\Chjs\Tests\Feature;
 
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use WinLocalInc\Chjs\Database\Seeders\ComponentSeeder;
@@ -14,6 +15,7 @@ use WinLocalInc\Chjs\Enums\ProductPricing;
 use WinLocalInc\Chjs\Enums\ShareCardProPricing;
 use WinLocalInc\Chjs\Enums\SubscriptionStatus;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
+use WinLocalInc\Chjs\Events\TopUpWalletEvent;
 use WinLocalInc\Chjs\Models\Component;
 use WinLocalInc\Chjs\Models\ComponentPrice;
 use WinLocalInc\Chjs\Models\Metafield;
@@ -24,6 +26,7 @@ use WinLocalInc\Chjs\Models\SubscriptionComponent;
 use WinLocalInc\Chjs\Tests\Database\Models\User;
 use WinLocalInc\Chjs\Tests\Database\Models\Workspace;
 use WinLocalInc\Chjs\Tests\TestCase;
+use WinLocalInc\Chjs\Webhook\Handlers\ComponentAllocation;
 use WinLocalInc\Chjs\Webhook\Handlers\ComponentPriceChange;
 use WinLocalInc\Chjs\Webhook\Handlers\MetafieldUpdate;
 use WinLocalInc\Chjs\Webhook\Handlers\SubscriptionEvents;
@@ -328,6 +331,120 @@ class ChargifyWebhookEventsTest extends TestCase
                 ],
             ]
         );
+
+        $this->assertDatabaseHas('chjs_subscription_components', [
+            'subscription_id' => $subscription->subscription_id,
+            'component_id' => $component->component_id,
+            'subscription_component_quantity' => $quantity,
+            'subscription_component_price' => $finalPrice,
+        ]);
+
+        $this->assertDatabaseHas('chjs_subscription_histories', [
+            'subscription_id' => $subscription->subscription_id,
+            'workspace_id' => $workspace->workspace_id,
+        ]);
+    }
+
+    public function testChargifyWebhookComponentAllocationChangeEvent()
+    {
+        Event::fake([
+            TopUpWalletEvent::class,
+        ]);
+
+        $workspace = Workspace::factory()->create();
+        $user = User::factory()
+            ->workspace($workspace)
+            ->withChargifyId()
+            ->create();
+
+        $product = Product::where('product_handle', ProductEnum::PROMO->value)->first();
+        $productPrice = ProductPrice::where('product_price_handle', ProductPricing::SOLO_MONTH->value)->first();
+
+        $component = Component::where('component_handle', 'ad_credit_one_time')->first();
+        $componentPrice = ComponentPrice::where('component_price_handle', 'ad_credit_one_time')->first();
+
+        $subscription = Subscription::factory()
+            ->user($user)
+            ->workspace($workspace)
+            ->productPrice($productPrice)
+            ->create();
+
+        SubscriptionComponent::factory()
+            ->subscription($subscription)
+            ->component($component)
+            ->componentPrice($componentPrice)
+            ->create();
+
+        $quantity = 200;
+        $unitPrice = '1.0';
+        $finalPrice = $quantity * (int) number_format($unitPrice * 100, '0', '', '');
+
+        Http::fake([
+            'chargify.test/*' => Http::sequence()
+                ->push([
+                    'price_points' => [
+                        [
+                            'id' => $componentPrice->component_price_id,
+                            'name' => 'Auto-created',
+                            'type' => 'default',
+                            'component_id' => $component->component_id,
+                            'handle' => 'auto-created',
+                            'prices' => [
+                                [
+                                    'id' => 1,
+                                    'component_id' => $component->component_id,
+                                    'starting_quantity' => 0,
+                                    'ending_quantity' => null,
+                                    'unit_price' => $unitPrice,
+                                    'price_point_id' => 1,
+                                    'formatted_unit_price' => '$1.00',
+                                    'segment_id' => null,
+                                ],
+                            ],
+                        ],
+                    ],
+                ], 200),
+        ]);
+
+        ComponentAllocation::dispatch(
+            random_int(1000000, 9999999),
+            WebhookEvents::ComponentAllocationChange->value,
+            [
+                'site' => [
+                    'id' => 85360,
+                    'subdomain' => 'win-local',
+                ],
+                'component' => [
+                    'id' => $component->component_id,
+                    'kind' => 'quantity_based_component',
+                    'name' => 'Ad Credit One Time',
+                    'unit_name' => 'credit',
+                    'handle' => 'ad_credit_one_time',
+                    'recurring' => false,
+                ],
+                'subscription' => [
+                    'id' => $subscription->subscription_id,
+                    'name' => 'Brian Wetzel',
+                    'state' => 'active',
+                ],
+                'allocation' => [
+                    'id' => 651406957,
+                    'proration_upgrade_scheme' => 'full-price-attempt-capture',
+                    'proration_downgrade_scheme' => 'full',
+                ],
+                'previous_allocation' => 0,
+                'new_allocation' => 200,
+                'price_point_id' => $componentPrice->component_price_id,
+                'payment' => [
+                    'id' => 990551662,
+                    'success' => true,
+                    'amount_in_cents' => 20000,
+                    'memo' => 'Payment for Full-price component allocation changes.',
+                ],
+            ]
+        );
+
+        Event::assertDispatched(TopUpWalletEvent::class);
 
         $this->assertDatabaseHas('chjs_subscription_components', [
             'subscription_id' => $subscription->subscription_id,

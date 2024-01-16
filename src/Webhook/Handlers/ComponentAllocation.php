@@ -4,6 +4,7 @@ namespace WinLocalInc\Chjs\Webhook\Handlers;
 
 use WinLocalInc\Chjs\Attributes\HandleEvents;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
+use WinLocalInc\Chjs\Events\TopUpWalletEvent;
 use WinLocalInc\Chjs\Models\Subscription;
 use WinLocalInc\Chjs\Models\SubscriptionComponent;
 use WinLocalInc\Chjs\Models\SubscriptionHistory;
@@ -40,5 +41,14 @@ class ComponentAllocation extends AbstractHandler
 
         $subscription = Subscription::where('subscription_id', $subscriptionId)->first();
         ProductStructure::setMainComponent(subscription: $subscription);
+
+        $this->topUpWallet($subscription, $payload);
+    }
+
+    protected function topUpWallet(Subscription $subscription, array &$payload): void
+    {
+        if (in_array($payload['component']['handle'], ['ad_credit', 'ad_credit_one_time'])) {
+            event(new TopUpWalletEvent($subscription, $payload['payment']['amount_in_cents'], $payload['payment']['id']));
+        }
     }
 }
