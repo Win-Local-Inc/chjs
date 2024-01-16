@@ -244,6 +244,150 @@ class ChargifyWebhookEventsTest extends TestCase
         Http::assertSentCount(3);
     }
 
+    public function testChargifyWebhookEventsRenewalSuccessEvent()
+    {
+        Event::fake([
+            TopUpWalletEvent::class,
+        ]);
+
+        $workspace = Workspace::factory()->create();
+        $user = User::factory()
+            ->workspace($workspace)
+            ->withChargifyId()
+            ->create();
+
+        $product = Product::where('product_handle', ProductEnum::SOLO->value)->first();
+        $productPrice = ProductPrice::where('product_price_handle', ProductPricing::SOLO_MONTH->value)->first();
+
+        $component = Component::where('component_handle', 'ad_credit')->first();
+        $componentPrice = ComponentPrice::where('component_price_handle', 'ad_credit')->first();
+
+        $subscription = Subscription::factory()
+            ->workspace($workspace)
+            ->user($user)
+            ->productPrice($productPrice)
+            ->create();
+
+        SubscriptionComponent::factory()
+            ->subscription($subscription)
+            ->component($component)
+            ->componentPrice($componentPrice)
+            ->create();
+
+        $nextAssessmentAt = Date::now()->toDateTimeString();
+        $state = SubscriptionStatus::OnHold->value;
+        $paymentMethod = PaymentCollectionMethod::Remittance->value;
+
+        Http::fake([
+            'chargify.test/*' => Http::sequence()
+                ->push([[
+                    'component' => [
+                        'component_id' => $component->component_id,
+                        'component_handle' => $component->component_handle,
+                        'price_point_handle' => $componentPrice->component_price_handle,
+                        'price_point_id' => $componentPrice->component_price_id,
+                        'subscription_id' => $subscription->subscription_id,
+                        'allocated_quantity' => 1,
+                        'pricing_scheme' => 'per_unit',
+                        'name' => 'Users',
+                        'kind' => 'quantity_based_component',
+                        'created_at' => '2023-08-05 08:06:32 -0400',
+                        'updated_at' => '2023-08-05 08:06:32 -0400',
+                    ],
+                ]], 200)
+                ->push([
+                    'price_points' => [
+                        [
+                            'id' => $componentPrice->component_price_id,
+                            'component_id' => $component->component_id,
+                            'name' => $componentPrice->component_price_handle,
+                            'type' => 'default',
+                            'handle' => $componentPrice->component_price_handle,
+                            'prices' => [
+                                [
+                                    'id' => 1,
+                                    'component_id' => $component->component_id,
+                                    'starting_quantity' => 0,
+                                    'ending_quantity' => null,
+                                    'unit_price' => '1.00',
+                                    'price_point_id' => 1,
+                                    'formatted_unit_price' => '$1.00',
+                                    'segment_id' => null,
+                                ],
+                            ],
+                        ],
+                    ],
+                ], 200),
+        ]);
+
+        SubscriptionEvents::dispatch(
+            random_int(1000000, 9999999),
+            WebhookEvents::RenewalSuccess->value,
+            [
+                'event_id' => random_int(1000000, 9999999),
+                'subscription' => [
+                    'id' => $subscription->subscription_id,
+                    'state' => $state,
+                    'payment_collection_method' => $paymentMethod,
+                    'reference' => $workspace->workspace_id,
+                    'trial_ended_at' => null,
+                    'balance_in_cents' => '0',
+                    'total_revenue_in_cents' => '10000',
+                    'product_price_in_cents' => '10000',
+                    'current_period_ends_at' => '2023-08-05 08:06:32 -0400',
+                    'created_at' => '2023-08-05 08:06:32 -0400',
+                    'updated_at' => '2023-08-05 08:06:32 -0400',
+                    'next_assessment_at' => $nextAssessmentAt,
+                    'scheduled_cancellation_at' => null,
+                    'product_price_point_id' => $productPrice->product_price_id,
+                    'product_price_point_type' => 'default',
+                    'customer' => [
+                        'id' => $user->chargify_id,
+                        'email' => $user->email,
+                        'reference' => $user->user_id,
+                        'created_at' => '2023-08-05 08:06:32 -0400',
+                        'updated_at' => '2023-08-05 08:06:32 -0400',
+                    ],
+                    'product' => [
+                        'id' => $product->product_id,
+                        'name' => Str::random(),
+                        'description' => Str::random(),
+                        'handle' => $product->product_handle,
+                        'price_in_cents' => '10000',
+                        'interval' => '1',
+                        'interval_unit' => 'month',
+                        'trial_price_in_cents' => null,
+                        'trial_interval' => null,
+                        'trial_interval_unit' => null,
+                        'archived_at' => null,
+                        'require_credit_card' => 'true',
+                        'default_product_price_point_id' => $productPrice->product_price_id,
+                        'product_price_point_id' => $productPrice->product_price_id,
+                        'product_price_point_name' => Str::random(),
+                        'product_price_point_handle' => $productPrice->product_price_handle,
+                        'created_at' => '2023-08-05 08:06:32 -0400',
+                        'updated_at' => '2023-08-05 08:06:32 -0400',
+                        'product_family' => [
+                            'id' => Str::random(),
+                            'name' => Str::random(),
+                            'description' => Str::random(),
+                            'handle' => Str::random(),
+                            'created_at' => '2023-08-05 08:06:32 -0400',
+                            'updated_at' => '2023-08-05 08:06:32 -0400',
+                        ],
+                    ],
+                    'credit_card' => [
+                        'id' => Str::random(),
+                        'masked_card_number' => 'XXXX-XXXX-XXXX-1111',
+                        'customer_id' => $user->chargify_id,
+                    ],
+                ],
+            ],
+        );
+
+        Event::assertDispatched(TopUpWalletEvent::class);
+    }
+
     public function testChargifyWebhookComponentPriceChangeEvent()
     {
         $workspace = Workspace::factory()->create();

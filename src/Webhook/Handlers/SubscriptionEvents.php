@@ -2,6 +2,7 @@
 
 namespace WinLocalInc\Chjs\Webhook\Handlers;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use WinLocalInc\Chjs\Attributes\HandleEvents;
 use WinLocalInc\Chjs\Chargify\PricePoints;
@@ -9,6 +10,7 @@ use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 use WinLocalInc\Chjs\Enums\SubscriptionStatus;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
 use WinLocalInc\Chjs\Events\SubscriptionEvent;
+use WinLocalInc\Chjs\Events\TopUpWalletEvent;
 use WinLocalInc\Chjs\Models\Subscription;
 use WinLocalInc\Chjs\Models\SubscriptionComponent;
 use WinLocalInc\Chjs\Models\SubscriptionHistory;
@@ -87,6 +89,7 @@ class SubscriptionEvents extends AbstractHandler
     {
         if (! in_array($this->event, [
             WebhookEvents::SignupSuccess->value,
+            WebhookEvents::RenewalSuccess->value,
             WebhookEvents::SubscriptionStateChange->value,
             WebhookEvents::SubscriptionProductChange->value,
             WebhookEvents::DelayedSubscriptionCreationSuccess->value,
@@ -129,5 +132,31 @@ class SubscriptionEvents extends AbstractHandler
 
         $subscription = Subscription::where('subscription_id', $subscriptionId)->first();
         ProductStructure::setMainComponent(subscription: $subscription);
+
+        $this->walletUpdate($subscription, $componentsResponse, $componentPrices);
+    }
+
+    protected function walletUpdate(Subscription $subscription, Collection $components, Collection $componentPrices): void
+    {
+        if (! in_array($this->event, [
+            WebhookEvents::SignupSuccess->value,
+            WebhookEvents::RenewalSuccess->value,
+        ])) {
+            return;
+        }
+
+        $adCredit = $components->filter(function ($item) {
+            return $item->component_handle === 'ad_credit';
+        })->first();
+
+        $adCreditPrice = $componentPrices->filter(function ($item) {
+            return $item->handle === 'ad_credit';
+        })->first();
+
+        if ($adCredit && $adCreditPrice) {
+            $unitPrice = $adCreditPrice->prices->first()->unit_price;
+            $quantity = $adCredit->allocated_quantity;
+            event(new TopUpWalletEvent($subscription, $unitPrice * $quantity, $this->payload['event_id']));
+        }
     }
 }

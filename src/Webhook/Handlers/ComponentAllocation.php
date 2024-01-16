@@ -4,6 +4,7 @@ namespace WinLocalInc\Chjs\Webhook\Handlers;
 
 use WinLocalInc\Chjs\Attributes\HandleEvents;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
+use WinLocalInc\Chjs\Events\RemoveFromWalletEvent;
 use WinLocalInc\Chjs\Events\TopUpWalletEvent;
 use WinLocalInc\Chjs\Models\Subscription;
 use WinLocalInc\Chjs\Models\SubscriptionComponent;
@@ -20,7 +21,8 @@ class ComponentAllocation extends AbstractHandler
         // need to get unit_price and handle
         $pricePoint = maxio()->componentPrice->find($payload['price_point_id']);
         // all prices will be per_unit so only 1 element in array
-        $newPrice = (int) $pricePoint->prices[0]->unit_price * (int) $payload['new_allocation'];
+        $unitPrice = (int) $pricePoint->prices[0]->unit_price;
+        $newPrice = $unitPrice * (int) $payload['new_allocation'];
 
         $subscriptionId = $payload['subscription']['id'];
 
@@ -42,18 +44,27 @@ class ComponentAllocation extends AbstractHandler
         $subscription = Subscription::where('subscription_id', $subscriptionId)->first();
         ProductStructure::setMainComponent(subscription: $subscription);
 
-        $this->topUpWallet($subscription, $payload);
+        $this->walletUpdate($subscription, $payload, $unitPrice);
     }
 
-    protected function topUpWallet(Subscription $subscription, array &$payload): void
+    protected function walletUpdate(Subscription $subscription, array &$payload, int $unitPrice): void
     {
         if (in_array($payload['component']['handle'], ['ad_credit', 'ad_credit_one_time'])) {
 
-            if (! array_key_exists('payment', $payload) || ! is_array($payload['payment']) || ! $payload['payment']['success']) {
+            if (array_key_exists('payment', $payload) && is_array($payload['payment']) && $payload['payment']['success']) {
+                event(new TopUpWalletEvent($subscription, $payload['payment']['amount_in_cents'], $payload['payment']['id']));
+
                 return;
             }
 
-            event(new TopUpWalletEvent($subscription, $payload['payment']['amount_in_cents'], $payload['payment']['id']));
+            if (array_key_exists('payment', $payload) && ! is_array($payload['payment'])) {
+                $quantity = (int) $payload['previous_allocation'] - (int) $payload['new_allocation'];
+                if ($quantity > 0) {
+                    event(new RemoveFromWalletEvent($subscription, $quantity * $unitPrice, $payload['allocation']['id']));
+
+                    return;
+                }
+            }
         }
     }
 }
