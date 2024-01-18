@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('status', 18)->default(SubscriptionStatus::Active->value);
             $table->string('payment_collection_method', 10)->default(PaymentCollectionMethod::Automatic->value);
             $table->enum('subscription_interval', SubscriptionInterval::values())->default(SubscriptionInterval::Month->value);
-            $table->unsignedMediumInteger('total_revenue_in_cents')->default(0);
+            $table->unsignedBigInteger('total_revenue_in_cents')->default(0);
             $table->unsignedMediumInteger('product_price_in_cents')->default(0);
             //            $table->boolean('self_payment')->default(1);
             $table->timestamp('next_billing_at')->nullable();
