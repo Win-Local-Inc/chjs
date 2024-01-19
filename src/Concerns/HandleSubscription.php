@@ -43,24 +43,28 @@ trait HandleSubscription
             $data['custom_price']['interval_unit'] = 'month';
         }
 
-        /** @var Subscription $maxioSubscription * */
-        $maxioSubscription = maxio()->subscription->migrateProduct(subscriptionId: $this->subscription->subscription_id, parameters: $data);
 
-        $this->subscription->forceFill(
-            [
-                'product_price_handle' => $maxioSubscription->product->product_price_point_handle,
-                'product_handle' => $maxioSubscription->product->handle,
-                'status' => $maxioSubscription->state,
-                'payment_collection_method' => $maxioSubscription->payment_collection_method,
-                'subscription_interval' => SubscriptionInterval::getIntervalUnit($maxioSubscription->product->interval),
-                'total_revenue_in_cents' => $maxioSubscription->total_revenue_in_cents,
-                'product_price_in_cents' => $maxioSubscription->product_price_in_cents,
-                'next_billing_at' => $maxioSubscription->next_assessment_at,
-                'updated_at' => $maxioSubscription->updated_at,
-            ]
-        )->save();
+        return $this->migrateProduct($data);
+    }
 
-        return $this;
+    public function swapSubscriptionProductPriceUsingTrial(ProductPrice $productPrice, int $trialIntervalInDays): static
+    {
+        $data = [
+            'product_id' => $productPrice->product->product_id,
+            'include_trial' => true,
+            'preserve_period' => false,
+        ];
+
+        $data['custom_price']['price_in_cents'] = $productPrice->product_price_in_cents;
+        $data['custom_price']['interval'] = $productPrice->product_price_interval->getInterval();
+        $data['custom_price']['interval_unit'] = 'month';
+        $data['custom_price']['trial_price_in_cents'] = 0;
+        $data['custom_price']['trial_interval_unit'] = 'day';
+        $data['custom_price']['trial_interval'] = $trialIntervalInDays;
+        $data['custom_price']['initial_charge_after_trial'] = true;
+
+
+        return $this->migrateProduct($data);
     }
 
     public function addSubscriptionComponent(Component $component, int $qty, int $customPrice = null, array $options = []): static
@@ -308,5 +312,27 @@ trait HandleSubscription
     public function setDefaultPaymentMethods(string $paymentProfileId): ChargifyObject
     {
         return maxio()->paymentProfile->setDefault(paymentProfileId: $paymentProfileId, subscriptionId: $this->subscription->subscription_id);
+    }
+
+    protected function migrateProduct(array $data): static
+    {
+        /** @var Subscription $maxioSubscription * */
+        $maxioSubscription = maxio()->subscription->migrateProduct(subscriptionId: $this->subscription->subscription_id, parameters: $data);
+
+        $this->subscription->forceFill(
+            [
+                'product_price_handle' => $maxioSubscription->product->product_price_point_handle,
+                'product_handle' => $maxioSubscription->product->handle,
+                'status' => $maxioSubscription->state,
+                'payment_collection_method' => $maxioSubscription->payment_collection_method,
+                'subscription_interval' => SubscriptionInterval::getIntervalUnit($maxioSubscription->product->interval),
+                'total_revenue_in_cents' => $maxioSubscription->total_revenue_in_cents,
+                'product_price_in_cents' => $maxioSubscription->product_price_in_cents,
+                'next_billing_at' => $maxioSubscription->next_assessment_at,
+                'updated_at' => $maxioSubscription->updated_at,
+            ]
+        )->save();
+
+        return $this;
     }
 }
