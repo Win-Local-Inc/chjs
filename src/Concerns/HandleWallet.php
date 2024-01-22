@@ -11,11 +11,11 @@ trait HandleWallet
     /**
      * @throws InvalidCustomer
      */
-    public function addBalanceToWallet($qty): ChargifyObject
+    public function addBalanceToWallet(int $qty, string $memo = ''): ChargifyObject
     {
         $adComponentPrice = ComponentPrice::where('component_handle', 'ad_credit_one_time')->first();
 
-        $data = ['component_id' => $adComponentPrice->component_id, 'quantity' => $qty];
+        $data = ['component_id' => $adComponentPrice->component_id, 'quantity' => $qty, 'method' => $memo];
 
         return maxio()->subscriptionComponent->updateQuantity(
             subscriptionId: $this->subscription->subscription_id,
