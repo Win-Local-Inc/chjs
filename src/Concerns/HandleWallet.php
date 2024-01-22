@@ -15,7 +15,7 @@ trait HandleWallet
     {
         $adComponentPrice = ComponentPrice::where('component_handle', 'ad_credit_one_time')->first();
 
-        $data = ['component_id' => $adComponentPrice->component_id, 'quantity' => $qty, 'method' => $memo];
+        $data = ['component_id' => $adComponentPrice->component_id, 'quantity' => $qty, 'memo' => $memo];
 
         return maxio()->subscriptionComponent->updateQuantity(
             subscriptionId: $this->subscription->subscription_id,
