@@ -29,7 +29,7 @@ trait HandleSubscription
     //adding status check
     //add exceptions
 
-    public function swapSubscriptionProduct(ProductPrice $productPrice, int $customPrice = null): static
+    public function swapSubscriptionProduct(ProductPrice $productPrice, int $customPrice = null, array $options = []): static
     {
         //Subscriptions should be in the active or trialing
 
@@ -43,6 +43,7 @@ trait HandleSubscription
             $data['custom_price']['interval_unit'] = 'month';
         }
 
+        $data = array_merge($options, $data);
 
         return $this->migrateProduct($data);
     }
