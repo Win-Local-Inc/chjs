@@ -20,7 +20,7 @@ class ComponentSeeder extends Seeder
             [
                 'component_id' => 2402436,
                 'component_handle' => 'sharecard_zero',
-                'component_name' => 'ShareCard™',
+                'component_name' => 'ShareCard®',
                 'component_entry' => 'SHARE_CARD',
                 'component_unit' => 'component',
                 'component_type' => 'recurring',
@@ -31,7 +31,7 @@ class ComponentSeeder extends Seeder
             [
                 'component_id' => 2402437,
                 'component_handle' => 'sharecard_pro_zero',
-                'component_name' => 'ShareCard™ Pro zero',
+                'component_name' => 'ShareCard® Pro zero',
                 'component_entry' => 'SHARE_CARD_PRO',
                 'component_unit' => 'component',
                 'component_type' => 'recurring',
@@ -42,7 +42,7 @@ class ComponentSeeder extends Seeder
             [
                 'component_id' => 2402438,
                 'component_handle' => 'sharecard_pro_month',
-                'component_name' => 'ShareCard™ Pro month',
+                'component_name' => 'ShareCard® Pro month',
                 'component_entry' => 'SHARE_CARD_PRO',
                 'component_unit' => 'component',
                 'component_type' => 'recurring',
@@ -53,7 +53,7 @@ class ComponentSeeder extends Seeder
             [
                 'component_id' => 2402439,
                 'component_handle' => 'sharecard_pro_year',
-                'component_name' => 'ShareCard™ Pro year',
+                'component_name' => 'ShareCard® Pro year',
                 'component_entry' => 'SHARE_CARD_PRO',
                 'component_unit' => 'component',
                 'component_type' => 'recurring',
@@ -64,7 +64,7 @@ class ComponentSeeder extends Seeder
             [
                 'component_id' => 2402440,
                 'component_handle' => 'sharecard_pro_biannual',
-                'component_name' => 'ShareCard™ Pro biannual',
+                'component_name' => 'ShareCard® Pro biannual',
                 'component_entry' => 'SHARE_CARD_PRO',
                 'component_unit' => 'component',
                 'component_type' => 'recurring',
@@ -350,7 +350,7 @@ class ComponentSeeder extends Seeder
             [
                 'component_id' => 2402466,
                 'component_handle' => 'sharecard_month',
-                'component_name' => 'ShareCard™ month',
+                'component_name' => 'ShareCard® month',
                 'component_entry' => 'SHARE_CARD',
                 'component_unit' => 'component',
                 'component_type' => 'recurring',
@@ -361,7 +361,7 @@ class ComponentSeeder extends Seeder
             [
                 'component_id' => 2402467,
                 'component_handle' => 'sharecard_year',
-                'component_name' => 'ShareCard™ year',
+                'component_name' => 'ShareCard® year',
                 'component_entry' => 'SHARE_CARD',
                 'component_unit' => 'component',
                 'component_type' => 'recurring',
@@ -372,7 +372,7 @@ class ComponentSeeder extends Seeder
             [
                 'component_id' => 2402468,
                 'component_handle' => 'sharecard_biannual',
-                'component_name' => 'ShareCard™ biannual',
+                'component_name' => 'ShareCard® biannual',
                 'component_entry' => 'SHARE_CARD',
                 'component_unit' => 'component',
                 'component_type' => 'recurring',
