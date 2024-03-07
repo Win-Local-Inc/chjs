@@ -26,7 +26,20 @@ class SubscriptionService extends AbstractService
 
     public function find(string $subscriptionId): ChargifyObject
     {
-        return $this->get('subscriptions/'.$subscriptionId); //['include[]' => 'self_service_page_token']
+        $subscription = $this->get('subscriptions/'.$subscriptionId, ['include[]' => 'self_service_page_token']);
+
+        if (isset($subscription->self_service_page_token)) {
+            $subscription->self_service_page_url =
+                $this->getSelfServicePageUrl($subscription->id, $subscription->self_service_page_token);
+        }
+
+        return $subscription;
+    }
+
+    public function getSelfServicePageUrl(string $subscriptionId, string $pageToken): string
+    {
+        return 'https://'.config('chjs.subdomain')
+            .'.chargifypay.com/update_payment/'.$subscriptionId.'/'.$pageToken;
     }
 
     public function findByReference(string $reference): ChargifyObject

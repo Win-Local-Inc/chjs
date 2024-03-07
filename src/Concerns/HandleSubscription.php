@@ -64,7 +64,6 @@ trait HandleSubscription
         $data['custom_price']['trial_interval'] = $trialIntervalInDays;
         $data['custom_price']['initial_charge_after_trial'] = true;
 
-
         return $this->migrateProduct($data);
     }
 
