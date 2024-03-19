@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use WinLocalInc\Chjs\Attributes\HandleEvents;
 use WinLocalInc\Chjs\Chargify\PricePoints;
+use WinLocalInc\Chjs\Enums\ProductPricing;
 use WinLocalInc\Chjs\Enums\SubscriptionInterval;
 use WinLocalInc\Chjs\Enums\SubscriptionStatus;
 use WinLocalInc\Chjs\Enums\WebhookEvents;
@@ -37,6 +38,10 @@ class SubscriptionEvents extends AbstractHandler
     protected function handleEvent(string $event, array $payload)
     {
         $data = $payload['subscription'];
+
+        if($data['product']['product_price_point_handle'] == ProductPricing::AD_RECURRING->value) {
+            return;
+        }
 
         SubscriptionHistory::createSubscriptionHistory($data['id'], $event);
 
