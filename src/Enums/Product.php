@@ -15,6 +15,7 @@ enum Product: string
     case PKG_OVERTIME = 'pkg_overtime';
     case ONCE_OFF = 'once_off';
     case AD_RECURRING = 'ad_recurring';
+    case MONTHLY_CONTENT_MANAGEMENT = 'monthly-content-management';
 
     public function isParentable(): bool
     {
