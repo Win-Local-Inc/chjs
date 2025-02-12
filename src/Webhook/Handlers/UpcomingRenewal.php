@@ -16,9 +16,10 @@ class UpcomingRenewal extends AbstractHandler
     protected function handleEvent(string $event, array $payload)
     {
 
-        if($payload['product']['name'] == Product::AD_RECURRING->value) {
+        if (isset($payload['product']['name']) && $payload['product']['name'] == Product::AD_RECURRING->value) {
             return;
         }
+        
 
         $subscriptionId = $payload['subscription']['id'];
 
