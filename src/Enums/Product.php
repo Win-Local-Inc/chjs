@@ -25,8 +25,7 @@ enum Product: string
             self::ENTREPRENEUR,
             self::PKG_PART_TIME,
             self::PKG_FULL_TIME,
-            self::PKG_OVERTIME,
-            self::MONTHLY_CONTENT_MANAGEMENT
+            self::PKG_OVERTIME
         ]);
     }
 
