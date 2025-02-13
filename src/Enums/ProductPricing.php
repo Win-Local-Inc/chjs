@@ -29,6 +29,16 @@ enum ProductPricing: string
     case ONCE_OFF = 'once_off';
     case AD_RECURRING = 'ad_recurring';
 
+
+    case MONTHLY_CONTENT_MANAGEMENT = 'monthly-content-management';
+
+    case NFC_PAPER = 'nfc-paper';
+
+    case AI_ASSISTANT_SET_UP_FEE = 'ai-assistant-set-up-fee';
+
+    case MISSED_LEAD_TEXT_BACK = 'missed-lead-text-back';
+
+
     public static function getProductPrices(Product $product)
     {
         $prices = [];

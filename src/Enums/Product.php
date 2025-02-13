@@ -17,6 +17,12 @@ enum Product: string
     case AD_RECURRING = 'ad_recurring';
     case MONTHLY_CONTENT_MANAGEMENT = 'monthly-content-management';
 
+    case NFC_PAPER = 'nfc-paper';
+
+    case AI_ASSISTANT_SET_UP_FEE = 'ai-assistant-set-up-fee';
+
+    case MISSED_LEAD_TEXT_BACK = 'missed-lead-text-back';
+
     public function isParentable(): bool
     {
         return in_array($this, [
