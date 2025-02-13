@@ -15,7 +15,7 @@ enum Product: string
     case PKG_OVERTIME = 'pkg_overtime';
     case ONCE_OFF = 'once_off';
     case AD_RECURRING = 'ad_recurring';
-    case MONTHLY_CONTENT_MANAGEMENT_MONTH = 'monthly_content_management_month';
+    case MONTHLY_CONTENT_MANAGEMENT = 'monthly_content_management';
 
     case NFC_PAPER = 'nfc-paper';
 

@@ -30,7 +30,7 @@ enum ProductPricing: string
     case AD_RECURRING = 'ad_recurring';
 
 
-    case MONTHLY_CONTENT_MANAGEMENT = 'monthly_content_management';
+    case MONTHLY_CONTENT_MANAGEMENT_MONTH = 'monthly_content_management_month';
 
     case NFC_PAPER = 'nfc-paper';
 
