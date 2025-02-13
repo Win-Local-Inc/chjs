@@ -46,7 +46,10 @@ class ProductStructure
                 Product::PKG_OVERTIME->value => [
                     CompanyPricing::ZERO->value,
                 ],
-
+                Product::MONTHLY_CONTENT_MANAGEMENT->value => array_merge(
+                    ShareCardProPricing::values(),
+                    ShareCardPricing::values()
+                ),
             ];
         }
 
