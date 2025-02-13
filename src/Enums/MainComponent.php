@@ -14,6 +14,8 @@ enum MainComponent
     case FRANCHISE; // FranchisePricing::class;
     case DISTRIBUTOR; // DistributorPricing::class;
 
+    case MONTHLY_CONTENT_MANAGEMENT; 
+
     /**
      * @throws Exception
      */
