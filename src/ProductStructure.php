@@ -48,7 +48,8 @@ class ProductStructure
                 ],
                 Product::MONTHLY_CONTENT_MANAGEMENT->value => array_merge(
                     ShareCardProPricing::values(),
-                    ShareCardPricing::values()
+                    ShareCardPricing::values(),
+                    CompanyPricing::values()
                 ),
             ];
         }
