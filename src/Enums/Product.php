@@ -23,6 +23,12 @@ enum Product: string
 
     case MISSED_LEAD_TEXT_BACK = 'missed-lead-text-back';
 
+    //local-engagement-for-homesmart
+    case LOCAL_ENGAGEMENT_FOR_HOMESMART = 'local-engagement-for-homesmart';
+
+    //win-local-connects-subscription-homesmart
+    case WIN_LOCAL_CONNECTS_SUBSCRIPTION_HOMESMART = 'win-local-connects-subscription-homesmart';
+    
     public function isParentable(): bool
     {
         return in_array($this, [
