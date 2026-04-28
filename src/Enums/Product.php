@@ -23,6 +23,8 @@ enum Product: string
 
     case MISSED_LEAD_TEXT_BACK = 'missed-lead-text-back';
 
+    case MISSED_CALL_CONNECT = 'missed-call-connect';
+
     //local-engagement-for-homesmart
     case LOCAL_ENGAGEMENT_FOR_HOMESMART = 'local-engagement-for-homesmart';
 
